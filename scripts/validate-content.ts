@@ -21,35 +21,42 @@ const targets: { dir: string; schema: any; name: string }[] = [
   { dir: 'pages', schema: KeyDatesFrontmatter, name: 'page' },
 ];
 
-let failed = 0;
+async function main() {
+  let failed = 0;
 
-for (const { dir, schema, name } of targets) {
-  const full = path.join(ROOT, dir);
-  let entries: string[] = [];
-  try {
-    entries = await fs.readdir(full);
-  } catch {
-    continue;
-  }
-  for (const file of entries) {
-    if (!file.endsWith('.md') && !file.endsWith('.mdx')) continue;
-    const raw = await fs.readFile(path.join(full, file), 'utf8');
-    const { data } = matter(raw);
-    const result = schema.safeParse(data);
-    if (!result.success) {
-      failed += 1;
-      console.error(`✗ ${dir}/${file} (${name}):`);
-      for (const issue of result.error.issues) {
-        console.error(`    - ${issue.path.join('.')}: ${issue.message}`);
+  for (const { dir, schema, name } of targets) {
+    const full = path.join(ROOT, dir);
+    let entries: string[] = [];
+    try {
+      entries = await fs.readdir(full);
+    } catch {
+      continue;
+    }
+    for (const file of entries) {
+      if (!file.endsWith('.md') && !file.endsWith('.mdx')) continue;
+      const raw = await fs.readFile(path.join(full, file), 'utf8');
+      const { data } = matter(raw);
+      const result = schema.safeParse(data);
+      if (!result.success) {
+        failed += 1;
+        console.error(`✗ ${dir}/${file} (${name}):`);
+        for (const issue of result.error.issues) {
+          console.error(`    - ${issue.path.join('.')}: ${issue.message}`);
+        }
+      } else {
+        console.log(`✓ ${dir}/${file}`);
       }
-    } else {
-      console.log(`✓ ${dir}/${file}`);
     }
   }
+
+  if (failed > 0) {
+    console.error(`\n${failed} file(s) failed validation.`);
+    process.exit(1);
+  }
+  console.log('\nAll content valid.');
 }
 
-if (failed > 0) {
-  console.error(`\n${failed} file(s) failed validation.`);
+main().catch((err) => {
+  console.error(err);
   process.exit(1);
-}
-console.log('\nAll content valid.');
+});
