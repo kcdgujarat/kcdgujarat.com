@@ -11,9 +11,10 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const posts = await getBlogPosts();
-  const post = posts.find((p) => p.slug === params.slug);
+  const post = posts.find((p) => p.slug === slug);
   if (!post) return buildMetadata({ title: 'Post not found' });
   return buildMetadata({
     title: post.title,
@@ -22,9 +23,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const posts = await getBlogPosts();
-  const post = posts.find((p) => p.slug === params.slug);
+  const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
   return (
     <Container className="py-16 max-w-3xl">

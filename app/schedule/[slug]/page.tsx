@@ -13,9 +13,10 @@ export async function generateStaticParams() {
   return sessions.map((s) => ({ slug: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const sessions = await getSessions();
-  const s = sessions.find((x) => x.slug === params.slug);
+  const s = sessions.find((x) => x.slug === slug);
   if (!s) return buildMetadata({ title: 'Session not found' });
   return buildMetadata({
     title: s.title,
@@ -24,9 +25,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-export default async function SessionDetailPage({ params }: { params: { slug: string } }) {
+export default async function SessionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [sessions, speakers] = await Promise.all([getSessions(), getSpeakers()]);
-  const s = sessions.find((x) => x.slug === params.slug);
+  const s = sessions.find((x) => x.slug === slug);
   if (!s) notFound();
   const sessionSpeakers = speakers.filter((sp) => s.speakers?.includes(sp.slug));
 
