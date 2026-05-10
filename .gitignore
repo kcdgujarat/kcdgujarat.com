@@ -100,3 +100,5 @@ dump.sql
 .contentlayer/
 public/sitemap-*.xml
 public/robots.txt.generated
+.vercel
+.env*.local
