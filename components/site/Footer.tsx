@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Container } from './Container';
-import { Github, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { Github, Linkedin, Twitter, Youtube } from '@/components/ui/social-icons';
 
 interface FooterProps {
   socials?: {

@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { getSessions, getSpeakers } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
-import { Github, Globe, Linkedin, Twitter } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Github, Linkedin, Twitter } from '@/components/ui/social-icons';
 
 export const revalidate = 3600;
 
@@ -15,9 +16,10 @@ export async function generateStaticParams() {
   return speakers.map((s) => ({ slug: s.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const speakers = await getSpeakers();
-  const s = speakers.find((sp) => sp.slug === params.slug);
+  const s = speakers.find((sp) => sp.slug === slug);
   if (!s) return buildMetadata({ title: 'Speaker not found' });
   return buildMetadata({
     title: s.name,
@@ -27,9 +29,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-export default async function SpeakerDetailPage({ params }: { params: { slug: string } }) {
+export default async function SpeakerDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [speakers, sessions] = await Promise.all([getSpeakers(), getSessions()]);
-  const s = speakers.find((sp) => sp.slug === params.slug);
+  const s = speakers.find((sp) => sp.slug === slug);
   if (!s) notFound();
   const speakerSessions = sessions.filter((sess) => sess.speakers?.includes(s.slug));
 
