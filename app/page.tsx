@@ -1,10 +1,22 @@
+import { HeroSection } from '@/components/sections/HeroSection';
+import { AboutSection } from '@/components/sections/AboutSection';
+import { KeyDatesSection } from '@/components/sections/KeyDatesSection';
+import { SpeakersPreview } from '@/components/sections/SpeakersPreview';
+import { SchedulePreview } from '@/components/sections/SchedulePreview';
+import { VenueSection } from '@/components/sections/VenueSection';
+import { CfpSection } from '@/components/sections/CfpSection';
+import { SponsorStrip } from '@/components/sections/SponsorStrip';
+import { FaqSection } from '@/components/sections/FaqSection';
+import { CtaSection } from '@/components/sections/CtaSection';
 import { ComingSoon } from '@/components/sections/ComingSoon';
+import { getFaqs, getKeyDates, getSessions, getSpeakers, getSponsors } from '@/lib/content';
 import { getSettings } from '@/lib/payload';
 import { siteUrl } from '@/lib/utils';
 
 export const revalidate = 3600;
 
 export default async function HomePage() {
+  const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
   const settings = (await getSettings()) as any;
 
   const eventLd = {
@@ -23,13 +35,64 @@ export default async function HomePage() {
     url: siteUrl('/'),
   };
 
+  if (comingSoon) {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+        />
+        <ComingSoon city={settings?.eventCity} contactEmail={settings?.contactEmail} />
+      </>
+    );
+  }
+
+  const [speakers, sessions, sponsors, faqs, keyDates] = await Promise.all([
+    getSpeakers(),
+    getSessions(),
+    getSponsors(),
+    getFaqs(),
+    getKeyDates(),
+  ]);
+
+  const eventDate = settings?.eventDate || null;
+  const registrationUrl = settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
+  const cfpUrl = settings?.cfpUrl || process.env.NEXT_PUBLIC_CFP_URL;
+
+  const fullEventLd = {
+    ...eventLd,
+    startDate: eventDate || undefined,
+    endDate: settings?.eventEndDate || eventDate || undefined,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(fullEventLd) }}
       />
-      <ComingSoon city={settings?.eventCity} contactEmail={settings?.contactEmail} />
+      <HeroSection
+        headline={settings?.heroHeadline}
+        subheadline={settings?.heroSubheadline}
+        eventDate={eventDate}
+        city={settings?.eventCity}
+        registrationUrl={registrationUrl}
+        cfpUrl={cfpUrl}
+      />
+      <AboutSection />
+      <KeyDatesSection items={keyDates} eventDate={eventDate} />
+      <SpeakersPreview speakers={speakers} />
+      <SchedulePreview sessions={sessions} />
+      <VenueSection
+        venueName={settings?.venueName}
+        venueAddress={settings?.venueAddress}
+        mapEmbedUrl={settings?.mapEmbedUrl}
+      />
+      <SponsorStrip sponsors={sponsors} />
+      <CfpSection cfpUrl={cfpUrl} />
+      <FaqSection faqs={faqs} />
+      <CtaSection registrationUrl={registrationUrl} cfpUrl={cfpUrl} />
     </>
   );
 }
