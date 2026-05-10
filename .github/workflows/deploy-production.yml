@@ -1,8 +1,10 @@
 name: Deploy Production
 
 on:
-  push:
-    branches: [main]
+  # Auto-deploy on main is DISABLED to avoid premature publishing.
+  # Re-enable by uncommenting the `push` trigger below.
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -46,15 +48,21 @@ jobs:
           URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
-      - name: Smoke check (follow redirects)
+      - name: Smoke check (with retry)
         run: |
           set -eo pipefail
-          # apex 308 -> www; -L follows redirect.
+          # Vercel promotion + DNS can take a moment after deploy. Retry up to 6x.
+          fetch() {
+            for i in 1 2 3 4 5 6; do
+              code=$(curl -sL -o /dev/null -w "%{http_code}" "$1")
+              [ "$code" = "200" ] || [ "$code" = "304" ] && { echo "$code"; return 0; }
+              sleep 10
+            done
+            echo "$code"
+            return 1
+          }
           for path in / /speakers /schedule /sponsors /venue /cfp /api/health; do
-            code=$(curl -sL -o /dev/null -w "%{http_code}" "https://kcdgujarat.com$path")
+            url="https://kcdgujarat.com$path"
+            code=$(fetch "$url") || (echo "✗ smoke failed on $path (last code $code)" && exit 1)
             echo "GET $path -> $code"
-            case "$code" in
-              200|304) ;;
-              *) echo "✗ smoke failed on $path"; exit 1 ;;
-            esac
           done

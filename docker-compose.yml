@@ -46,7 +46,9 @@ services:
       # Keep container's node_modules + .next on a named volume so host files don't shadow them.
       - kcdgujarat-node-modules:/app/node_modules
       - kcdgujarat-next-cache:/app/.next
-    command: pnpm dev
+    # Install on every start so container deps stay in sync with package.json/lockfile.
+    # CI=true (in image env) keeps pnpm non-interactive.
+    command: sh -c "pnpm install --no-frozen-lockfile --reporter=append-only && pnpm dev"
     stdin_open: true
     tty: true
 
