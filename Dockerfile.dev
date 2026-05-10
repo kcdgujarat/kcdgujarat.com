@@ -1,4 +1,6 @@
 # Dev image — hot reload via bind mount + polling watcher.
+# pnpm install runs at container start (see docker-compose command) so deps
+# always track the current package.json/lockfile, not a stale image layer.
 FROM node:20-bookworm-slim
 
 ENV PNPM_HOME=/pnpm \
@@ -6,9 +8,10 @@ ENV PNPM_HOME=/pnpm \
     NEXT_TELEMETRY_DISABLED=1 \
     CHOKIDAR_USEPOLLING=true \
     WATCHPACK_POLLING=true \
-    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    CI=true
 
-# Build tools needed by sharp / native deps. dumb-init for clean PID 1.
+# Native deps (sharp etc.) need build tools. dumb-init for clean PID 1.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -25,11 +28,6 @@ RUN apt-get update \
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 
 WORKDIR /app
-
-# Pre-install deps to warm the cache. Source is bind-mounted at runtime,
-# but if package.json hasn't changed the install layer is reused.
-COPY package.json pnpm-lock.yaml* .npmrc* ./
-RUN pnpm install --no-frozen-lockfile --reporter=append-only
 
 EXPOSE 3000
 
