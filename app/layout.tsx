@@ -22,7 +22,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
-        <Header registrationUrl={settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL} />
+        <Header
+          registrationUrl={settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL}
+          comingSoon={process.env.NEXT_PUBLIC_COMING_SOON === 'true'}
+        />
         <main id="main">{children}</main>
         <Footer
           socials={settings?.socialLinks || {}}
