@@ -8,6 +8,7 @@ import { CfpSection } from '@/components/sections/CfpSection';
 import { SponsorStrip } from '@/components/sections/SponsorStrip';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { CtaSection } from '@/components/sections/CtaSection';
+import { ComingSoon } from '@/components/sections/ComingSoon';
 import { getFaqs, getKeyDates, getSessions, getSpeakers, getSponsors } from '@/lib/content';
 import { getSettings } from '@/lib/payload';
 import { siteUrl } from '@/lib/utils';
@@ -15,18 +16,8 @@ import { siteUrl } from '@/lib/utils';
 export const revalidate = 3600;
 
 export default async function HomePage() {
-  const [speakers, sessions, sponsors, faqs, keyDates, settings] = await Promise.all([
-    getSpeakers(),
-    getSessions(),
-    getSponsors(),
-    getFaqs(),
-    getKeyDates(),
-    getSettings() as any,
-  ]);
-
-  const eventDate = settings?.eventDate || null;
-  const registrationUrl = settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
-  const cfpUrl = settings?.cfpUrl || process.env.NEXT_PUBLIC_CFP_URL;
+  const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
+  const settings = (await getSettings()) as any;
 
   const eventLd = {
     '@context': 'https://schema.org',
@@ -34,10 +25,7 @@ export default async function HomePage() {
     name: 'KCD Gujarat 2026',
     description:
       'Kubernetes Community Day Gujarat 2026 — a CNCF-backed, community-driven conference for the cloud-native community.',
-    startDate: eventDate || undefined,
-    endDate: settings?.eventEndDate || eventDate || undefined,
     eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {
       '@type': 'Place',
       name: settings?.venueName || 'TBD',
@@ -47,11 +35,42 @@ export default async function HomePage() {
     url: siteUrl('/'),
   };
 
+  if (comingSoon) {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+        />
+        <ComingSoon city={settings?.eventCity} contactEmail={settings?.contactEmail} />
+      </>
+    );
+  }
+
+  const [speakers, sessions, sponsors, faqs, keyDates] = await Promise.all([
+    getSpeakers(),
+    getSessions(),
+    getSponsors(),
+    getFaqs(),
+    getKeyDates(),
+  ]);
+
+  const eventDate = settings?.eventDate || null;
+  const registrationUrl = settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
+  const cfpUrl = settings?.cfpUrl || process.env.NEXT_PUBLIC_CFP_URL;
+
+  const fullEventLd = {
+    ...eventLd,
+    startDate: eventDate || undefined,
+    endDate: settings?.eventEndDate || eventDate || undefined,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(fullEventLd) }}
       />
       <HeroSection
         headline={settings?.heroHeadline}

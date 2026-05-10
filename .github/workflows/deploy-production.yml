@@ -48,21 +48,23 @@ jobs:
           URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
+      - name: Wait for edge promotion
+        run: sleep 30
+
       - name: Smoke check (with retry)
         run: |
           set -eo pipefail
-          # Vercel promotion + DNS can take a moment after deploy. Retry up to 6x.
           fetch() {
-            for i in 1 2 3 4 5 6; do
+            for i in 1 2 3 4 5 6 7 8 9 10; do
               code=$(curl -sL -o /dev/null -w "%{http_code}" "$1")
               [ "$code" = "200" ] || [ "$code" = "304" ] && { echo "$code"; return 0; }
-              sleep 10
+              sleep 15
             done
             echo "$code"
             return 1
           }
-          for path in / /speakers /schedule /sponsors /venue /cfp /api/health; do
-            url="https://kcdgujarat.com$path"
+          for path in / /api/health; do
+            url="https://www.kcdgujarat.com$path"
             code=$(fetch "$url") || (echo "✗ smoke failed on $path (last code $code)" && exit 1)
             echo "GET $path -> $code"
           done

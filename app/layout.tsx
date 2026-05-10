@@ -13,6 +13,7 @@ export const metadata: Metadata = buildMetadata({});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = (await getSettings()) as any;
+  const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
   return (
     <html lang="en" className={inter.variable} style={{ colorScheme: 'light' }}>
       <body className="bg-white text-kcd-ink antialiased">
@@ -22,12 +23,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
-        <Header registrationUrl={settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL} />
-        <main id="main">{children}</main>
-        <Footer
-          socials={settings?.socialLinks || {}}
-          contactEmail={settings?.contactEmail}
+        <Header
+          registrationUrl={settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL}
+          comingSoon={comingSoon}
         />
+        <main id="main">{children}</main>
+        {!comingSoon && (
+          <Footer
+            socials={settings?.socialLinks || {}}
+            contactEmail={settings?.contactEmail}
+          />
+        )}
         <Analytics />
       </body>
     </html>
