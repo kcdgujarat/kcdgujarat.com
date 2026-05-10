@@ -29,8 +29,7 @@
       "@payload-config": [
         "./payload.config.ts"
       ]
-    },
-    "baseUrl": "."
+    }
   },
   "include": [
     "next-env.d.ts",
