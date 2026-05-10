@@ -1,0 +1,20 @@
+{
+  "site": {
+    "name": "KCD ગુજરાત 2026",
+    "tagline": "Kubernetes Community Day, ગુજરાત"
+  },
+  "nav": {
+    "home": "હોમ",
+    "speakers": "વક્તાઓ",
+    "schedule": "કાર્યક્રમ",
+    "sponsors": "પ્રાયોજકો",
+    "venue": "સ્થળ",
+    "cfp": "CFP",
+    "register": "નોંધણી"
+  },
+  "hero": {
+    "register": "નોંધણી કરો",
+    "submitTalk": "વાર્તાલાપ સબમિટ કરો",
+    "viewSchedule": "કાર્યક્રમ જુઓ"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "site": {
+    "name": "KCD Gujarat 2026",
+    "tagline": "Kubernetes Community Day, Gujarat"
+  },
+  "nav": {
+    "home": "Home",
+    "speakers": "Speakers",
+    "schedule": "Schedule",
+    "sponsors": "Sponsors",
+    "venue": "Venue",
+    "cfp": "CFP",
+    "register": "Register"
+  },
+  "hero": {
+    "register": "Register",
+    "submitTalk": "Submit a Talk",
+    "viewSchedule": "View schedule"
+  }
+}

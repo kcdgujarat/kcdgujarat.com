@@ -1,0 +1,37 @@
+# Dev image — hot reload via bind mount + polling watcher.
+FROM node:20-bookworm-slim
+
+ENV PNPM_HOME=/pnpm \
+    PATH=/pnpm:/usr/local/bin:$PATH \
+    NEXT_TELEMETRY_DISABLED=1 \
+    CHOKIDAR_USEPOLLING=true \
+    WATCHPACK_POLLING=true \
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+
+# Build tools needed by sharp / native deps. dumb-init for clean PID 1.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        openssl \
+        dumb-init \
+        python3 \
+        make \
+        g++ \
+        libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+
+WORKDIR /app
+
+# Pre-install deps to warm the cache. Source is bind-mounted at runtime,
+# but if package.json hasn't changed the install layer is reused.
+COPY package.json pnpm-lock.yaml* .npmrc* ./
+RUN pnpm install --no-frozen-lockfile --reporter=append-only
+
+EXPOSE 3000
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["pnpm", "dev"]

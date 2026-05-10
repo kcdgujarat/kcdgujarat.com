@@ -1,0 +1,206 @@
+version: '3'
+
+# https://taskfile.dev — install with `brew install go-task`.
+# Run `task -l` to list tasks.
+
+vars:
+  PNPM: pnpm
+  COMPOSE: docker compose
+
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+
+tasks:
+  default:
+    desc: List tasks
+    cmds:
+      - task -l
+    silent: true
+
+  setup:
+    desc: First-time setup — env, deps, db, payload types
+    cmds:
+      - task: env
+      - task: install
+      - task: db:up
+      - task: db:wait
+      - task: payload:generate
+
+  env:
+    desc: Copy .env.example -> .env if missing
+    cmds:
+      - test -f .env || cp .env.example .env
+      - 'echo "→ .env ready (edit secrets before running task dev)"'
+    status:
+      - test -f .env
+
+  install:
+    desc: Install JS deps
+    cmds:
+      - '{{.PNPM}} install --frozen-lockfile=false'
+    sources:
+      - package.json
+      - pnpm-lock.yaml
+    generates:
+      - node_modules/.modules.yaml
+
+  dev:
+    desc: Run Next.js + Payload admin (http://localhost:3000)
+    deps: [db:up, db:wait]
+    cmds:
+      - '{{.PNPM}} dev'
+
+  build:
+    desc: Production build
+    deps: [db:up, db:wait]
+    cmds:
+      - '{{.PNPM}} build'
+
+  start:
+    desc: Run production build locally
+    cmds:
+      - '{{.PNPM}} start'
+
+  lint:
+    desc: ESLint
+    cmds:
+      - '{{.PNPM}} lint'
+
+  typecheck:
+    desc: TypeScript --noEmit
+    cmds:
+      - '{{.PNPM}} typecheck'
+
+  format:
+    desc: Prettier write
+    cmds:
+      - '{{.PNPM}} exec prettier --write .'
+
+  test:
+    desc: Vitest unit
+    cmds:
+      - '{{.PNPM}} test'
+
+  test:e2e:
+    desc: Playwright e2e
+    cmds:
+      - '{{.PNPM}} test:e2e'
+
+  test:a11y:
+    desc: Playwright + axe accessibility
+    cmds:
+      - '{{.PNPM}} test:a11y'
+
+  content:validate:
+    desc: Zod-validate /content frontmatter
+    cmds:
+      - '{{.PNPM}} content:validate'
+
+  payload:generate:
+    desc: Generate Payload TS types
+    deps: [db:up, db:wait]
+    cmds:
+      - '{{.PNPM}} payload:generate'
+
+  ci:
+    desc: Run lint + typecheck + content:validate + test (mirrors CI)
+    cmds:
+      - task: lint
+      - task: typecheck
+      - task: content:validate
+      - task: test
+
+  db:up:
+    desc: Start local Postgres (docker compose)
+    cmds:
+      - '{{.COMPOSE}} up -d postgres'
+    status:
+      - docker ps --filter "name=kcdgujarat-postgres" --filter "status=running" -q | grep -q .
+
+  db:down:
+    desc: Stop local Postgres
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  db:wait:
+    desc: Wait for Postgres to accept connections
+    cmds:
+      - |
+        echo "→ waiting for postgres..."
+        for i in $(seq 1 30); do
+          if docker exec kcdgujarat-postgres pg_isready -U kcdgujarat -d kcdgujarat >/dev/null 2>&1; then
+            echo "→ postgres ready"
+            exit 0
+          fi
+          sleep 1
+        done
+        echo "✗ postgres did not become ready in 30s" >&2
+        exit 1
+
+  db:psql:
+    desc: Open psql shell against local DB
+    cmds:
+      - docker exec -it kcdgujarat-postgres psql -U kcdgujarat -d kcdgujarat
+
+  db:reset:
+    desc: Drop + recreate local Postgres volume (destructive)
+    prompt: This will WIPE the local Postgres volume. Continue?
+    cmds:
+      - '{{.COMPOSE}} down -v'
+      - task: db:up
+      - task: db:wait
+
+  clean:
+    desc: Remove build + cache artefacts (keeps node_modules)
+    cmds:
+      - rm -rf .next
+      - rm -rf .turbo
+      - rm -rf coverage
+      - rm -rf playwright-report
+      - rm -rf test-results
+
+  nuke:
+    desc: Remove everything regenerable (node_modules, build, db volume)
+    prompt: This will remove node_modules and the local DB. Continue?
+    cmds:
+      - rm -rf node_modules
+      - '{{.COMPOSE}} down -v'
+      - task: clean
+
+  docker:up:
+    desc: Run full stack in Docker (app + postgres) with hot reload
+    cmds:
+      - task: env
+      - '{{.COMPOSE}} up --build'
+
+  docker:up:detached:
+    desc: Same as docker:up but in background
+    cmds:
+      - task: env
+      - '{{.COMPOSE}} up -d --build'
+
+  docker:logs:
+    desc: Tail app logs
+    cmds:
+      - '{{.COMPOSE}} logs -f app'
+
+  docker:sh:
+    desc: Open shell in app container
+    cmds:
+      - '{{.COMPOSE}} exec app bash'
+
+  docker:install:
+    desc: Re-run pnpm install inside the app container (after editing package.json)
+    cmds:
+      - '{{.COMPOSE}} exec app pnpm install'
+
+  docker:down:
+    desc: Stop full stack (keeps volumes)
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  docker:reset:
+    desc: Stop stack and wipe volumes (db + node_modules + .next cache)
+    prompt: This wipes Postgres data and the container's node_modules. Continue?
+    cmds:
+      - '{{.COMPOSE}} down -v'

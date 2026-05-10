@@ -1,0 +1,63 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  production:
+    name: Vercel production (kcdgujarat.com)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: production
+      url: https://kcdgujarat.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      - name: Pull Vercel env (production)
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy production
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Alias to apex domain
+        run: |
+          vercel alias set "${{ steps.deploy.outputs.url }}" kcdgujarat.com --token=${{ secrets.VERCEL_TOKEN }}
+          vercel alias set "${{ steps.deploy.outputs.url }}" www.kcdgujarat.com --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Smoke check
+        run: |
+          set -eo pipefail
+          for path in / /speakers /schedule /sponsors /api/health; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://kcdgujarat.com$path")
+            echo "GET $path -> $code"
+            test "$code" = "200" || test "$code" = "304" || (echo "✗ smoke failed on $path" && exit 1)
+          done
