@@ -1,20 +1,18 @@
 import type { MetadataRoute } from 'next';
-import { getBlogPosts, getSessions, getSpeakers, getSponsors } from '@/lib/content';
+import { getSessions, getSpeakers, getSponsors, getCfpConfig } from '@/lib/content';
 import { siteUrl } from '@/lib/utils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [speakers, sessions, sponsors, posts] = await Promise.all([
+  const [speakers, sessions, sponsors, cfp] = await Promise.all([
     getSpeakers(),
     getSessions(),
     getSponsors(),
-    getBlogPosts(),
+    getCfpConfig(),
   ]);
 
   const now = new Date();
-  const staticEntries: MetadataRoute.Sitemap = [
+  const staticPaths = [
     '/',
-    '/speakers',
-    '/schedule',
     '/sponsors',
     '/venue',
     '/cfp',
@@ -23,17 +21,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/sponsorship',
     '/code-of-conduct',
     '/faq',
-    '/blog',
-  ].map((path) => ({ url: siteUrl(path), lastModified: now, changeFrequency: 'weekly', priority: path === '/' ? 1 : 0.7 }));
+  ];
+  if (!cfp.open) {
+    staticPaths.push('/speakers', '/schedule');
+  }
+  const staticEntries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
+    url: siteUrl(path),
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: path === '/' ? 1 : 0.7,
+  }));
+
+  if (cfp.open) {
+    return [
+      ...staticEntries,
+      ...sponsors.map((s) => ({ url: siteUrl(`/sponsors`), lastModified: now })),
+    ];
+  }
 
   return [
     ...staticEntries,
     ...speakers.map((s) => ({ url: siteUrl(`/speakers/${s.slug}`), lastModified: now })),
     ...sessions.map((s) => ({ url: siteUrl(`/schedule/${s.slug}`), lastModified: now })),
     ...sponsors.map((s) => ({ url: siteUrl(`/sponsors`), lastModified: now })),
-    ...posts.map((p) => ({
-      url: siteUrl(`/blog/${p.slug}`),
-      lastModified: p.publishedAt ? new Date(p.publishedAt) : now,
-    })),
   ];
 }

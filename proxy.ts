@@ -15,7 +15,7 @@ const CSP = [
   'upgrade-insecure-requests',
 ].join('; ');
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const res = NextResponse.next();
   // Skip CSP on the Payload admin/api routes — Payload manages its own headers.
   const path = req.nextUrl.pathname;

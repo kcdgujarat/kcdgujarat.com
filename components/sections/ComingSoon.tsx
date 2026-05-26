@@ -16,7 +16,7 @@ export function ComingSoon({ city = 'Gujarat, India', contactEmail }: ComingSoon
       <Container className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center py-20 text-center">
         <div className="relative h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72">
           <Image
-            src="/images/logo.jpg"
+            src="/images/KCDGujaratLogo2000x2000.png"
             alt="KCD Gujarat 2026 logo"
             fill
             priority

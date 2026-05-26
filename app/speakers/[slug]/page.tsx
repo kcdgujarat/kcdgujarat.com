@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { Badge } from '@/components/ui/badge';
-import { getSessions, getSpeakers } from '@/lib/content';
+import { getSessions, getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
 import { Globe } from 'lucide-react';
@@ -12,6 +12,8 @@ import { Github, Linkedin, Twitter } from '@/components/ui/social-icons';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
+  const cfp = await getCfpConfig();
+  if (cfp.open) return [];
   const speakers = await getSpeakers();
   return speakers.map((s) => ({ slug: s.slug }));
 }
@@ -31,7 +33,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function SpeakerDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [speakers, sessions] = await Promise.all([getSpeakers(), getSessions()]);
+  const [speakers, sessions, cfp] = await Promise.all([
+    getSpeakers(),
+    getSessions(),
+    getCfpConfig(),
+  ]);
+  if (cfp.open) notFound();
   const s = speakers.find((sp) => sp.slug === slug);
   if (!s) notFound();
   const speakerSessions = sessions.filter((sess) => sess.speakers?.includes(s.slug));

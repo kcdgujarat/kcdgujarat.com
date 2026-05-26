@@ -1,50 +1,44 @@
+import Image from 'next/image';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
-import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
-import { Cpu, Users, Globe, Sparkles } from 'lucide-react';
-
-const PILLARS = [
-  {
-    icon: Users,
-    title: 'Community-driven',
-    body: 'Built by Kubernetes practitioners and CNCF community members in Gujarat, for the Gujarat tech community.',
-  },
-  {
-    icon: Cpu,
-    title: 'Hands-on',
-    body: 'Talks, workshops, and lightning sessions across Platform, DevSecOps, AI/ML, and Networking tracks.',
-  },
-  {
-    icon: Globe,
-    title: 'CNCF-backed',
-    body: 'Part of the global Kubernetes Community Days program — same playbook, distinctly Gujarati flavour.',
-  },
-  {
-    icon: Sparkles,
-    title: 'For everyone',
-    body: 'Beginner-friendly tracks, mentorship, and a Code of Conduct we take seriously.',
-  },
-];
 
 export function AboutSection() {
   return (
     <section id="about" className="py-20">
       <Container>
-        <SectionHeader
-          eyebrow="About KCD"
-          title="One day, one community, all things cloud-native"
-          description="Kubernetes Community Days bring together adopters, contributors, and the curious for a single day of in-depth technical content and meaningful conversations."
-        />
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {PILLARS.map(({ icon: Icon, title, body }) => (
-            <Card key={title}>
-              <CardBody>
-                <Icon className="h-7 w-7 text-kcd-primary" aria-hidden />
-                <CardTitle className="mt-4">{title}</CardTitle>
-                <CardDescription>{body}</CardDescription>
-              </CardBody>
-            </Card>
-          ))}
+        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
+          <div>
+            <SectionHeader
+              eyebrow="About KCD Gujarat 2026"
+              title="The cloud-native community, finally in Gujarat."
+              description="Kubernetes Community Days (KCD) Gujarat 2026 is a CNCF-backed, community-organized conference bringing together developers, operators, and cloud-native enthusiasts from across India and beyond."
+            />
+            <p className="max-w-xl text-base leading-relaxed text-kcd-ink/80 md:text-lg">
+              Set in Gujarat, this single-day conference offers a unique opportunity to learn from industry experts, discover what teams are shipping in production, and connect with the growing cloud-native community in western India.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-kcd-border bg-white p-8 shadow-card">
+            <p className="text-xs font-semibold uppercase tracking-wider text-kcd-muted">
+              Supported by
+            </p>
+            <div className="mt-4 flex items-center gap-4">
+              <Image
+                src="/images/cncf.svg"
+                alt="Cloud Native Computing Foundation"
+                width={120}
+                height={48}
+                className="h-12 w-auto"
+                style={{ width: 'auto' }}
+              />
+              <span className="font-display text-lg font-semibold text-kcd-ink">
+                Cloud Native Computing Foundation
+              </span>
+            </div>
+            <p className="mt-5 text-sm leading-relaxed text-kcd-ink/75">
+              Kubernetes Community Days are community-organized events that are part of the CNCF ecosystem. As a CNCF event, we receive guidance, resources, and recognition — while staying community-first, grassroots, and rooted in the region we serve.
+            </p>
+          </div>
         </div>
       </Container>
     </section>

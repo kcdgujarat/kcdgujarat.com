@@ -2,13 +2,15 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { Badge } from '@/components/ui/badge';
-import { getSessions, getSpeakers } from '@/lib/content';
+import { getSessions, getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatTime } from '@/lib/utils';
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
+  const cfp = await getCfpConfig();
+  if (cfp.open) return [];
   const sessions = await getSessions();
   return sessions.map((s) => ({ slug: s.slug }));
 }
@@ -27,7 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function SessionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [sessions, speakers] = await Promise.all([getSessions(), getSpeakers()]);
+  const [sessions, speakers, cfp] = await Promise.all([
+    getSessions(),
+    getSpeakers(),
+    getCfpConfig(),
+  ]);
+  if (cfp.open) notFound();
   const s = sessions.find((x) => x.slug === slug);
   if (!s) notFound();
   const sessionSpeakers = speakers.filter((sp) => s.speakers?.includes(sp.slug));

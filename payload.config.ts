@@ -11,7 +11,6 @@ import { Speakers } from './collections/Speakers';
 import { Sessions } from './collections/Sessions';
 import { Sponsors } from './collections/Sponsors';
 import { FAQs } from './collections/FAQs';
-import { BlogPosts } from './collections/BlogPosts';
 import { Settings } from './collections/Settings';
 
 const filename = fileURLToPath(import.meta.url);
@@ -27,7 +26,7 @@ export default buildConfig({
     },
   },
   editor: lexicalEditor(),
-  collections: [Users, Media, Speakers, Sessions, Sponsors, FAQs, BlogPosts],
+  collections: [Users, Media, Speakers, Sessions, Sponsors, FAQs],
   globals: [Settings],
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-me',
   typescript: {
