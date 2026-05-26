@@ -39,6 +39,10 @@ export function buildMetadata(opts: {
       description,
       images: [image],
     },
+    icons: {
+      icon: '/images/Favicon250x250.png',
+      apple: '/images/Favicon250x250.png',
+    },
     robots: { index: true, follow: true },
   };
 }

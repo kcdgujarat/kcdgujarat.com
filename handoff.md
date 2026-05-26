@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-05-27_
+_Last updated: 2026-05-27 (logo + favicon session)_
 
 ## 1. Goal
 
@@ -98,6 +98,13 @@ Do NOT commit without running `pnpm typecheck && pnpm content:validate && pnpm b
 **Add real photos.** Drop portraits into `public/images/team/<slug>.jpg` and `public/images/speakers/<slug>.jpg`, partner/sponsor logos into `public/images/partners/<slug>.svg`. Add `photo:` / `logo:` to the corresponding markdown frontmatter. No code change required — components already render the image when the field is set.
 
 After photos: confirm `pnpm build` completes cleanly (no TypeScript errors, no broken image paths), then do a Vercel preview deployment.
+
+---
+
+### Logo + favicon (2026-05-27)
+
+- `public/images/KCDGujaratLogo2000x2000.png` — new brand logo. Replaces `logo.jpg` in Header, Footer, and ComingSoon components. Displayed in a rounded container with `object-contain` + white background.
+- `public/images/Favicon250x250.png` — new favicon. Added to `lib/seo.ts` `buildMetadata` via `icons.icon` + `icons.apple` so it applies to every route.
 
 ---
 

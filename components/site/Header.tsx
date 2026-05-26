@@ -64,8 +64,8 @@ export function Header({ registrationUrl, registrationOpen = false, comingSoon =
           )}
         >
           <Link href="/" className="flex items-center gap-2 font-display text-base font-semibold text-kcd-ink sm:text-lg">
-            <span className="relative inline-block h-9 w-9 overflow-hidden rounded-full ring-2 ring-white/40" aria-hidden>
-              <Image src="/images/logo.jpg" alt="" fill sizes="36px" className="object-cover" />
+            <span className="relative inline-block h-9 w-9 overflow-hidden rounded-full bg-white ring-2 ring-white/40" aria-hidden>
+              <Image src="/images/KCDGujaratLogoSmall500x500.png" alt="" fill sizes="36px" className="object-contain p-0.5" />
             </span>
             <span className="hidden sm:inline">KCD Gujarat 2026</span>
           </Link>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from './Container';
 import { Github, Linkedin, Twitter, Youtube } from '@/components/ui/social-icons';
@@ -37,8 +38,14 @@ export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, sh
     <footer className="mt-24 border-t border-white/10 bg-kcd-navy text-white">
       <Container className="grid gap-10 py-12 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 font-display text-lg font-semibold">
-            <span className="inline-block h-6 w-6 rounded-full bg-kcd-primary" aria-hidden />
+          <div className="flex items-center gap-3 font-display text-lg font-semibold">
+            <Image
+              src="/images/KCDGujaratLogoSmall500x500.png"
+              alt="KCD Gujarat 2026"
+              width={48}
+              height={48}
+              className="h-12 w-12 shrink-0 object-contain"
+            />
             KCD Gujarat 2026
           </div>
           <p className="mt-3 text-sm text-white/70">
