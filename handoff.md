@@ -105,7 +105,7 @@ After photos: confirm `pnpm build` completes cleanly (no TypeScript errors, no b
 
 - Set `NEXT_PUBLIC_COMING_SOON=true` in `.env.local` (local) or Vercel env vars (prod). Restart/redeploy required.
 - When on: `/` shows `ComingSoon`; header is logo-only; footer hidden.
-- `middleware.ts` blocks **all other routes** (including `/speakers`, `/admin`, etc.) — rewrites to internal handler that calls `notFound()` → proper 404 UI + status.
+- `proxy.ts` blocks **all other routes** (including `/speakers`, `/admin`, etc.) — rewrites to internal handler that calls `notFound()` → proper 404 UI + status.
 - Only `/`, static assets, and infra APIs (`/api/health`, `/api/revalidate`, `/api/og`) remain reachable.
 
 - `public/images/KCDGujaratLogo2000x2000.png` — new brand logo. Replaces `logo.jpg` in Header, Footer, and ComingSoon components. Displayed in a rounded container with `object-contain` + white background.
