@@ -80,6 +80,21 @@ export const EventConfigFrontmatter = z.object({
 });
 export type EventConfigFrontmatter = z.infer<typeof EventConfigFrontmatter>;
 
+export const SponsorshipTier = z.object({
+  name: z.string(),
+  slug: z.enum(['diamond', 'platinum', 'gold', 'silver', 'community', 'media']),
+  price: z.string().optional().default(''),
+  perks: z.array(z.string()).default([]),
+});
+export type SponsorshipTier = z.infer<typeof SponsorshipTier>;
+
+export const SponsorshipConfigFrontmatter = z.object({
+  contactEmail: z.string().email().optional(),
+  prospectusUrl: z.string().url().optional(),
+  tiers: z.array(SponsorshipTier).default([]),
+});
+export type SponsorshipConfigFrontmatter = z.infer<typeof SponsorshipConfigFrontmatter>;
+
 export const RegistrationConfigFrontmatter = z.object({
   /** Show registration buttons and the /register page CTA. */
   open: z.boolean().default(false),

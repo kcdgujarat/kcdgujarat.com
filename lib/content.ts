@@ -16,6 +16,7 @@ import {
   CfpConfigFrontmatter,
   RegistrationConfigFrontmatter,
   EventConfigFrontmatter,
+  SponsorshipConfigFrontmatter,
 } from './schema';
 import { payload } from './payload';
 
@@ -242,6 +243,18 @@ export async function getCfpConfig(): Promise<CfpConfig> {
     return CfpConfigFrontmatter.parse(data);
   } catch {
     return { open: true, showSpeakers: false };
+  }
+}
+
+export type SponsorshipConfig = SponsorshipConfigFrontmatter;
+
+export async function getSponsorshipConfig(): Promise<SponsorshipConfig> {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, 'pages', 'sponsorship.md'), 'utf8');
+    const { data } = matter(raw);
+    return SponsorshipConfigFrontmatter.parse(data);
+  } catch {
+    return { tiers: [] };
   }
 }
 
