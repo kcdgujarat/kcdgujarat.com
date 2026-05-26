@@ -241,7 +241,7 @@ export async function getCfpConfig(): Promise<CfpConfig> {
     const { data } = matter(raw);
     return CfpConfigFrontmatter.parse(data);
   } catch {
-    return { open: true };
+    return { open: true, showSpeakers: false };
   }
 }
 
@@ -285,6 +285,7 @@ export async function getKeyDates(): Promise<KeyDate[]> {
 async function safePayloadList(collection: string): Promise<any[]> {
   try {
     const p = await payload();
+    if (!p) return [];
     const res = await p.find({ collection: collection as any, limit: 500, depth: 1 });
     return res.docs as any[];
   } catch {
