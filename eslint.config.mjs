@@ -12,6 +12,7 @@ export default [
       'app/(payload)/admin/importMap.js',
       'next-env.d.ts',
       'global.d.ts',
+      'kcd_kochi_website/**',
     ],
   },
   ...nextCoreWebVitals,

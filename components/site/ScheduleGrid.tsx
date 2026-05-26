@@ -7,11 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardBody } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { formatTime } from '@/lib/utils';
+import { TRACKS as TRACK_DEFS, TRACK_BY_SCHEMA } from '@/lib/tracks';
 
-const TRACKS = ['All', 'Platform', 'DevSecOps', 'AI/ML', 'Networking', 'Beginner'] as const;
+const FILTERS = [
+  { schema: 'All' as const, label: 'All' },
+  ...TRACK_DEFS.map((t) => ({ schema: t.schema, label: t.label })),
+];
 
 export function ScheduleGrid({ sessions }: { sessions: Session[] }) {
-  const [track, setTrack] = React.useState<(typeof TRACKS)[number]>('All');
+  const [track, setTrack] = React.useState<(typeof FILTERS)[number]['schema']>('All');
 
   const filtered = track === 'All' ? sessions : sessions.filter((s) => s.track === track);
 
@@ -28,21 +32,21 @@ export function ScheduleGrid({ sessions }: { sessions: Session[] }) {
   return (
     <div>
       <div role="tablist" aria-label="Filter by track" className="mb-6 flex flex-wrap gap-2">
-        {TRACKS.map((t) => (
+        {FILTERS.map((f) => (
           <button
-            key={t}
+            key={f.schema}
             type="button"
             role="tab"
-            aria-selected={t === track}
-            onClick={() => setTrack(t)}
+            aria-selected={f.schema === track}
+            onClick={() => setTrack(f.schema)}
             className={cn(
               'rounded-full border px-4 py-1.5 text-sm font-medium transition-colors',
-              t === track
+              f.schema === track
                 ? 'border-kcd-primary bg-kcd-primary text-white'
                 : 'border-kcd-border bg-white text-kcd-ink hover:bg-kcd-subtle',
             )}
           >
-            {t}
+            {f.label}
           </button>
         ))}
       </div>
@@ -77,7 +81,7 @@ export function ScheduleGrid({ sessions }: { sessions: Session[] }) {
                           <h4 className="text-base font-semibold text-kcd-ink">{s.title}</h4>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          {s.track && <Badge>{s.track}</Badge>}
+                          {s.track && <Badge>{TRACK_BY_SCHEMA[s.track]?.label ?? s.track}</Badge>}
                           {s.type && <Badge>{s.type}</Badge>}
                           {s.level && <Badge>{s.level}</Badge>}
                         </div>

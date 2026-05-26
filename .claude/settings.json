@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/handoff.md\" ]; then echo '=== handoff.md (read this first) ==='; cat \"$CLAUDE_PROJECT_DIR/handoff.md\"; else echo 'handoff.md missing — create one and update each session'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

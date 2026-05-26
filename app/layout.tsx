@@ -1,22 +1,53 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Inter, Noto_Sans_Gujarati } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
 import { getSettings } from '@/lib/payload';
+import { getCfpConfig, getRegistrationConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+// Brand guideline: Plus Jakarta Sans for display headings (700–800)
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+  weight: ['600', '700', '800'],
+});
+
+// Brand guideline: Inter for body copy & UI (400–500)
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+  weight: ['400', '500', '600'],
+});
+
+// Brand guideline: Noto Sans Gujarati (Bold/Black) for Gujarati script
+const notoSansGujarati = Noto_Sans_Gujarati({
+  subsets: ['gujarati'],
+  variable: '--font-gujarati',
+  display: 'swap',
+  weight: ['700', '900'],
+});
 
 export const metadata: Metadata = buildMetadata({});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const settings = (await getSettings()) as any;
+  const [settings, cfp, registration] = await Promise.all([
+    getSettings(),
+    getCfpConfig(),
+    getRegistrationConfig(),
+  ]);
   const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
+  const cfpOpen = cfp.open;
+  const showSpeakers = cfp.showSpeakers;
+  const registrationOpen = registration.open;
+  const registrationUrl = registration.url || settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
   return (
-    <html lang="en" className={inter.variable} style={{ colorScheme: 'light' }}>
-      <body className="bg-white text-kcd-ink antialiased">
+    <html lang="en" className={`${plusJakartaSans.variable} ${inter.variable} ${notoSansGujarati.variable}`} style={{ colorScheme: 'light' }}>
+      <body className="bg-kcd-bg text-kcd-ink antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-kcd-primary focus:px-4 focus:py-2 focus:text-white"
@@ -24,14 +55,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           Skip to main content
         </a>
         <Header
-          registrationUrl={settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL}
+          registrationUrl={registrationUrl}
+          registrationOpen={registrationOpen}
           comingSoon={comingSoon}
+          cfpOpen={cfpOpen}
+          cfpUrl={cfp.url}
+          showSpeakers={showSpeakers}
         />
         <main id="main">{children}</main>
         {!comingSoon && (
           <Footer
             socials={settings?.socialLinks || {}}
             contactEmail={settings?.contactEmail}
+            cfpOpen={cfpOpen}
+            cfpUrl={cfp.url}
+            showSpeakers={showSpeakers}
           />
         )}
         <Analytics />

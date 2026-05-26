@@ -5,7 +5,7 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'outline';
 type Size = 'sm' | 'md' | 'lg';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-kcd-primary text-white hover:bg-kcd-primary/90 focus-visible:ring-kcd-primary',
+  primary: 'bg-kcd-primary !text-white hover:bg-kcd-primary/90 focus-visible:ring-kcd-primary',
   secondary: 'bg-kcd-accent text-kcd-ink hover:bg-kcd-accent/90 focus-visible:ring-kcd-accent',
   ghost: 'bg-transparent text-kcd-ink hover:bg-kcd-subtle',
   outline: 'border border-kcd-border bg-white text-kcd-ink hover:bg-kcd-subtle',

@@ -10,30 +10,43 @@ const TIERS: Sponsor['tier'][] = ['diamond', 'platinum', 'gold', 'silver', 'comm
 export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
   const byTier = (t: Sponsor['tier']) => sponsors.filter((s) => s.tier === t);
   return (
-    <section id="sponsors" className="bg-kcd-subtle py-20">
+    <section id="sponsors" className="bg-kcd-surface py-20">
       <Container>
         <SectionHeader
-          eyebrow="Sponsors"
-          title="Powered by our community"
-          description="We are proudly supported by organizations that believe in the cloud-native community."
+          eyebrow="Our sponsors"
+          title="Our sponsors make KCD Gujarat happen"
+          description="We are grateful to the organizations who power KCD Gujarat 2026. Their support brings together the Kubernetes and cloud-native community in Gujarat."
           align="center"
         />
         {sponsors.length === 0 && (
-          <p className="text-center text-kcd-muted">Sponsor slots are open. Be the first.</p>
+          <div className="rounded-3xl border border-dashed border-kcd-border bg-white p-10 text-center">
+            <p className="font-display text-xl font-semibold text-kcd-ink">Sponsor slots are open</p>
+            <p className="mt-2 text-sm text-kcd-ink/70">
+              Be the first to back the inaugural KCD in Gujarat. Diamond, Platinum, Gold, Silver, Community, and Media tiers available.
+            </p>
+          </div>
         )}
         {TIERS.map((t) => (
           <SponsorTier key={t} tier={t} sponsors={byTier(t)} />
         ))}
-        <div className="mt-10 text-center">
-          <ButtonLink href="/sponsorship" variant="outline">
-            Become a sponsor
-          </ButtonLink>
-          <Link
-            href="/sponsors"
-            className="ml-4 text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
-          >
-            All sponsors →
-          </Link>
+        <div className="mt-12 rounded-3xl border border-kcd-border bg-white p-8 text-center shadow-card md:p-10">
+          <h3 className="font-display text-2xl font-bold text-kcd-ink sm:text-3xl">
+            Want to become a sponsor?
+          </h3>
+          <p className="mx-auto mt-3 max-w-2xl text-base text-kcd-ink/75">
+            Join our community of supporters and help make KCD Gujarat 2026 unforgettable. Multiple sponsorship packages available.
+          </p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/sponsorship" className="rounded-full">
+              View Sponsorship Packages
+            </ButtonLink>
+            <Link
+              href="/sponsors"
+              className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
+            >
+              All sponsors →
+            </Link>
+          </div>
         </div>
       </Container>
     </section>

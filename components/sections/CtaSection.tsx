@@ -1,29 +1,51 @@
 import { Container } from '@/components/site/Container';
 import { ButtonLink } from '@/components/ui/button';
 
-export function CtaSection({
-  registrationUrl,
-  cfpUrl,
-}: {
+interface Props {
   registrationUrl?: string;
   cfpUrl?: string;
-}) {
+  soldOut?: boolean;
+}
+
+export function CtaSection({ registrationUrl, cfpUrl, soldOut = false }: Props) {
   return (
     <section className="py-20">
       <Container>
-        <div className="rounded-3xl border border-kcd-border bg-gradient-to-br from-kcd-primary/5 via-white to-kcd-accent/5 p-10 text-center shadow-card md:p-16">
-          <h2 className="font-display text-3xl font-bold text-kcd-ink sm:text-4xl">
-            Be part of KCD Gujarat 2026
+        <div className="relative overflow-hidden rounded-3xl bg-kcd-navy p-10 text-center text-white shadow-card md:p-16">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full opacity-30 blur-3xl"
+            style={{
+              background:
+                'linear-gradient(120deg, #2D6BF0 0%, #5E8E1A 50%, #D9531E 100%)',
+            }}
+          />
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+            Ready to join us?
+          </p>
+          <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
+            Be part of the premier Kubernetes event in Gujarat.
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-kcd-muted md:text-lg">
-            Whether you want to speak, sponsor, or simply attend — we would love to have you.
+          <p className="mx-auto mt-4 max-w-2xl text-base text-white/75 md:text-lg">
+            Register now and join the growing cloud-native community in western India. Talks, workshops, and a full day of meaningful connections.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href={registrationUrl || '/register'} size="lg">
-              Register now
-            </ButtonLink>
-            <ButtonLink href={cfpUrl || '/cfp'} size="lg" variant="outline">
-              Submit a talk
+            {soldOut ? (
+              <span className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 bg-white/10 px-7 text-sm font-bold uppercase tracking-wider text-white/80">
+                🎟️ Sold Out
+              </span>
+            ) : (
+              <ButtonLink href={registrationUrl || '/register'} size="lg" className="rounded-full">
+                Book Tickets
+              </ButtonLink>
+            )}
+            <ButtonLink
+              href={cfpUrl || '/cfp'}
+              size="lg"
+              variant="outline"
+              className="rounded-full !border-white/40 !bg-transparent !text-white hover:!bg-white/10"
+            >
+              Submit a Talk
             </ButtonLink>
           </div>
         </div>

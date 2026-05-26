@@ -2,6 +2,10 @@
 
 This file is the canonical brief for any AI assistant (Claude Code, Cursor, etc.) or human contributor working in this repository. Read it end‑to‑end before changing code, and keep it up to date when conventions change.
 
+## 0. Session start
+
+**ALWAYS read [`handoff.md`](./handoff.md) before doing any work.** It tracks current goal, in-flight files, recent changes, failed attempts, and the single next thing to try. CLAUDE.md is for conventions; `handoff.md` is for active state. After any meaningful change, update `handoff.md` per the instructions in its trailing section.
+
 ## 1. Project overview
 
 This repository hosts the official website for **Kubernetes Community Days (KCD) Gujarat 2026** — a CNCF‑backed, community‑driven, single‑day conference for the cloud‑native community in Gujarat, India.
@@ -201,15 +205,72 @@ Pages are statically generated (`generateStaticParams` + `revalidate`). A Payloa
 
 ## 8. Accessibility
 
-WCAG 2.2 AA is the minimum bar. Specifically:
+WCAG 2.2 AA is the minimum bar. Every PR must hold or improve the a11y posture below — never disable an a11y rule to clear CI.
 
-- Color contrast ≥ 4.5:1 for body text, 3:1 for large text and UI components. Verify both light and dark themes.
-- All interactive elements reachable and operable by keyboard. Visible focus rings — never `outline: none` without a replacement.
-- Use semantic HTML first; ARIA only to fill gaps. Header/main/footer landmarks on every page.
-- `alt` text on every image; sponsor logos use the sponsor name; decorative images use `alt=""`.
-- Form fields have associated labels and inline error messaging.
-- Schedule page must work without JS for screen readers; filtering is a progressive enhancement.
-- Run `pnpm test:a11y` (Playwright + axe) in CI on `/`, `/speakers`, `/schedule`, `/sponsors`, `/venue`. Zero serious or critical violations.
+### 8.1 Semantic HTML
+
+- Reach for the right element first; ARIA only when there is no native equivalent.
+- One `<h1>` per page; heading levels nest in order (`h1` → `h2` → `h3`), never skip levels for styling.
+- Landmarks present on every page: `<header>` (in root layout), `<main id="main">` (one per page, layout already provides it — sections use `<section>`), `<footer>` (root layout), `<nav aria-label="...">` for any navigation list.
+- Use `<button>` for actions, `<a>` for navigation. Never bind click handlers to `<div>` / `<span>` without `role="button"` + keyboard handling.
+- Lists (`<ul>`, `<ol>`, `<dl>`) for groups of repeated items (sponsor tiers, FAQs, schedule rows, social links). Don't render lists as bare `<div>` grids.
+
+### 8.2 Keyboard + focus
+
+- Every interactive element must be reachable with `Tab` and operable with `Enter`/`Space`.
+- Focus order matches visual order. Don't use positive `tabindex` values; use `tabindex="-1"` only to take an element out of the tab order programmatically.
+- Visible focus indicators are required. We use `:focus-visible { outline: 2px solid #2d6bf0; outline-offset: 2px; }` globally in `globals.css`. Never override with `outline: none` unless replaced with an equally visible alternative (the same applies inside the `kcd-glass-link` chip).
+- Custom widgets (menus, dialogs, tabs, accordions) must follow the ARIA Authoring Practices for keyboard interaction (e.g. dialogs trap focus + restore on close; accordions toggle with Enter/Space + arrow nav).
+- Skip-to-main link is in `app/layout.tsx` and must remain the first focusable element.
+
+### 8.3 Color + contrast
+
+- Body text contrast ≥ **4.5:1**; large text (≥ 18px regular or 14px bold) and active UI components ≥ **3:1**. Verify with the actual rendered token, not the raw hex.
+- Don't communicate state with color alone — pair with an icon, label, or shape (e.g. a sold-out badge has both red tint *and* the text "Sold out").
+- Watch translucent surfaces (`kcd-glass`) — the worst-case background under the glass must still satisfy contrast for foreground text.
+- When using `text-kcd-ink/65` or similar low-opacity utilities, confirm the resolved ratio against the actual background. Drop down to `/70` or `/80` if the contrast fails.
+
+### 8.4 Images + media
+
+- Every `<Image>` has an `alt` attribute. Informative images describe the content; decorative images use `alt=""` *and* `aria-hidden` only when paired with adjacent text that conveys the meaning.
+- Speaker photos: `alt="<name>"`. Sponsor logos: `alt="<sponsor name>"`. Inline decorative SVGs: add `aria-hidden` and skip `alt`.
+- Never embed text into images that isn't also present in the surrounding DOM.
+- Videos must ship with captions; transcripts go alongside.
+
+### 8.5 Forms
+
+- Every input has a visible `<label>` (or `aria-labelledby`). Placeholder text is not a label.
+- Group related fields with `<fieldset>` + `<legend>`.
+- Inline error messages reference the input via `aria-describedby`, and the input gets `aria-invalid="true"` until corrected.
+- Required fields show the requirement in text, not just with `*`.
+
+### 8.6 Motion + reduced-motion
+
+- All animations, transitions, parallax effects, and auto-advancing content must respect `prefers-reduced-motion: reduce`. The HeroSection parallax bails out when the user has reduced motion enabled (`React.useRef` listener short-circuits) — keep that pattern for new motion.
+- No content that flashes more than 3 times per second.
+- Don't trap users in carousels — provide pause + arrow controls and don't auto-advance faster than 5s.
+
+### 8.7 Internationalization + scripts
+
+- `<html lang="...">` set per active locale (`en` / `gu`).
+- Gujarati text uses the dedicated `font-gujarati` variable; never force Latin numerals where the locale would use Gujarati script.
+
+### 8.8 Progressive enhancement
+
+- Schedule grid must render and be navigable without JS — filters are progressive enhancement on top of a fully-rendered server list.
+- Hash navigation (`/#about`, `/team#organizers`, etc.) must scroll to the right section with the sticky header offset (`scroll-margin-top` is set globally in `globals.css`).
+- Any feature gated on a markdown flag (e.g. CFP `open: true|false`) must degrade cleanly when the flag is missing — default to the safer state.
+
+### 8.9 Testing
+
+- Run `pnpm test:a11y` (Playwright + axe) in CI on `/`, `/speakers`, `/schedule`, `/sponsors`, `/venue`, `/team`. Zero serious or critical violations.
+- Manual checks before merging any UI PR:
+  - Tab through every interactive element on the changed page. Focus ring visible? Logical order? Skip links work?
+  - Resize to 320px and 1440px — content reflows, no horizontal scroll on touch widths, no overlapping focus rings.
+  - Toggle "Reduce motion" in the OS — animations stop, content still readable, hover/focus chips still highlight.
+  - Run Lighthouse on the changed route. **Accessibility ≥ 95**. SEO + Best Practices ≥ 95 in CI.
+  - Verify with VoiceOver (macOS) or NVDA (Windows) — landmarks announce, headings read in order, images describe themselves correctly.
+- Don't add `eslint-disable jsx-a11y/*` or `@axe-core/*` ignores without an explicit, time-bounded justification in the PR body.
 
 ## 9. Internationalization
 

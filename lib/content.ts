@@ -6,12 +6,16 @@ import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import {
-  BlogFrontmatter,
   FaqFrontmatter,
   KeyDatesFrontmatter,
   SessionFrontmatter,
   SpeakerFrontmatter,
   SponsorFrontmatter,
+  TeamFrontmatter,
+  PartnerFrontmatter,
+  CfpConfigFrontmatter,
+  RegistrationConfigFrontmatter,
+  EventConfigFrontmatter,
 } from './schema';
 import { payload } from './payload';
 
@@ -178,26 +182,91 @@ export async function getFaqs(): Promise<Faq[]> {
   return merged.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
 
-export type BlogPost = BlogFrontmatter & {
+
+export type Partner = PartnerFrontmatter & {
   slug: string;
-  body: string;
-  bodyHtml: string;
+  logoUrl?: string;
 };
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
-  const files = await listMarkdown('blog');
-  const md: BlogPost[] = [];
+export async function getPartners(): Promise<Partner[]> {
+  const files = await listMarkdown('partners');
+  const md: Partner[] = [];
   for (const f of files) {
-    const { data, content } = await readMarkdown('blog', f);
-    const parsed = BlogFrontmatter.parse(data);
+    if (f.includes('.gu.')) continue;
+    const { data } = await readMarkdown('partners', f);
+    const parsed = PartnerFrontmatter.parse(data);
     md.push({
       ...parsed,
       slug: slugFromFile(f),
-      body: content,
-      bodyHtml: await renderMarkdown(content),
+      logoUrl: parsed.logo,
     });
   }
-  return md.sort((a, b) => (b.publishedAt || '').localeCompare(a.publishedAt || ''));
+  return md.sort(
+    (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
+  );
+}
+
+export type TeamMember = TeamFrontmatter & {
+  slug: string;
+  bio: string;
+  bioHtml: string;
+  photoUrl?: string;
+};
+
+export async function getTeam(): Promise<TeamMember[]> {
+  const files = await listMarkdown('team');
+  const md: TeamMember[] = [];
+  for (const f of files) {
+    if (f.includes('.gu.')) continue;
+    const { data, content } = await readMarkdown('team', f);
+    const parsed = TeamFrontmatter.parse(data);
+    md.push({
+      ...parsed,
+      slug: slugFromFile(f),
+      bio: content,
+      bioHtml: await renderMarkdown(content),
+      photoUrl: parsed.photo,
+    });
+  }
+  return md.sort(
+    (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
+  );
+}
+
+export type CfpConfig = CfpConfigFrontmatter;
+
+export async function getCfpConfig(): Promise<CfpConfig> {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, 'pages', 'cfp.md'), 'utf8');
+    const { data } = matter(raw);
+    return CfpConfigFrontmatter.parse(data);
+  } catch {
+    return { open: true };
+  }
+}
+
+export type EventConfig = EventConfigFrontmatter;
+
+export async function getEventConfig(): Promise<EventConfig> {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, 'pages', 'event.md'), 'utf8');
+    const { data } = matter(raw);
+    return EventConfigFrontmatter.parse(data);
+  } catch {
+    return { city: 'Gujarat, India' };
+  }
+}
+
+export type RegistrationConfig = RegistrationConfigFrontmatter;
+
+export async function getRegistrationConfig(): Promise<RegistrationConfig> {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, 'pages', 'registration.md'), 'utf8');
+    const { data } = matter(raw);
+    return RegistrationConfigFrontmatter.parse(data);
+  } catch {
+    return { open: false };
+  }
 }
 
 export type KeyDate = { label: string; value: string };
