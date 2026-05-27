@@ -90,11 +90,11 @@ export function HeroSection({
           }}
         />
 
-        {/* Statue — absolutely pinned to the right edge, full panel height */}
+        {/* Statue — desktop: full-height right edge; mobile: anchored bottom-right */}
         <div
           ref={statueRef}
           aria-hidden
-          className="pointer-events-none absolute bottom-0 right-0 top-0 hidden w-[42%] will-change-transform md:block"
+          className="pointer-events-none absolute bottom-0 right-0 will-change-transform max-md:h-[min(40vh,260px)] max-md:w-[82%] md:top-0 md:h-full md:w-[42%]"
         >
           <Image
             src="/images/sardarpatel.svg"
@@ -105,7 +105,7 @@ export function HeroSection({
           />
         </div>
 
-        <Container className="relative py-16 md:py-24">
+        <Container className="relative py-16 max-md:pb-[min(36vh,240px)] md:py-24">
           {/* Text occupies the left ~55% on desktop; full width on mobile */}
           <div className="max-w-[55%] max-md:max-w-full">
             <div ref={headlineRef} className="will-change-transform">
@@ -177,18 +177,6 @@ export function HeroSection({
                     )}
                   </>
                 )}
-              </div>
-
-              {/* Mobile-only image below the text */}
-              <div className="mt-8 md:hidden">
-                <Image
-                  src="/images/sardarpatel.svg"
-                  alt="Sardar Vallabhbhai Patel illustration"
-                  width={400}
-                  height={480}
-                  className="mx-auto h-[280px] w-full object-contain object-bottom"
-                  priority
-                />
               </div>
             </div>
           </div>
