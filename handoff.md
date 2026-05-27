@@ -71,6 +71,7 @@ Do NOT commit without: `pnpm typecheck && pnpm content:validate && pnpm build`.
 20. **Coming-soon mode hardened** — `NEXT_PUBLIC_COMING_SOON=true` now blocks **all routes except `/`** with real 404 (not just homepage swap).
 21. **Coming-soon UX** — header logo-only, footer hidden, `ComingSoon` section on `/`.
 22. **`proxy.ts` merge** — coming-soon gating merged into existing `proxy.ts` (CSP). Deleted standalone `middleware.ts` — Next.js 16 rejects having both files (Vercel build error).
+23. **Hero parallax removed** — scroll-driven transforms in `HeroSection.tsx` dropped (janky on mobile). Component is now a server component with static layout.
 
 ## 5. Failed attempts
 
