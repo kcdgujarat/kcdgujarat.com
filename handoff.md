@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-05-27 (logo + favicon session)_
+_Last updated: 2026-05-27 (end of day — logo, coming-soon, proxy fix)_
 
 ## 1. Goal
 
@@ -12,104 +12,78 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 
 ### Layout + chrome
 
-- `app/layout.tsx` — loads **Plus Jakarta Sans** (display, `--font-display`) + **Inter** (body, `--font-sans`) + **Noto Sans Gujarati** (`--font-gujarati`) via `next/font/google`. Fetches `getSettings()` + `getCfpConfig()` + `getRegistrationConfig()` in parallel. Passes `cfpOpen`, `cfpUrl`, `showSpeakers`, `registrationOpen`, `registrationUrl` to both Header and Footer.
-- `components/site/Header.tsx` — sticky liquid-glass pill nav. Nav items flagged `speakersOnly` (Speakers, Schedule — visible only when `showSpeakers: true`) and `cfpOnly` (CFP — visible only when `cfpOpen: true`). Primary CTA: "Submit a Talk" when CFP open; "Register" when registration open; hidden when both closed. Uses `usePathname()` to resolve anchor links: on homepage → `#section` (in-page smooth scroll), on other pages → `/#section` (full navigation + anchor jump, no hero flash).
-- `components/site/Footer.tsx` — dark navy 4-column grid. Speakers/Schedule links gated on `showSpeakers`. CFP "Submit a Talk" link gated on `cfpOpen`. `showSpeakers` prop passed from layout.
-- `app/globals.css` — Warm Cream `#f6f4ed` body bg, `--font-sans`/`--font-display`/`--font-gujarati` CSS vars, `.kcd-glass` + `.kcd-glass-link`, universal hover transitions, `:focus-visible` outline at `#4285f4`.
-- `tailwind.config.ts` — `kcd.*` palette updated to brand spec: primary `#4285F4` (Tech Blue), green `#557B3E` (Heritage Green), orange/accent `#E05F36` (Terracotta), ink `#111827`, navy `#0F172A`, bg/cream `#F6F4ED`.
+- `app/layout.tsx` — loads **Plus Jakarta Sans** (display) + **Inter** (body) + **Noto Sans Gujarati** via `next/font/google`. Reads `NEXT_PUBLIC_COMING_SOON`; when `true`, passes `comingSoon` to Header and **hides Footer**. Fetches settings + CFP + registration config in parallel.
+- `components/site/Header.tsx` — sticky liquid-glass pill nav. Logo: `KCDGujaratLogoSmall500x500.png` in 36px round container. Nav/CTA hidden when `comingSoon`. Nav items gated: `speakersOnly` on Speakers/Schedule (`showSpeakers`), `cfpOnly` on CFP (`cfpOpen`). Smart anchor resolution via `usePathname()`.
+- `components/site/Footer.tsx` — dark navy 4-column grid. Logo: `KCDGujaratLogoSmall500x500.png` at 48×48 (full badge, **not** circular crop — earlier round crop showed only blue and looked like the old placeholder dot). Speakers/Schedule gated on `showSpeakers`; CFP link gated on `cfpOpen`.
+- `lib/seo.ts` — `buildMetadata()` sets favicon via `icons.icon` + `icons.apple` → `/images/Favicon250x250.png`.
+- `proxy.ts` — **single edge entry point** (Next.js 16; do **not** add `middleware.ts`). Two jobs: (1) CSP headers on non-admin/non-api routes; (2) when `NEXT_PUBLIC_COMING_SOON=true`, rewrite all disallowed paths to `/__coming_soon_not_found__` (404). Allowed during coming-soon: `/`, static assets, `robots.txt`, `sitemap.xml`, `/api/health`, `/api/revalidate`, `/api/og`.
+- `app/__coming_soon_not_found__/page.tsx` — internal rewrite target; calls `notFound()` → global `app/not-found.tsx` with HTTP 404.
+- `app/page.tsx` — when `NEXT_PUBLIC_COMING_SOON=true`, renders `<ComingSoon />` instead of full homepage.
+- `components/sections/ComingSoon.tsx` — large hero logo uses `KCDGujaratLogo2000x2000.png` (high-res for big display).
+
+### Brand assets (`public/images/`)
+
+- `KCDGujaratLogoSmall500x500.png` — navbar + footer
+- `KCDGujaratLogo2000x2000.png` — ComingSoon page
+- `Favicon250x250.png` — site icon (via `lib/seo.ts`)
+- `sardarpatel.svg` — hero illustration
+- `logo.jpg` — **deleted**, no longer referenced
 
 ### Routing model
 
-- `/` (`app/page.tsx`) — HeroSection → AboutSection → WhatToExpect → **KeyDatesSection** → SpeakersPreview (gated on `showSpeakers`) → DayAtGlance → CfpSection (gated on `cfpOpen`) → VenueSection → TeamPreview → SponsorStrip → CommunityPartners → FaqSection. Fetches all data + `getKeyDates()` + `getEventConfig()` + `getRegistrationConfig()` in parallel.
-- `/team` — full grouped roster. "See more" buttons link to `/team` (not sub-routes).
-- `/team/[group]` — **deleted**. Route removed, directory removed.
-- `/speakers`, `/speakers/[slug]`, `/schedule`, `/schedule/[slug]` — gated on `showSpeakers`.
-- `/register` — shows "Registration opens soon" when `registration.open: false`; ticketing redirect when `open: true`.
-- `/sponsors`, `/sponsorship`, `/venue`, `/cfp`, `/faq`, `/code-of-conduct`, `/api/*`, `/admin/*` — unchanged.
-- Removed: `/blog`, `/blog/[slug]`.
+- `/` — full marketing page **or** ComingSoon (env flag).
+- `/team`, `/speakers`, `/schedule`, `/sponsors`, `/venue`, `/cfp`, `/register`, `/faq`, `/code-of-conduct`, `/sponsorship`, `/admin` — all return **404** when coming-soon mode is on (via `proxy.ts`).
+- `/speakers`, `/schedule` and sub-routes also gated on `showSpeakers: true` in content (nav visibility, not 404).
+- `/register` — coming-soon copy when `registration.open: false`.
+- Removed: `/blog`, `/team/[group]`.
 
-### Sections (all under `components/sections/`)
+### Content flags (`content/pages/`)
 
-- `HeroSection.tsx` — `'use client'`. Headline: "Kubernetes Community Days **ગુજરાત** 2026" — `ગુજરાત` in `font-gujarati text-kcd-orange`, year in bordered pill badge (always "2026"). Right-side image is `public/images/sardarpatel.svg` absolutely positioned flush to the right edge of the panel (`object-contain object-right-bottom`). Hero gradient updated to brand spec: pale yellow → soft orange → coral/pink. Buttons gated: "Submit a Talk" on `cfpOpen`; "Book Tickets" on `registrationOpen`; "View Schedule" + "Meet the speakers →" on `showSpeakers`.
-- `AboutSection.tsx` — CNCF SVG fixed: `style={{ width: 'auto' }}` added to suppress Next.js aspect-ratio warning.
-- `WhatToExpect.tsx` — CFP callout block (deadline + Submit-a-Talk) only rendered when `cfpOpen: true`. "CFP Closed" state removed.
-- `KeyDatesSection.tsx` — now rendered on homepage after `WhatToExpect`. Uses `getKeyDates()` from `content/pages/key-dates.md`. Falls back to internal FALLBACK array.
-- `DayAtGlance.tsx` — accepts `timeline?: TimelineItem[]` prop from `event.md`. Falls back to `DEFAULT_TIMELINE` if not provided.
-- `CfpSection.tsx` — rendered on homepage only when `cfpOpen: true`. Nav "CFP" link points to `/#cfp` for smooth-scroll.
-- `TeamPreview.tsx` — "Want to join our team?" banner removed. "See more" buttons link to `/team`.
-- `CtaSection.tsx` — removed from homepage (file still exists, just not imported).
+- `event.md` — headline, dates, city, venue, DayAtGlance timeline.
+- `cfp.md` — `open`, `deadline`, `url`, **`showSpeakers`** (independent of CFP open state).
+- `registration.md` — `open`, `url`.
+- `key-dates.md` — KeyDatesSection on homepage.
 
-### Content (`content/pages/`)
+### Env vars (see `.env.example`)
 
-- `event.md` — **new**. Controls: `headline`, `subheadline`, `eventDate`, `eventEndDate`, `city`, `venueName`, `venueAddress`, `mapEmbedUrl`, `timeline[]` (DayAtGlance schedule items). Markdown-first; Payload settings fill anything blank.
-- `cfp.md` — `open: true|false`, `deadline`, `url`, **`showSpeakers: false|true`** (independent of CFP state; controls speaker/schedule visibility everywhere).
-- `registration.md` — **new**. `open: false|true`, `url`. Gates all "Book Tickets"/"Register" buttons and the `/register` page.
-- `key-dates.md` — existing. Drives `KeyDatesSection` on homepage.
-
-### Schema + loaders (`lib/`)
-
-- `schema.ts` — added `EventConfigFrontmatter` (headline/subheadline/eventDate/eventEndDate/city/venueName/venueAddress/mapEmbedUrl/timeline), `TimelineItem` (time/label/icon), `RegistrationConfigFrontmatter` (open/url). `CfpConfigFrontmatter` extended with `showSpeakers: boolean`.
-- `content.ts` — added `getEventConfig()`, `getRegistrationConfig()`. All existing loaders unchanged.
+- `NEXT_PUBLIC_COMING_SOON=false` — set to `true` to launch coming-soon-only site. Requires restart/redeploy.
 
 ## 3. Files in flight (modified, not yet committed)
 
-Run `git status` for the definitive list. Key dirty files from this session:
+Working tree is **clean** as of end of session. Local branch `v1-website` was **behind `origin/v1-website` by 2 commits** — run `git pull` before starting next session.
 
-- `app/layout.tsx`, `app/page.tsx`, `app/globals.css`
-- `app/team/page.tsx` (team "join" banner removed)
-- `app/register/page.tsx` (coming-soon gating)
-- `components/site/Header.tsx`, `components/site/Footer.tsx`
-- `components/sections/HeroSection.tsx`, `WhatToExpect.tsx`, `DayAtGlance.tsx`, `TeamPreview.tsx`, `AboutSection.tsx`
-- `lib/schema.ts`, `lib/content.ts`
-- `tailwind.config.ts`
-- `content/pages/event.md` (new), `content/pages/registration.md` (new), `content/pages/cfp.md` (showSpeakers added)
-- `public/images/sardarpatel.svg` (new)
+Do NOT commit without: `pnpm typecheck && pnpm content:validate && pnpm build`.
 
-Do NOT commit without running `pnpm typecheck && pnpm content:validate && pnpm build`.
+## 4. Things that have changed (2026-05-27)
 
-## 4. Things that have changed (this session — 2026-05-27)
+### Earlier session (brand + homepage)
 
-1. **Sardar Patel SVG in hero** — replaced inline `StatueOfUnityIllustration` with `next/image` at `public/images/sardarpatel.svg`, absolutely positioned flush to right edge of hero panel. Mobile fallback inline below text.
-2. **Hero headline** — "Kubernetes Community Days ગુજરાત 2026" — ગુજરાત in Terracotta Orange + Noto Sans Gujarati; "2026" hardcoded in bordered pill badge (date badge removed, always shows year).
-3. **Brand guidelines applied** — colors (Tech Blue `#4285F4`, Heritage Green `#557B3E`, Terracotta `#E05F36`, Warm Cream `#F6F4ED`, Dark Ink `#111827`, Deep Navy `#0F172A`); fonts (Plus Jakarta Sans display, Inter body, Noto Sans Gujarati); hero gradient (pale yellow → warm orange → coral/pink).
-4. **`showSpeakers` flag** — independent boolean in `cfp.md` that controls speaker lineup + schedule visibility everywhere (hero buttons, nav, footer, `SpeakersPreview`, `DayAtGlance` "View Full Schedule").
-5. **Registration flag** — new `content/pages/registration.md` with `open` + `url`. All "Book Tickets"/"Register" buttons gated. `/register` page shows coming-soon when `open: false`.
-6. **Hero content editable via markdown** — `content/pages/event.md` drives headline, subheadline, eventDate, city, venueName, venueAddress, mapEmbedUrl, and DayAtGlance timeline.
-7. **Key dates fixed** — `KeyDatesSection` was built but never added to homepage. Now rendered after `WhatToExpect`.
-8. **DayAtGlance timeline editable** — `timeline:` array in `event.md`; component falls back to defaults if omitted.
-9. **Navbar smart anchor resolution** — `usePathname()` in Header: `/#section` links become `#section` when on `/` (in-page smooth scroll) and stay `/#section` on other pages (browser jumps to anchor without scrolling from hero).
-10. **CFP nav → smooth scroll** — "CFP" nav item changed from `/cfp` to `/#cfp`; `CfpSection` added to homepage gated on `cfpOpen`.
-11. **WhatToExpect CFP banner** — "CFP Closed" state removed; entire banner hidden when `cfpOpen: false`.
-12. **CtaSection removed** from homepage (dark navy "Be part of…" banner).
-13. **Team "Want to join" banners removed** — from both homepage `TeamPreview` and `/team` page.
-14. **`/team/[group]` route deleted** — "See more" buttons now go to `/team`.
-15. **CNCF SVG aspect-ratio warning fixed** — `style={{ width: 'auto' }}` added to `<Image>`.
-16. **Footer speaker/schedule links gated** on `showSpeakers`.
+1. Sardar Patel SVG hero, Gujarati headline styling, brand palette/fonts.
+2. `showSpeakers` + `registration.md` flags; hero/event content editable via `event.md`.
+3. KeyDatesSection wired to homepage; DayAtGlance timeline from markdown.
+4. Navbar anchor smart-scroll; CFP nav → `/#cfp`; CtaSection removed; team join banners removed; `/team/[group]` deleted.
+
+### This session (logo, favicon, coming-soon)
+
+17. **Brand logo + favicon** — new PNG assets; favicon in `lib/seo.ts`; `logo.jpg` removed.
+18. **Header logo** — `KCDGujaratLogoSmall500x500.png` in round 36px container.
+19. **Footer logo fix** — switched from 28px `rounded-full` crop (looked like blue dot) to 48×48 full badge with explicit `width`/`height`.
+20. **Coming-soon mode hardened** — `NEXT_PUBLIC_COMING_SOON=true` now blocks **all routes except `/`** with real 404 (not just homepage swap).
+21. **Coming-soon UX** — header logo-only, footer hidden, `ComingSoon` section on `/`.
+22. **`proxy.ts` merge** — coming-soon gating merged into existing `proxy.ts` (CSP). Deleted standalone `middleware.ts` — Next.js 16 rejects having both files (Vercel build error).
 
 ## 5. Failed attempts
 
-- **Figma WebFetch on proto URL** — WebFetch returned empty. Pivoted to screenshot.
-- **Figma MCP `get_design_context`** — file blocked; auth seat had no access.
+- **Figma WebFetch / MCP** — blocked or empty; used screenshot instead.
 - **`pnpm dev` HTTP 500** — first-compile latency, not a real failure.
-- **Postgres connection refused** — Payload init failure cached as null; site runs in markdown-only mode.
+- **Postgres connection refused** — Payload init fails; site runs markdown-only.
+- **`middleware.ts` + `proxy.ts` together** — Next.js 16 build error: *"Both middleware file and proxy file are detected"*. Fix: delete `middleware.ts`, keep all logic in `proxy.ts`.
 
 ## 6. Single next thing to try
 
-**Add real photos.** Drop portraits into `public/images/team/<slug>.jpg` and `public/images/speakers/<slug>.jpg`, partner/sponsor logos into `public/images/partners/<slug>.svg`. Add `photo:` / `logo:` to the corresponding markdown frontmatter. No code change required — components already render the image when the field is set.
+**Verify production with coming-soon mode.** Pull latest (`git pull`), confirm Vercel deploy succeeds after the `proxy.ts` fix, set `NEXT_PUBLIC_COMING_SOON=true` on Vercel, and smoke-test: `/` shows ComingSoon; direct hits to `/speakers`, `/team`, `/admin` return 404. Then flip to `false` when ready for full launch.
 
-After photos: confirm `pnpm build` completes cleanly (no TypeScript errors, no broken image paths), then do a Vercel preview deployment.
-
----
-
-### Coming-soon mode (2026-05-27)
-
-- Set `NEXT_PUBLIC_COMING_SOON=true` in `.env.local` (local) or Vercel env vars (prod). Restart/redeploy required.
-- When on: `/` shows `ComingSoon`; header is logo-only; footer hidden.
-- `proxy.ts` blocks **all other routes** (including `/speakers`, `/admin`, etc.) — rewrites to internal handler that calls `notFound()` → proper 404 UI + status.
-- Only `/`, static assets, and infra APIs (`/api/health`, `/api/revalidate`, `/api/og`) remain reachable.
-
-- `public/images/KCDGujaratLogo2000x2000.png` — new brand logo. Replaces `logo.jpg` in Header, Footer, and ComingSoon components. Displayed in a rounded container with `object-contain` + white background.
-- `public/images/Favicon250x250.png` — new favicon. Added to `lib/seo.ts` `buildMetadata` via `icons.icon` + `icons.apple` so it applies to every route.
+After that: add real speaker/team photos under `public/images/` and wire `photo:` / `logo:` in markdown frontmatter (no code change needed).
 
 ---
 
