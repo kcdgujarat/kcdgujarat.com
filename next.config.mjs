@@ -13,18 +13,6 @@ class WatchContentDirPlugin {
   }
 }
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const contentDir = path.join(__dirname, 'content');
-
-/** Registers `content/` with webpack so `--webpack` dev recompiles on markdown edits. */
-class WatchContentDirPlugin {
-  apply(compiler) {
-    compiler.hooks.afterCompile.tap('WatchContentDirPlugin', (compilation) => {
-      compilation.contextDependencies.add(contentDir);
-    });
-  }
-}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
