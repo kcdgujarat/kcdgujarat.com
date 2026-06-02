@@ -1,11 +1,19 @@
 ---
-# Toggle registration visibility.
-# - open: true  → "Book Tickets" / "Register" buttons are shown everywhere.
-# - open: false → All registration buttons are hidden; /register shows a coming-soon state.
-open: false
+startDate: "2026-06-08"
+endDate: "2026-09-20"
+url: "https://konfhub.com/kcd-gujarat"
 
-# The URL for the ticketing platform. Shown on buttons and the /register page.
-url: "https://konfhub.com/kcd-gujarat-2026"
+eyebrow: "Register"
+title: "Reserve your seat"
+description: "Tickets are issued via our ticketing partner. Click below to continue."
 ---
 
-This file controls registration button visibility across the site. Flip `open` to `true` once ticketing is live.
+### How ticketing works
+
+We keep checkout on a dedicated platform so you have a clean experience. You will be redirected to our ticketing partner to complete your purchase.
+
+### What's included
+
+- Full-day access to all tracks, workshops, and networking sessions
+- Lunch and refreshments
+- Conference swag while supplies last

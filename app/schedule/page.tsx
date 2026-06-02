@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { ScheduleGrid } from '@/components/site/ScheduleGrid';
 import { getSessions, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
+import { formatEventDate } from '@/lib/utils';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
@@ -14,8 +16,12 @@ export const metadata = buildMetadata({
 
 export default async function SchedulePage() {
   const [sessions, cfp] = await Promise.all([getSessions(), getCfpConfig()]);
+  if (!cfp.showSpeakers) notFound();
 
-  if (cfp.open) {
+  const startLabel = formatEventDate(cfp.startDate);
+  const endLabel = formatEventDate(cfp.endDate);
+
+  if (cfp.phase === 'open') {
     return (
       <Container className="py-16">
         <SectionHeader
@@ -27,7 +33,7 @@ export default async function SchedulePage() {
           <p className="font-display text-xl font-semibold text-kcd-ink">CFP is open</p>
           <p className="mx-auto mt-2 max-w-2xl text-sm text-kcd-ink/70">
             Want your talk on this schedule? Submit
-            {cfp.deadline ? ` before ${cfp.deadline}.` : ' while the CFP is open.'}
+            {cfp.deadline ? ` before ${formatEventDate(cfp.deadline)}.` : ' while the CFP is open.'}
           </p>
           {cfp.url && (
             <Link
@@ -39,6 +45,29 @@ export default async function SchedulePage() {
               Submit a Talk
             </Link>
           )}
+        </div>
+      </Container>
+    );
+  }
+
+  if (cfp.phase === 'upcoming') {
+    return (
+      <Container className="py-16">
+        <SectionHeader
+          eyebrow="Schedule"
+          title="Schedule publishes after CFP closes"
+          description={
+            startLabel
+              ? `The CFP opens ${startLabel} and closes ${endLabel}. The agenda will be published once submissions are in and talks are confirmed.`
+              : 'The full agenda will be published after the Call for Proposals closes.'
+          }
+        />
+        <div className="rounded-3xl border border-dashed border-kcd-border bg-white p-8 text-center shadow-card md:p-10">
+          <p className="text-sm text-kcd-ink/70">
+            <Link href="/cfp" className="font-semibold text-kcd-primary underline-offset-4 hover:underline">
+              CFP details →
+            </Link>
+          </p>
         </div>
       </Container>
     );

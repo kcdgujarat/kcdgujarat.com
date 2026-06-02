@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/code-of-conduct',
     '/faq',
   ];
-  if (!cfp.open) {
+  if (cfp.showSpeakers && cfp.phase === 'closed') {
     staticPaths.push('/speakers', '/schedule');
   }
   const staticEntries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
@@ -32,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === '/' ? 1 : 0.7,
   }));
 
-  if (cfp.open) {
+  if (cfp.phase !== 'closed' || !cfp.showSpeakers) {
     return [
       ...staticEntries,
       ...sponsors.map((s) => ({ url: siteUrl(`/sponsors`), lastModified: now })),

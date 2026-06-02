@@ -17,8 +17,8 @@ const NAV: NavItem[] = [
   { href: '/schedule', label: 'Schedule', speakersOnly: true },
   { href: '/#cfp', label: 'CFP', cfpOnly: true },
   { href: '/#venue', label: 'Venue' },
+  { href: '/#team', label: 'Team' },
   { href: '/#sponsors', label: 'Sponsors' },
-  { href: '/team', label: 'Team' },
   { href: '/#faq', label: 'FAQ' },
 ];
 

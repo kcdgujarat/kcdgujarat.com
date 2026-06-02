@@ -46,7 +46,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const registrationOpen = registration.open;
   const registrationUrl = registration.url || settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${inter.variable} ${notoSansGujarati.variable}`} style={{ colorScheme: 'light' }}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${plusJakartaSans.variable} ${inter.variable} ${notoSansGujarati.variable}`}
+      style={{ colorScheme: 'light' }}
+    >
       <body className="bg-kcd-bg text-kcd-ink antialiased">
         <a
           href="#main"

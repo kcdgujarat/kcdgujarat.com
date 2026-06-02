@@ -10,11 +10,11 @@ export function AboutSection() {
           <div>
             <SectionHeader
               eyebrow="About KCD Gujarat 2026"
-              title="The cloud-native community, finally in Gujarat."
+              title="The cloud-native community day event, finally in Gujarat."
               description="Kubernetes Community Days (KCD) Gujarat 2026 is a CNCF-backed, community-organized conference bringing together developers, operators, and cloud-native enthusiasts from across India and beyond."
             />
             <p className="max-w-xl text-base leading-relaxed text-kcd-ink/80 md:text-lg">
-              Set in Gujarat, this single-day conference offers a unique opportunity to learn from industry experts, discover what teams are shipping in production, and connect with the growing cloud-native community in western India.
+              Set in Ahmedabad, Gujarat, this single-day conference offers a unique opportunity to learn from industry experts, discover what teams are shipping in production, and connect with the growing cloud-native community in western India.
             </p>
           </div>
 
@@ -24,10 +24,11 @@ export function AboutSection() {
             </p>
             <div className="mt-4 flex items-center gap-4">
               <Image
-                src="/images/cncf.svg"
+                src="/static/cncf.svg"
                 alt="Cloud Native Computing Foundation"
                 width={120}
                 height={48}
+                unoptimized
                 className="h-12 w-auto"
                 style={{ width: 'auto' }}
               />

@@ -13,7 +13,7 @@ export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const cfp = await getCfpConfig();
-  if (cfp.open) return [];
+  if (!cfp.showSpeakers || cfp.phase === 'open' || cfp.phase === 'upcoming') return [];
   const speakers = await getSpeakers();
   return speakers.map((s) => ({ slug: s.slug }));
 }
@@ -38,7 +38,7 @@ export default async function SpeakerDetailPage({ params }: { params: Promise<{ 
     getSessions(),
     getCfpConfig(),
   ]);
-  if (cfp.open) notFound();
+  if (!cfp.showSpeakers || cfp.phase === 'open' || cfp.phase === 'upcoming') notFound();
   const s = speakers.find((sp) => sp.slug === slug);
   if (!s) notFound();
   const speakerSessions = sessions.filter((sess) => sess.speakers?.includes(s.slug));

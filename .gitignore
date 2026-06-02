@@ -96,8 +96,8 @@ desktop.ini
 dump.sql
 *.dump
 
-# ─── Generated content artefacts ────────────────────────────────
-.contentlayer/
+# Auto-bumped locally by scripts/watch-content.mjs during pnpm dev.
+lib/content-revision.ts
 public/sitemap-*.xml
 public/robots.txt.generated
 .vercel

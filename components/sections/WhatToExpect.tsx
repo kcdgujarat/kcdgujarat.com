@@ -3,6 +3,7 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
 import { Code2, Wrench, Users, Sparkles, Megaphone } from 'lucide-react';
+import { formatEventDate } from '@/lib/utils';
 
 const ITEMS = [
   {
@@ -67,7 +68,7 @@ export function WhatToExpect({ cfpUrl, cfpDeadline, cfpOpen = true }: Props) {
                 <h3 className="font-display text-lg font-semibold text-kcd-ink">Call for Proposals</h3>
                 <p className="text-sm text-kcd-ink/70">
                   Submit your talk proposals for KCD Gujarat 2026.
-                  {cfpDeadline ? ` Deadline: ${cfpDeadline}.` : ''}
+                  {cfpDeadline ? ` Deadline: ${formatEventDate(cfpDeadline)}.` : ''}
                 </p>
               </div>
             </div>

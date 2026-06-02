@@ -40,12 +40,14 @@ export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
             <ButtonLink href="/sponsorship" className="rounded-full">
               View Sponsorship Packages
             </ButtonLink>
-            <Link
-              href="/sponsors"
-              className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
-            >
-              All sponsors →
-            </Link>
+            {sponsors.length > 0 && (
+              <Link
+                href="/sponsors"
+                className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
+              >
+                All sponsors →
+              </Link>
+            )}
           </div>
         </div>
       </Container>

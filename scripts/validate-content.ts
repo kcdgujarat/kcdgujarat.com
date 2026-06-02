@@ -9,11 +9,12 @@ import {
   SponsorFrontmatter,
   TeamFrontmatter,
   PartnerFrontmatter,
+  CfpConfigFrontmatter,
+  SponsorshipConfigFrontmatter,
+  RegistrationConfigFrontmatter,
 } from '../lib/schema';
 
 const ROOT = path.join(process.cwd(), 'content');
-
-import { CfpConfigFrontmatter } from '../lib/schema';
 
 const targets: { dir: string; schema: any; name: string; fileSchema?: Record<string, any> }[] = [
   { dir: 'speakers', schema: SpeakerFrontmatter, name: 'speaker' },
@@ -26,6 +27,8 @@ const targets: { dir: string; schema: any; name: string; fileSchema?: Record<str
     name: 'page',
     fileSchema: {
       'cfp.md': CfpConfigFrontmatter,
+      'sponsorship.md': SponsorshipConfigFrontmatter,
+      'registration.md': RegistrationConfigFrontmatter,
     },
   },
   { dir: 'team', schema: TeamFrontmatter, name: 'team member' },

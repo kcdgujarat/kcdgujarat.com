@@ -41,7 +41,7 @@ export default async function SponsorshipPage() {
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {tiers.map((t) => (
-          <Card key={t.name}>
+          <Card key={t.slug}>
             <CardBody>
               <CardTitle>{t.name}</CardTitle>
               {t.price && <CardDescription>{t.price}</CardDescription>}

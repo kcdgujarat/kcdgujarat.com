@@ -1,6 +1,17 @@
 import { z } from 'zod';
+import { isDateRangeActive, isRegistrationWindowActive, getWindowPhase } from '@/lib/utils';
 
-export const SpeakerFrontmatter = z.object({
+/** When `false`, the entry stays in Git but is hidden on the site. Defaults to `true`. */
+export const RenderFlag = z.object({
+  render: z.boolean().optional().default(true),
+});
+export type RenderFlag = z.infer<typeof RenderFlag>;
+
+export function isPublished(entry: { render?: boolean }): boolean {
+  return entry.render !== false;
+}
+
+export const SpeakerFrontmatter = RenderFlag.extend({
   name: z.string(),
   role: z.string().optional().default(''),
   company: z.string().optional().default(''),
@@ -21,7 +32,7 @@ export const SpeakerFrontmatter = z.object({
 });
 export type SpeakerFrontmatter = z.infer<typeof SpeakerFrontmatter>;
 
-export const SessionFrontmatter = z.object({
+export const SessionFrontmatter = RenderFlag.extend({
   title: z.string(),
   speakers: z.array(z.string()).optional().default([]),
   track: z.enum(['Platform', 'DevSecOps', 'AI/ML', 'Networking', 'Beginner']).optional(),
@@ -34,7 +45,7 @@ export const SessionFrontmatter = z.object({
 });
 export type SessionFrontmatter = z.infer<typeof SessionFrontmatter>;
 
-export const SponsorFrontmatter = z.object({
+export const SponsorFrontmatter = RenderFlag.extend({
   name: z.string(),
   tier: z.enum(['diamond', 'platinum', 'gold', 'silver', 'community', 'media']),
   logo: z.string().optional(),
@@ -44,23 +55,42 @@ export const SponsorFrontmatter = z.object({
 });
 export type SponsorFrontmatter = z.infer<typeof SponsorFrontmatter>;
 
-export const FaqFrontmatter = z.object({
+export const FaqFrontmatter = RenderFlag.extend({
   question: z.string(),
   order: z.number().optional().default(100),
 });
 export type FaqFrontmatter = z.infer<typeof FaqFrontmatter>;
 
-export const CfpConfigFrontmatter = z.object({
-  open: z.boolean().default(true),
-  deadline: z.string().optional(),
-  url: z.string().url().optional(),
-  announcedAt: z.string().optional(),
-  /** Show the speaker lineup on the home page and in the nav, independent of CFP state. */
-  showSpeakers: z.boolean().default(false),
-});
+export const CfpConfigFrontmatter = z
+  .object({
+    /** First day the CFP is open (YYYY-MM-DD, Asia/Kolkata). */
+    startDate: z.string(),
+    /** Last day submissions are accepted (YYYY-MM-DD, Asia/Kolkata). */
+    endDate: z.string(),
+    url: z.string().url().optional(),
+    announcedAt: z.string().optional(),
+    /** Show the speaker lineup on the home page and in the nav, independent of CFP state. */
+    showSpeakers: z.boolean().default(false),
+    /** /cfp page header copy */
+    eyebrow: z.string().optional().default('CFP'),
+    title: z.string().optional().default('Call for Proposals'),
+    description: z
+      .string()
+      .optional()
+      .default(
+        'We are looking for talks, workshops, and lightning sessions across Platform, DevSecOps, AI/ML, Networking, and Beginner tracks.',
+      ),
+  })
+  .transform((data) => ({
+    ...data,
+    open: isDateRangeActive(data.startDate, data.endDate),
+    phase: getWindowPhase(data.startDate, data.endDate),
+    /** Alias kept for components that display the submission deadline. */
+    deadline: data.endDate,
+  }));
 export type CfpConfigFrontmatter = z.infer<typeof CfpConfigFrontmatter>;
 
-export const TimelineItem = z.object({
+export const TimelineItem = RenderFlag.extend({
   time: z.string(),
   label: z.string(),
   icon: z.string().optional().default('📌'),
@@ -80,33 +110,52 @@ export const EventConfigFrontmatter = z.object({
 });
 export type EventConfigFrontmatter = z.infer<typeof EventConfigFrontmatter>;
 
-export const SponsorshipTier = z.object({
+export const SponsorshipTier = RenderFlag.extend({
   name: z.string(),
-  slug: z.enum(['diamond', 'platinum', 'gold', 'silver', 'community', 'media']),
+  /** Package identifier for the prospectus page (kebab-case, e.g. bronze, diversity). */
+  slug: z.string().min(1),
   price: z.string().optional().default(''),
   perks: z.array(z.string()).default([]),
 });
 export type SponsorshipTier = z.infer<typeof SponsorshipTier>;
 
 export const SponsorshipConfigFrontmatter = z.object({
-  contactEmail: z.string().email().optional(),
-  prospectusUrl: z.string().url().optional(),
+  contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
+  /** PDF filename under `static/` (defaults to prospectus.pdf when present). */
+  prospectus: z.string().optional(),
+  /** Optional full URL override; takes precedence over `prospectus`. */
+  prospectusUrl: z.union([z.string().url(), z.literal('')]).optional(),
   tiers: z.array(SponsorshipTier).default([]),
 });
 export type SponsorshipConfigFrontmatter = z.infer<typeof SponsorshipConfigFrontmatter>;
 
-export const RegistrationConfigFrontmatter = z.object({
-  /** Show registration buttons and the /register page CTA. */
-  open: z.boolean().default(false),
-  /** URL for the ticketing platform. */
-  url: z.string().url().optional(),
-});
+export const RegistrationConfigFrontmatter = z
+  .object({
+    /** First day registration opens (YYYY-MM-DD, Asia/Kolkata). */
+    startDate: z.string(),
+    /** Optional last day registration stays open (YYYY-MM-DD, Asia/Kolkata). */
+    endDate: z.string().optional(),
+    /** URL for the ticketing platform. */
+    url: z.string().url().optional(),
+    /** /register page header copy */
+    eyebrow: z.string().optional().default('Register'),
+    title: z.string().optional().default('Reserve your seat'),
+    description: z
+      .string()
+      .optional()
+      .default('Tickets are issued via our ticketing partner. Click below to continue.'),
+  })
+  .transform((data) => ({
+    ...data,
+    open: isRegistrationWindowActive(data.startDate, data.endDate),
+    phase: getWindowPhase(data.startDate, data.endDate),
+  }));
 export type RegistrationConfigFrontmatter = z.infer<typeof RegistrationConfigFrontmatter>;
 
 export const KeyDatesFrontmatter = z.object({
   items: z
     .array(
-      z.object({
+      RenderFlag.extend({
         label: z.string(),
         value: z.string(),
       }),
@@ -115,7 +164,7 @@ export const KeyDatesFrontmatter = z.object({
 });
 export type KeyDatesFrontmatter = z.infer<typeof KeyDatesFrontmatter>;
 
-export const PartnerFrontmatter = z.object({
+export const PartnerFrontmatter = RenderFlag.extend({
   name: z.string(),
   description: z.string(),
   url: z.string().url().optional(),
@@ -124,7 +173,7 @@ export const PartnerFrontmatter = z.object({
 });
 export type PartnerFrontmatter = z.infer<typeof PartnerFrontmatter>;
 
-export const TeamFrontmatter = z.object({
+export const TeamFrontmatter = RenderFlag.extend({
   name: z.string(),
   role: z.string().optional().default(''),
   company: z.string().optional().default(''),

@@ -4,7 +4,9 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { TRACKS } from '@/lib/tracks';
 import type { TimelineItem } from '@/lib/schema';
 
-const DEFAULT_TIMELINE: TimelineItem[] = [
+type ScheduleTimelineItem = Pick<TimelineItem, 'time' | 'label' | 'icon'>;
+
+const DEFAULT_TIMELINE: ScheduleTimelineItem[] = [
   { time: '08:00', label: 'Registration & Morning Mixer', icon: '☕' },
   { time: '09:00', label: 'Keynote Sessions', icon: '🎤' },
   { time: '11:00', label: 'Parallel Tracks Begin', icon: '🚀' },
@@ -18,7 +20,7 @@ interface Props {
   eventDateLabel?: string;
   cfpOpen?: boolean;
   showSpeakers?: boolean;
-  timeline?: TimelineItem[];
+  timeline?: ScheduleTimelineItem[];
 }
 
 export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen = false, showSpeakers = false, timeline }: Props) {

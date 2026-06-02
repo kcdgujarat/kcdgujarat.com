@@ -2,7 +2,7 @@
 # ─── Hero copy ───────────────────────────────────────────────────────────────
 # Leave headline/subheadline blank to use the default generated text.
 headline: ""
-subheadline: "A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in Ahmedabad, Gujarat. Speaker line-up, schedule, and venue dropping shortly."
+subheadline: "A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in Ahmedabad, Gujarat. Call for Proposals for speakers and Early Bird tickets will open shortly."
 
 # ─── Event details ────────────────────────────────────────────────────────────
 # ISO 8601 date-times in IST (UTC+05:30). Used in the hero badge, schedule
