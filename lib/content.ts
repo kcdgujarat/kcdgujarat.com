@@ -2,6 +2,7 @@ import 'server-only';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { ensureDevContentFresh } from './content-fresh';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
@@ -17,6 +18,7 @@ import {
   RegistrationConfigFrontmatter,
   EventConfigFrontmatter,
   SponsorshipConfigFrontmatter,
+  isPublished,
 } from './schema';
 import { payload } from './payload';
 
@@ -38,12 +40,17 @@ async function readMarkdown(dir: string, file: string) {
 }
 
 export async function renderMarkdown(md: string): Promise<string> {
+  ensureDevContentFresh();
   const file = await remark().use(remarkGfm).use(remarkHtml, { sanitize: false }).process(md);
   return String(file);
 }
 
 function slugFromFile(file: string) {
   return file.replace(/\.(md|mdx)$/, '');
+}
+
+function publishedOnly<T extends { render?: boolean }>(items: T[]): T[] {
+  return items.filter(isPublished);
 }
 
 export type Speaker = SpeakerFrontmatter & {
@@ -54,12 +61,14 @@ export type Speaker = SpeakerFrontmatter & {
 };
 
 export async function getSpeakers(): Promise<Speaker[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('speakers');
   const md: Speaker[] = [];
   for (const f of files) {
     if (f.includes('.gu.')) continue;
     const { data, content } = await readMarkdown('speakers', f);
     const parsed = SpeakerFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
@@ -80,10 +89,11 @@ export async function getSpeakers(): Promise<Speaker[]> {
     sessions: [],
     featured: !!p.featured,
     order: p.order ?? 100,
+    render: p.render ?? true,
     bio: p.bio || '',
     bioHtml: p.bio || '',
   }));
-  return merged.sort((a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name));
+  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name));
 }
 
 export type Session = SessionFrontmatter & {
@@ -93,12 +103,14 @@ export type Session = SessionFrontmatter & {
 };
 
 export async function getSessions(): Promise<Session[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('sessions');
   const md: Session[] = [];
   for (const f of files) {
     if (f.includes('.gu.')) continue;
     const { data, content } = await readMarkdown('sessions', f);
     const parsed = SessionFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
@@ -118,10 +130,11 @@ export async function getSessions(): Promise<Session[]> {
     level: p.level,
     speakers: (p.speakers || []).map((s: any) => (typeof s === 'object' ? s.slug : s)),
     tags: (p.tags || []).map((t: any) => (typeof t === 'object' ? t.tag : t)),
+    render: p.render ?? true,
     abstract: p.abstract || '',
     abstractHtml: p.abstract || '',
   }));
-  return merged.sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+  return publishedOnly(merged).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
 }
 
 export type Sponsor = SponsorFrontmatter & {
@@ -131,11 +144,13 @@ export type Sponsor = SponsorFrontmatter & {
 };
 
 export async function getSponsors(): Promise<Sponsor[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('sponsors');
   const md: Sponsor[] = [];
   for (const f of files) {
     const { data, content } = await readMarkdown('sponsors', f);
     const parsed = SponsorFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
@@ -150,21 +165,24 @@ export async function getSponsors(): Promise<Sponsor[]> {
     tier: p.tier,
     url: p.url,
     order: p.order ?? 100,
+    render: p.render ?? true,
     logo: typeof p.logo === 'object' ? p.logo?.url : undefined,
     logoUrl: typeof p.logo === 'object' ? p.logo?.url : undefined,
     description: p.description || '',
   }));
-  return merged.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
 
 export type Faq = FaqFrontmatter & { slug: string; answer: string; answerHtml: string };
 
 export async function getFaqs(): Promise<Faq[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('faq');
   const md: Faq[] = [];
   for (const f of files) {
     const { data, content } = await readMarkdown('faq', f);
     const parsed = FaqFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
@@ -177,10 +195,11 @@ export async function getFaqs(): Promise<Faq[]> {
     slug: p.slug,
     question: p.question,
     order: p.order ?? 100,
+    render: p.render ?? true,
     answer: p.answer || '',
     answerHtml: p.answer || '',
   }));
-  return merged.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
 
 
@@ -190,19 +209,21 @@ export type Partner = PartnerFrontmatter & {
 };
 
 export async function getPartners(): Promise<Partner[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('partners');
   const md: Partner[] = [];
   for (const f of files) {
     if (f.includes('.gu.')) continue;
     const { data } = await readMarkdown('partners', f);
     const parsed = PartnerFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
       logoUrl: parsed.logo,
     });
   }
-  return md.sort(
+  return publishedOnly(md).sort(
     (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
   );
 }
@@ -215,12 +236,14 @@ export type TeamMember = TeamFrontmatter & {
 };
 
 export async function getTeam(): Promise<TeamMember[]> {
+  ensureDevContentFresh();
   const files = await listMarkdown('team');
   const md: TeamMember[] = [];
   for (const f of files) {
     if (f.includes('.gu.')) continue;
     const { data, content } = await readMarkdown('team', f);
     const parsed = TeamFrontmatter.parse(data);
+    if (!isPublished(parsed)) continue;
     md.push({
       ...parsed,
       slug: slugFromFile(f),
@@ -229,30 +252,82 @@ export async function getTeam(): Promise<TeamMember[]> {
       photoUrl: parsed.photo,
     });
   }
-  return md.sort(
+  return publishedOnly(md).sort(
     (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
   );
 }
 
-export type CfpConfig = CfpConfigFrontmatter;
+export type CfpConfig = CfpConfigFrontmatter & {
+  body: string;
+  bodyHtml: string;
+};
 
 export async function getCfpConfig(): Promise<CfpConfig> {
+  ensureDevContentFresh();
   try {
     const raw = await fs.readFile(path.join(ROOT, 'pages', 'cfp.md'), 'utf8');
-    const { data } = matter(raw);
-    return CfpConfigFrontmatter.parse(data);
+    const { data, content } = matter(raw);
+    const parsed = CfpConfigFrontmatter.parse(data);
+    const body = content.trim();
+    return {
+      ...parsed,
+      body,
+      bodyHtml: body ? await renderMarkdown(body) : '',
+    };
   } catch {
-    return { open: true, showSpeakers: false };
+    return {
+      startDate: '',
+      endDate: '',
+      open: false,
+      phase: 'upcoming' as const,
+      deadline: '',
+      showSpeakers: false,
+      eyebrow: 'CFP',
+      title: 'Call for Proposals',
+      description: '',
+      body: '',
+      bodyHtml: '',
+    };
   }
 }
 
-export type SponsorshipConfig = SponsorshipConfigFrontmatter;
+export type SponsorshipConfig = SponsorshipConfigFrontmatter & {
+  /** Resolved download URL — `/static/…` or external override. */
+  prospectusUrl?: string;
+};
+
+const STATIC_ROOT = path.join(process.cwd(), 'static');
+
+async function resolveProspectusUrl(
+  config: SponsorshipConfigFrontmatter,
+): Promise<string | undefined> {
+  if (config.prospectusUrl) return config.prospectusUrl;
+
+  const filename = config.prospectus ?? 'prospectus.pdf';
+  const filePath = path.join(STATIC_ROOT, filename);
+  const normalizedRoot = path.normalize(STATIC_ROOT + path.sep);
+  if (!path.normalize(filePath).startsWith(normalizedRoot)) return undefined;
+
+  try {
+    await fs.access(filePath);
+    return `/static/${filename.split(path.sep).join('/')}`;
+  } catch {
+    return undefined;
+  }
+}
 
 export async function getSponsorshipConfig(): Promise<SponsorshipConfig> {
+  ensureDevContentFresh();
   try {
     const raw = await fs.readFile(path.join(ROOT, 'pages', 'sponsorship.md'), 'utf8');
     const { data } = matter(raw);
-    return SponsorshipConfigFrontmatter.parse(data);
+    const parsed = SponsorshipConfigFrontmatter.parse(data);
+    const prospectusUrl = await resolveProspectusUrl(parsed);
+    return {
+      ...parsed,
+      tiers: publishedOnly(parsed.tiers),
+      prospectusUrl,
+    };
   } catch {
     return { tiers: [] };
   }
@@ -261,35 +336,60 @@ export async function getSponsorshipConfig(): Promise<SponsorshipConfig> {
 export type EventConfig = EventConfigFrontmatter;
 
 export async function getEventConfig(): Promise<EventConfig> {
+  ensureDevContentFresh();
   try {
     const raw = await fs.readFile(path.join(ROOT, 'pages', 'event.md'), 'utf8');
     const { data } = matter(raw);
-    return EventConfigFrontmatter.parse(data);
+    const parsed = EventConfigFrontmatter.parse(data);
+    return {
+      ...parsed,
+      timeline: parsed.timeline ? publishedOnly(parsed.timeline) : parsed.timeline,
+    };
   } catch {
     return { city: 'Gujarat, India' };
   }
 }
 
-export type RegistrationConfig = RegistrationConfigFrontmatter;
+export type RegistrationConfig = RegistrationConfigFrontmatter & {
+  body: string;
+  bodyHtml: string;
+};
 
 export async function getRegistrationConfig(): Promise<RegistrationConfig> {
+  ensureDevContentFresh();
   try {
     const raw = await fs.readFile(path.join(ROOT, 'pages', 'registration.md'), 'utf8');
-    const { data } = matter(raw);
-    return RegistrationConfigFrontmatter.parse(data);
+    const { data, content } = matter(raw);
+    const parsed = RegistrationConfigFrontmatter.parse(data);
+    const body = content.trim();
+    return {
+      ...parsed,
+      body,
+      bodyHtml: body ? await renderMarkdown(body) : '',
+    };
   } catch {
-    return { open: false };
+    return {
+      startDate: '',
+      open: false,
+      phase: 'upcoming',
+      eyebrow: 'Register',
+      title: 'Reserve your seat',
+      description: '',
+      body: '',
+      bodyHtml: '',
+    };
   }
 }
 
 export type KeyDate = { label: string; value: string };
 
 export async function getKeyDates(): Promise<KeyDate[]> {
+  ensureDevContentFresh();
   try {
     const raw = await fs.readFile(path.join(ROOT, 'pages', 'key-dates.md'), 'utf8');
     const { data } = matter(raw);
     const parsed = KeyDatesFrontmatter.parse(data);
-    return parsed.items;
+    return publishedOnly(parsed.items).map(({ label, value }) => ({ label, value }));
   } catch {
     return [];
   }

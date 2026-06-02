@@ -1,4 +1,18 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { withPayload } from '@payloadcms/next/withPayload';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const contentDir = path.join(__dirname, 'content');
+
+/** Registers `content/` with webpack so `--webpack` dev recompiles on markdown edits. */
+class WatchContentDirPlugin {
+  apply(compiler) {
+    compiler.hooks.afterCompile.tap('WatchContentDirPlugin', (compilation) => {
+      compilation.contextDependencies.add(contentDir);
+    });
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -7,6 +21,12 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
     ],
+  },
+  webpack(config, { dev, isServer }) {
+    if (dev && isServer) {
+      config.plugins.push(new WatchContentDirPlugin());
+    }
+    return config;
   },
   async headers() {
     return [

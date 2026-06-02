@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-05-27 (end of day — logo, coming-soon, proxy fix)_
+_Last updated: 2026-06-02 (dev content hot reload)_
 
 ## 1. Goal
 
@@ -40,9 +40,10 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 ### Content flags (`content/pages/`)
 
 - `event.md` — headline, dates, city, venue, DayAtGlance timeline.
-- `cfp.md` — `open`, `deadline`, `url`, **`showSpeakers`** (independent of CFP open state).
+- `cfp.md` — **`startDate` / `endDate`** (auto-derives `open` via Asia/Kolkata calendar); `url`, **`showSpeakers`** (independent of CFP open state).
 - `registration.md` — `open`, `url`.
 - `key-dates.md` — KeyDatesSection on homepage.
+- `static/prospectus.pdf` — sponsorship prospectus; served at `/static/prospectus.pdf` (see `content/pages/sponsorship.md` `prospectus` field).
 
 ### Env vars (see `.env.example`)
 
@@ -72,6 +73,14 @@ Do NOT commit without: `pnpm typecheck && pnpm content:validate && pnpm build`.
 21. **Coming-soon UX** — header logo-only, footer hidden, `ComingSoon` section on `/`.
 22. **`proxy.ts` merge** — coming-soon gating merged into existing `proxy.ts` (CSP). Deleted standalone `middleware.ts` — Next.js 16 rejects having both files (Vercel build error).
 23. **Hero parallax removed** — scroll-driven transforms in `HeroSection.tsx` dropped (janky on mobile). Component is now a server component with static layout.
+
+### 2026-06-02 — CFP date window
+
+24. **CFP auto open/close** — `content/pages/cfp.md` now uses `startDate` + `endDate` (YYYY-MM-DD). `lib/utils.isDateRangeActive()` computes `open` at build/request time (Asia/Kolkata). Manual `open` flag removed. CTAs, nav, hero, `/cfp` page all respect computed state. Dates align with `key-dates.md` (opens 2026-06-15, closes 2026-07-15). Today (2026-06-02) CFP is closed until start date.
+
+### 2026-06-02 — Dev content hot reload
+
+25. **Content edits trigger dev HMR** — `pnpm dev` now runs `scripts/dev.mjs` (content watcher + Next). Watcher bumps `lib/content-revision.ts` on any `content/**/*.md(x)` change; loaders call `ensureDevContentFresh()` (`unstable_noStore` in dev). Webpack `--webpack` dev also watches `content/` via `WatchContentDirPlugin` in `next.config.mjs`. Use `pnpm dev` (not bare `next dev`) for markdown hot reload.
 
 ## 5. Failed attempts
 

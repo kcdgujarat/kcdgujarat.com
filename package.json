@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0",
-    "build": "next build",
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/ensure-content-revision.mjs && next build",
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node scripts/ensure-content-revision.mjs && tsc --noEmit",
     "content:validate": "tsx scripts/validate-content.ts",
     "payload:generate": "payload generate:types"
   },

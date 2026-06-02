@@ -83,7 +83,7 @@ export function HeroSection({
             {cfpOpen && (
               <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-kcd-ink/15 bg-white/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-kcd-ink/80 backdrop-blur">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-kcd-orange" />
-                CFP Open{cfpDeadline ? ` · closes ${cfpDeadline}` : ''}
+                CFP Open{cfpDeadline ? ` · closes ${formatEventDate(cfpDeadline)}` : ''}
               </p>
             )}
             <div className="mt-7 flex flex-wrap items-center gap-3">

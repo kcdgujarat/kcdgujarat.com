@@ -26,6 +26,7 @@ function isAllowedDuringComingSoon(pathname: string): boolean {
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/images/') ||
+    pathname.startsWith('/static/') ||
     pathname.startsWith('/og/') ||
     pathname === '/favicon.ico' ||
     pathname === '/robots.txt' ||
