@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import { Container } from '@/components/site/Container';
+import { SocialLinks } from '@/components/site/SocialLinks';
+import type { SiteSocialLinks } from '@/lib/site-social';
 
 interface ComingSoonProps {
   city?: string;
   contactEmail?: string;
+  socialLinks?: SiteSocialLinks;
 }
 
-export function ComingSoon({ city = 'Gujarat, India', contactEmail }: ComingSoonProps) {
+export function ComingSoon({ city = 'Gujarat, India', contactEmail, socialLinks = {} }: ComingSoonProps) {
   return (
     <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-gradient-to-b from-white via-kcd-subtle to-white">
       <div
@@ -40,6 +43,8 @@ export function ComingSoon({ city = 'Gujarat, India', contactEmail }: ComingSoon
           A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in {city}.
           Speaker line-up, schedule, and venue dropping shortly.
         </p>
+
+        <SocialLinks links={socialLinks} className="mt-8" />
 
         {contactEmail && (
           <p className="mt-10 text-sm text-kcd-muted">

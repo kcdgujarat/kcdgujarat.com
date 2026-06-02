@@ -1,36 +1,11 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: kcdgujarat-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: kcdgujarat
-      POSTGRES_PASSWORD: kcdgujarat
-      POSTGRES_DB: kcdgujarat
-    ports:
-      - '5432:5432'
-    volumes:
-      - kcdgujarat-pg:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U kcdgujarat -d kcdgujarat']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   app:
     build:
       context: .
       dockerfile: Dockerfile.dev
     container_name: kcdgujarat-app
     restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
-      # Override host=localhost from .env so the container talks to the postgres service.
-      DATABASE_URL: postgres://kcdgujarat:kcdgujarat@postgres:5432/kcdgujarat
-      POSTGRES_URL_NON_POOLING: postgres://kcdgujarat:kcdgujarat@postgres:5432/kcdgujarat
-      PAYLOAD_PUBLIC_SERVER_URL: http://localhost:3000
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: 'true'
@@ -53,6 +28,5 @@ services:
     tty: true
 
 volumes:
-  kcdgujarat-pg:
   kcdgujarat-node-modules:
   kcdgujarat-next-cache:

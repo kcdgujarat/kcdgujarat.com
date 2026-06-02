@@ -3,8 +3,7 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
 import { ButtonLink } from '@/components/ui/button';
 import { buildMetadata } from '@/lib/seo';
-import { getSettings } from '@/lib/payload';
-import { getSponsorshipConfig } from '@/lib/content';
+import { getSponsorshipConfig, getEventConfig } from '@/lib/content';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
@@ -23,13 +22,10 @@ const FALLBACK_TIERS = [
 ] as const;
 
 export default async function SponsorshipPage() {
-  const [settings, sponsorship] = await Promise.all([
-    getSettings() as any,
-    getSponsorshipConfig(),
-  ]);
+  const [event, sponsorship] = await Promise.all([getEventConfig(), getSponsorshipConfig()]);
 
   const tiers = sponsorship.tiers.length > 0 ? sponsorship.tiers : FALLBACK_TIERS;
-  const email = sponsorship.contactEmail || (settings as any)?.contactEmail;
+  const email = sponsorship.contactEmail || event.contactEmail;
   const prospectusUrl = sponsorship.prospectusUrl;
 
   return (

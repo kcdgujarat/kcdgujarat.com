@@ -17,10 +17,11 @@ import {
   CfpConfigFrontmatter,
   RegistrationConfigFrontmatter,
   EventConfigFrontmatter,
+  SocialLinksFrontmatter,
   SponsorshipConfigFrontmatter,
   isPublished,
 } from './schema';
-import { payload } from './payload';
+import type { SiteSocialLinks } from './site-social';
 
 const ROOT = path.join(process.cwd(), 'content');
 
@@ -77,23 +78,7 @@ export async function getSpeakers(): Promise<Speaker[]> {
       photoUrl: parsed.photo,
     });
   }
-  const fromPayload = await safePayloadList('speakers');
-  const merged = mergeBySlug(md, fromPayload, (p) => ({
-    slug: p.slug,
-    name: p.name,
-    role: p.role || '',
-    company: p.company || '',
-    photo: typeof p.photo === 'object' ? p.photo?.url : undefined,
-    photoUrl: typeof p.photo === 'object' ? p.photo?.url : undefined,
-    socials: p.socials || {},
-    sessions: [],
-    featured: !!p.featured,
-    order: p.order ?? 100,
-    render: p.render ?? true,
-    bio: p.bio || '',
-    bioHtml: p.bio || '',
-  }));
-  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name));
+  return md.sort((a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name));
 }
 
 export type Session = SessionFrontmatter & {
@@ -118,23 +103,7 @@ export async function getSessions(): Promise<Session[]> {
       abstractHtml: await renderMarkdown(content),
     });
   }
-  const fromPayload = await safePayloadList('sessions');
-  const merged = mergeBySlug(md, fromPayload, (p) => ({
-    slug: p.slug,
-    title: p.title,
-    type: p.type || 'Talk',
-    track: p.track,
-    durationMinutes: p.durationMinutes ?? 30,
-    start: p.start,
-    room: p.room,
-    level: p.level,
-    speakers: (p.speakers || []).map((s: any) => (typeof s === 'object' ? s.slug : s)),
-    tags: (p.tags || []).map((t: any) => (typeof t === 'object' ? t.tag : t)),
-    render: p.render ?? true,
-    abstract: p.abstract || '',
-    abstractHtml: p.abstract || '',
-  }));
-  return publishedOnly(merged).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+  return md.sort((a, b) => (a.start || '').localeCompare(b.start || ''));
 }
 
 export type Sponsor = SponsorFrontmatter & {
@@ -158,19 +127,7 @@ export async function getSponsors(): Promise<Sponsor[]> {
       logoUrl: parsed.logo,
     });
   }
-  const fromPayload = await safePayloadList('sponsors');
-  const merged = mergeBySlug(md, fromPayload, (p) => ({
-    slug: p.slug,
-    name: p.name,
-    tier: p.tier,
-    url: p.url,
-    order: p.order ?? 100,
-    render: p.render ?? true,
-    logo: typeof p.logo === 'object' ? p.logo?.url : undefined,
-    logoUrl: typeof p.logo === 'object' ? p.logo?.url : undefined,
-    description: p.description || '',
-  }));
-  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  return md.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
 
 export type Faq = FaqFrontmatter & { slug: string; answer: string; answerHtml: string };
@@ -190,18 +147,8 @@ export async function getFaqs(): Promise<Faq[]> {
       answerHtml: await renderMarkdown(content),
     });
   }
-  const fromPayload = await safePayloadList('faqs');
-  const merged = mergeBySlug(md, fromPayload, (p) => ({
-    slug: p.slug,
-    question: p.question,
-    order: p.order ?? 100,
-    render: p.render ?? true,
-    answer: p.answer || '',
-    answerHtml: p.answer || '',
-  }));
-  return publishedOnly(merged).sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  return md.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
-
 
 export type Partner = PartnerFrontmatter & {
   slug: string;
@@ -350,6 +297,32 @@ export async function getEventConfig(): Promise<EventConfig> {
   }
 }
 
+export type { SiteSocialLinks } from './site-social';
+
+export async function getSocialLinks(): Promise<SiteSocialLinks> {
+  ensureDevContentFresh();
+  const filePath = path.join(ROOT, 'pages', 'social.md');
+  let raw: string;
+  try {
+    raw = await fs.readFile(filePath, 'utf8');
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code === 'ENOENT') {
+      console.warn('[content] content/pages/social.md not found — no social icons will render');
+      return {};
+    }
+    throw err;
+  }
+
+  const { data } = matter(raw);
+  const result = SocialLinksFrontmatter.safeParse(data);
+  if (!result.success) {
+    const message = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    throw new Error(`Invalid content/pages/social.md — ${message}`);
+  }
+  return result.data;
+}
+
 export type RegistrationConfig = RegistrationConfigFrontmatter & {
   body: string;
   bodyHtml: string;
@@ -393,31 +366,4 @@ export async function getKeyDates(): Promise<KeyDate[]> {
   } catch {
     return [];
   }
-}
-
-async function safePayloadList(collection: string): Promise<any[]> {
-  try {
-    const p = await payload();
-    if (!p) return [];
-    const res = await p.find({ collection: collection as any, limit: 500, depth: 1 });
-    return res.docs as any[];
-  } catch {
-    return [];
-  }
-}
-
-function mergeBySlug<T extends { slug: string }>(
-  md: T[],
-  cms: any[],
-  fromCms: (doc: any) => T,
-): T[] {
-  const bySlug = new Map<string, T>();
-  for (const doc of cms) {
-    if (!doc?.slug) continue;
-    bySlug.set(doc.slug, fromCms(doc));
-  }
-  for (const item of md) {
-    bySlug.set(item.slug, { ...bySlug.get(item.slug), ...item });
-  }
-  return Array.from(bySlug.values());
 }

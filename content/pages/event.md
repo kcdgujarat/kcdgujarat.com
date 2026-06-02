@@ -19,6 +19,11 @@ venueAddress: ""
 # Paste a Google Maps embed src URL (the value inside the <iframe src="…">).
 mapEmbedUrl: ""
 
+# ─── Site contact (footer, coming-soon page) ──────────────────────────────────
+contactEmail: "contact@kcdgujarat.com"
+
+# Social profiles → edit content/pages/social.md (LinkedIn, X, Instagram, etc.)
+
 # ─── Day-at-a-Glance timeline ─────────────────────────────────────────────────
 # Each entry appears in the "Schedule overview" card. icon is an emoji.
 timeline:
