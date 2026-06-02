@@ -12,6 +12,8 @@ import {
   CfpConfigFrontmatter,
   SponsorshipConfigFrontmatter,
   RegistrationConfigFrontmatter,
+  EventConfigFrontmatter,
+  SocialLinksFrontmatter,
 } from '../lib/schema';
 
 const ROOT = path.join(process.cwd(), 'content');
@@ -29,6 +31,8 @@ const targets: { dir: string; schema: any; name: string; fileSchema?: Record<str
       'cfp.md': CfpConfigFrontmatter,
       'sponsorship.md': SponsorshipConfigFrontmatter,
       'registration.md': RegistrationConfigFrontmatter,
+      'event.md': EventConfigFrontmatter,
+      'social.md': SocialLinksFrontmatter,
     },
   },
   { dir: 'team', schema: TeamFrontmatter, name: 'team member' },

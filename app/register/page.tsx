@@ -1,7 +1,8 @@
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
+import { SocialLinks } from '@/components/site/SocialLinks';
 import { ButtonLink } from '@/components/ui/button';
-import { getRegistrationConfig } from '@/lib/content';
+import { getRegistrationConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate } from '@/lib/utils';
 
@@ -42,7 +43,7 @@ export async function generateMetadata() {
 }
 
 export default async function RegisterPage() {
-  const registration = await getRegistrationConfig();
+  const [registration, socialLinks] = await Promise.all([getRegistrationConfig(), getSocialLinks()]);
   const startLabel = formatEventDate(registration.startDate);
   const endLabel = registration.endDate ? formatEventDate(registration.endDate) : null;
 
@@ -64,6 +65,7 @@ export default async function RegisterPage() {
           <p className="text-kcd-muted">
             Follow us on social media so you don&apos;t miss the opening announcement.
           </p>
+          <SocialLinks links={socialLinks} className="mt-6" />
         </div>
       </Container>
     );

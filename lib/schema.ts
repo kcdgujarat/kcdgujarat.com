@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { normalizeSiteSocialLinks } from '@/lib/site-social';
 import { isDateRangeActive, isRegistrationWindowActive, getWindowPhase } from '@/lib/utils';
 
 /** When `false`, the entry stays in Git but is hidden on the site. Defaults to `true`. */
@@ -97,6 +98,23 @@ export const TimelineItem = RenderFlag.extend({
 });
 export type TimelineItem = z.infer<typeof TimelineItem>;
 
+const optionalUrl = z.union([z.string().url(), z.literal('')]).optional();
+
+/** Official site social profiles — edit `content/pages/social.md`. */
+export const SocialLinksFrontmatter = z
+  .object({
+    x: optionalUrl,
+    /** Legacy alias for `x`. */
+    twitter: optionalUrl,
+    linkedin: optionalUrl,
+    instagram: optionalUrl,
+    github: optionalUrl,
+    youtube: optionalUrl,
+  })
+  .partial()
+  .transform((data) => normalizeSiteSocialLinks(data));
+export type SocialLinksFrontmatter = z.infer<typeof SocialLinksFrontmatter>;
+
 export const EventConfigFrontmatter = z.object({
   headline: z.string().optional(),
   subheadline: z.string().optional(),
@@ -106,6 +124,7 @@ export const EventConfigFrontmatter = z.object({
   venueName: z.string().optional(),
   venueAddress: z.string().optional(),
   mapEmbedUrl: z.string().optional(),
+  contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
   timeline: z.array(TimelineItem).optional(),
 });
 export type EventConfigFrontmatter = z.infer<typeof EventConfigFrontmatter>;

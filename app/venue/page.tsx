@@ -1,7 +1,7 @@
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
-import { getSettings } from '@/lib/payload';
+import { getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { Accessibility, BedDouble, Bus, Car } from 'lucide-react';
 
@@ -13,10 +13,10 @@ export const metadata = buildMetadata({
 });
 
 export default async function VenuePage() {
-  const settings = (await getSettings()) as any;
-  const name = settings?.venueName || 'To be announced';
-  const address = settings?.venueAddress;
-  const map = settings?.mapEmbedUrl;
+  const event = await getEventConfig();
+  const name = event.venueName || 'To be announced';
+  const address = event.venueAddress;
+  const map = event.mapEmbedUrl;
 
   return (
     <Container className="py-16">

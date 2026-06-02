@@ -8,20 +8,14 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "node scripts/ensure-content-revision.mjs && tsc --noEmit",
-    "content:validate": "tsx scripts/validate-content.ts",
-    "payload:generate": "payload generate:types"
+    "content:validate": "tsx scripts/validate-content.ts"
   },
   "dependencies": {
-    "@payloadcms/db-postgres": "^3.84.1",
-    "@payloadcms/next": "^3.84.1",
-    "@payloadcms/richtext-lexical": "^3.84.1",
-    "@payloadcms/storage-vercel-blob": "^3.84.1",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.14.0",
     "next": "16.2.6",
-    "payload": "^3.84.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "remark": "^15.0.1",

@@ -18,13 +18,10 @@ tasks:
     silent: true
 
   setup:
-    desc: First-time setup — env, deps, db, payload types
+    desc: First-time setup — env and deps
     cmds:
       - task: env
       - task: install
-      - task: db:up
-      - task: db:wait
-      - task: payload:generate
 
   env:
     desc: Copy .env.example -> .env if missing
@@ -45,14 +42,12 @@ tasks:
       - node_modules/.modules.yaml
 
   dev:
-    desc: Run Next.js + Payload admin (http://localhost:3000)
-    deps: [db:up, db:wait]
+    desc: Run Next.js dev server (http://localhost:3000)
     cmds:
       - '{{.PNPM}} dev'
 
   build:
     desc: Production build
-    deps: [db:up, db:wait]
     cmds:
       - '{{.PNPM}} build'
 
@@ -95,12 +90,6 @@ tasks:
     desc: Zod-validate /content frontmatter
     cmds:
       - '{{.PNPM}} content:validate'
-
-  payload:generate:
-    desc: Generate Payload TS types
-    deps: [db:up, db:wait]
-    cmds:
-      - '{{.PNPM}} payload:generate'
 
   ci:
     desc: Run lint + typecheck + content:validate + test (mirrors CI)
@@ -168,7 +157,7 @@ tasks:
       - task: clean
 
   docker:up:
-    desc: Run full stack in Docker (app + postgres) with hot reload
+    desc: Run app in Docker with hot reload
     cmds:
       - task: env
       - '{{.COMPOSE}} up --build'

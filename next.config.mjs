@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { withPayload } from '@payloadcms/next/withPayload';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const contentDir = path.join(__dirname, 'content');
@@ -17,6 +16,8 @@ class WatchContentDirPlugin {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Dev content watcher uses webpack; production build uses Turbopack by default in Next 16.
+  turbopack: {},
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
@@ -44,4 +45,4 @@ const nextConfig = {
   },
 };
 
-export default withPayload(nextConfig);
+export default nextConfig;

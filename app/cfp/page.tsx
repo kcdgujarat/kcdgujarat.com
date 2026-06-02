@@ -1,8 +1,8 @@
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
+import { SocialLinks } from '@/components/site/SocialLinks';
 import { ButtonLink } from '@/components/ui/button';
-import { getCfpConfig } from '@/lib/content';
-import { getSettings } from '@/lib/payload';
+import { getCfpConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate } from '@/lib/utils';
 
@@ -41,8 +41,8 @@ export async function generateMetadata() {
 }
 
 export default async function CfpPage() {
-  const [cfp, settings] = await Promise.all([getCfpConfig(), getSettings()]);
-  const cfpUrl = cfp.url || (settings as any)?.cfpUrl || process.env.NEXT_PUBLIC_CFP_URL;
+  const [cfp, socialLinks] = await Promise.all([getCfpConfig(), getSocialLinks()]);
+  const cfpUrl = cfp.url || process.env.NEXT_PUBLIC_CFP_URL;
   const startLabel = formatEventDate(cfp.startDate);
   const endLabel = formatEventDate(cfp.endDate);
 
@@ -62,6 +62,7 @@ export default async function CfpPage() {
           <p className="text-kcd-muted">
             Follow us on social media so you don&apos;t miss the opening announcement.
           </p>
+          <SocialLinks links={socialLinks} className="mt-6" />
         </div>
       </Container>
     );

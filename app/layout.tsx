@@ -3,8 +3,7 @@ import { Plus_Jakarta_Sans, Inter, Noto_Sans_Gujarati } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
-import { getSettings } from '@/lib/payload';
-import { getCfpConfig, getRegistrationConfig } from '@/lib/content';
+import { getCfpConfig, getRegistrationConfig, getEventConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import './globals.css';
 
@@ -35,16 +34,18 @@ const notoSansGujarati = Noto_Sans_Gujarati({
 export const metadata: Metadata = buildMetadata({});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, cfp, registration] = await Promise.all([
-    getSettings(),
+  const [event, cfp, registration, socialLinks] = await Promise.all([
+    getEventConfig(),
     getCfpConfig(),
     getRegistrationConfig(),
+    getSocialLinks(),
   ]);
   const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
   const cfpOpen = cfp.open;
   const showSpeakers = cfp.showSpeakers;
   const registrationOpen = registration.open;
-  const registrationUrl = registration.url || settings?.registrationUrl || process.env.NEXT_PUBLIC_REGISTRATION_URL;
+  const registrationUrl =
+    registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
   return (
     <html
       lang="en"
@@ -70,8 +71,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main id="main">{children}</main>
         {!comingSoon && (
           <Footer
-            socials={settings?.socialLinks || {}}
-            contactEmail={settings?.contactEmail}
+            socials={socialLinks}
+            contactEmail={event.contactEmail}
             cfpOpen={cfpOpen}
             cfpUrl={cfp.url}
             showSpeakers={showSpeakers}

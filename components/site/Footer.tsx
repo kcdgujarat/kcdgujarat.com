@@ -1,15 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from './Container';
-import { Github, Linkedin, Twitter, Youtube } from '@/components/ui/social-icons';
+import { SocialLinks } from './SocialLinks';
+import type { SiteSocialLinks } from '@/lib/site-social';
 
 interface FooterProps {
-  socials?: {
-    twitter?: string;
-    linkedin?: string;
-    github?: string;
-    youtube?: string;
-  };
+  socials?: SiteSocialLinks;
   contactEmail?: string;
   cfpOpen?: boolean;
   cfpUrl?: string;
@@ -28,9 +24,7 @@ export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, sh
     { href: '/venue', label: 'Venue' },
   ];
   const getInvolvedLinks = [
-    ...(cfpOpen
-      ? [{ href: cfpUrl || '/cfp', label: 'Submit a Talk' }]
-      : []),
+    ...(cfpOpen ? [{ href: cfpUrl || '/cfp', label: 'Submit a Talk' }] : []),
     { href: '/sponsorship', label: 'Become a Sponsor' },
     { href: '/team', label: 'Organizers & Team' },
   ];
@@ -51,6 +45,7 @@ export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, sh
           <p className="mt-3 text-sm text-white/70">
             A community-driven Kubernetes Community Day for the cloud-native community in Gujarat, India.
           </p>
+          <SocialLinks links={socials} variant="footer" className="mt-5 justify-start" />
           {cfpOpen && (
             <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/80">
               CFP Open
@@ -71,36 +66,7 @@ export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, sh
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-sm text-white/60 md:flex-row">
           <p>© {new Date().getFullYear()} KCD Gujarat. KCD is a CNCF program.</p>
-          <ul className="flex items-center gap-4">
-            {socials.twitter && (
-              <li>
-                <a aria-label="Twitter / X" href={socials.twitter} target="_blank" rel="noreferrer" className="hover:text-white">
-                  <Twitter className="h-5 w-5" />
-                </a>
-              </li>
-            )}
-            {socials.linkedin && (
-              <li>
-                <a aria-label="LinkedIn" href={socials.linkedin} target="_blank" rel="noreferrer" className="hover:text-white">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-              </li>
-            )}
-            {socials.github && (
-              <li>
-                <a aria-label="GitHub" href={socials.github} target="_blank" rel="noreferrer" className="hover:text-white">
-                  <Github className="h-5 w-5" />
-                </a>
-              </li>
-            )}
-            {socials.youtube && (
-              <li>
-                <a aria-label="YouTube" href={socials.youtube} target="_blank" rel="noreferrer" className="hover:text-white">
-                  <Youtube className="h-5 w-5" />
-                </a>
-              </li>
-            )}
-          </ul>
+          <SocialLinks links={socials} variant="footer" />
         </Container>
       </div>
     </footer>
