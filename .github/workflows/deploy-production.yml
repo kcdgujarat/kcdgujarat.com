@@ -1,22 +1,18 @@
 name: Deploy Production
 
-# Manual production deploy only. GitHub → Actions → Deploy Production → Run workflow.
+# Manual production deploy — no VERCEL_TOKEN required.
 #
-# Approval gate (one-time):
-#   Repo → Settings → Environments → production → Required reviewers
+# After GitHub environment approval, fast-forwards the `production` branch to
+# match `main`. Vercel Git integration deploys `production` to kcdgujarat.com.
 #
-# Secrets (rotate when CI says "token is not valid"):
-#   ./scripts/sync-vercel-github-secrets.sh
-#
-# Optional: pass a preview URL to promote an already-tested build (no rebuild).
+# One-time setup:
+#   1. Vercel → Project → Settings → Git → Production Branch = `production`
+#   2. GitHub → Settings → Environments → production → Required reviewers
+#   3. Create the branch once: git push origin main:production
+#   4. This workflow needs `contents: write` (uses GITHUB_TOKEN)
 
 on:
   workflow_dispatch:
-    inputs:
-      preview_url:
-        description: 'Optional — preview deployment URL to promote (skips rebuild)'
-        required: false
-        type: string
 
 concurrency:
   group: vercel-production
@@ -24,58 +20,63 @@ concurrency:
 
 jobs:
   production:
-    name: Vercel production (kcdgujarat.com)
+    name: Promote main → production
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     environment:
       name: production
       url: https://kcdgujarat.com
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
-        if: inputs.preview_url == ''
-
-      - uses: pnpm/action-setup@v4
-        if: inputs.preview_url == ''
-
-      - uses: actions/setup-node@v4
-        if: inputs.preview_url == ''
         with:
-          node-version: 20
-          cache: pnpm
+          ref: main
+          fetch-depth: 0
 
-      - name: Install Vercel CLI
-        run: pnpm add -g vercel@latest
-
-      - name: Verify Vercel credentials
-        if: inputs.preview_url != ''
+      - name: Push main to production branch
         run: |
-          set -euo pipefail
-          vercel whoami --token="$VERCEL_TOKEN"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git push origin "HEAD:refs/heads/production" --force-with-lease
+          echo "→ Vercel will deploy the production branch to kcdgujarat.com"
 
-      - name: Promote preview to production
-        if: inputs.preview_url != ''
-        id: promote
-        run: |
-          URL=$(vercel promote "${{ inputs.preview_url }}" --token="$VERCEL_TOKEN")
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "Promoted to production: $URL"
-
-      - name: Deploy production
-        if: inputs.preview_url == ''
-        id: deploy
-        uses: ./.github/actions/vercel-deploy
+      - name: Wait for Vercel production deployment
+        uses: actions/github-script@v7
         with:
-          environment: production
-          production: 'true'
+          script: |
+            const sha = context.sha;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const deadline = Date.now() + 15 * 60 * 1000;
 
-      - name: Wait for edge promotion
-        run: sleep 30
+            while (Date.now() < deadline) {
+              const { data: statuses } = await github.rest.repos.listCommitStatusesForRef({
+                owner,
+                repo,
+                ref: sha,
+                per_page: 100,
+              });
 
-      - name: Smoke check (with retry)
+              const vercel = statuses.find((s) =>
+                /vercel/i.test(s.context) && /deployment/i.test(s.context),
+              );
+
+              if (vercel) {
+                core.info(`Vercel status: ${vercel.context} → ${vercel.state}`);
+                if (vercel.state === 'success') return;
+                if (vercel.state === 'failure' || vercel.state === 'error') {
+                  core.setFailed(`Vercel production deploy failed: ${vercel.description ?? ''}`);
+                  return;
+                }
+              }
+
+              await new Promise((r) => setTimeout(r, 15000));
+            }
+
+            core.warning('Timed out waiting for Vercel status — check the Vercel dashboard.');
+
+      - name: Smoke check production
         run: |
           set -eo pipefail
           fetch() {
