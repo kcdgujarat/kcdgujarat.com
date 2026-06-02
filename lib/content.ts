@@ -170,7 +170,7 @@ export async function getPartners(): Promise<Partner[]> {
       logoUrl: parsed.logo,
     });
   }
-  return md.sort(
+  return publishedOnly(md).sort(
     (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
   );
 }
@@ -199,7 +199,7 @@ export async function getTeam(): Promise<TeamMember[]> {
       photoUrl: parsed.photo,
     });
   }
-  return md.sort(
+  return publishedOnly(md).sort(
     (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.name.localeCompare(b.name),
   );
 }
