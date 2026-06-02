@@ -1,0 +1,97 @@
+name: Deploy Preview
+
+# Preview on every push to main (staging) and on pull requests.
+# Production is NEVER deployed from this workflow — see deploy-production.yml.
+#
+# Vercel dashboard (required once):
+#   Project → Settings → Git → Production Branch → set to `production` (not `main`)
+#   so Vercel Git integration does not auto-publish main to kcdgujarat.com.
+#   GitHub Actions owns preview + manual production instead.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: vercel-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  preview:
+    name: Vercel preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      - name: Pull Vercel env (preview)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy preview
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Preview URL: $URL"
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+        with:
+          script: |
+            const body = `<!-- vercel-preview-comment -->
+            **Vercel preview** · [Open deployment](${process.env.PREVIEW_URL})
+            \n\nDeployed from \`${context.sha.substring(0, 7)}\`. Production requires manual approval via **Deploy Production** workflow.`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body?.includes('vercel-preview-comment'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Smoke check preview
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          for path in / /api/health; do
+            code=$(curl -sL -o /dev/null -w "%{http_code}" "$URL$path")
+            echo "GET $path -> $code"
+            [ "$code" = "200" ] || [ "$code" = "304" ] || exit 1
+          done

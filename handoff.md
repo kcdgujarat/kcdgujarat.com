@@ -51,6 +51,15 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 - `NEXT_PUBLIC_COMING_SOON`, `NEXT_PUBLIC_REGISTRATION_URL`, `NEXT_PUBLIC_CFP_URL`, `REVALIDATE_SECRET`
 - **No** `DATABASE_URL` / Payload vars needed.
 
+### Deployments (GitHub Actions + Vercel)
+
+- **Preview** — `.github/workflows/deploy-preview.yml` runs on every push to `main` (+ PRs). Posts preview URL on PRs.
+- **Production** — `.github/workflows/deploy-production.yml` is **manual only** (`workflow_dispatch`). Uses GitHub `environment: production` for required reviewer approval.
+- **Vercel dashboard (one-time):** Project → Settings → Git → **Production Branch = `production`** (not `main`) so Vercel Git does not auto-publish `main` to kcdgujarat.com.
+- **GitHub (one-time):** Settings → Environments → `production` → Required reviewers.
+- Optional prod input: paste a preview URL to `vercel promote` instead of rebuilding.
+- CI secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+
 ## 3. Files in flight
 
 Working tree **clean** as of last commit: `0eaa235` — `(feat): no more payload cms, fixes social renders`.
