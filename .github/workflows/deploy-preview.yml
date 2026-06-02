@@ -3,10 +3,11 @@ name: Deploy Preview
 # Preview on every push to main (staging) and on pull requests.
 # Production is NEVER deployed from this workflow — see deploy-production.yml.
 #
-# Vercel dashboard (required once):
-#   Project → Settings → Git → Production Branch → set to `production` (not `main`)
-#   so Vercel Git integration does not auto-publish main to kcdgujarat.com.
-#   GitHub Actions owns preview + manual production instead.
+# Secrets (rotate when CI says "token is not valid"):
+#   ./scripts/sync-vercel-github-secrets.sh
+#
+# Vercel dashboard (one-time):
+#   Project → Settings → Git → Production Branch = `production` (not `main`)
 
 on:
   push:
@@ -17,10 +18,6 @@ concurrency:
   group: vercel-preview-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
   preview:
     name: Vercel preview
@@ -29,6 +26,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -42,18 +43,12 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
-      - name: Pull Vercel env (preview)
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-
       - name: Deploy preview
         id: deploy
-        run: |
-          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "Preview URL: $URL"
+        uses: ./.github/actions/vercel-deploy
+        with:
+          environment: preview
+          production: 'false'
 
       - name: Comment preview URL on PR
         if: github.event_name == 'pull_request'

@@ -1,0 +1,77 @@
+name: Vercel deploy
+description: Pull env, build, and deploy to Vercel (preview or production)
+
+inputs:
+  environment:
+    description: preview or production
+    required: true
+  production:
+    description: Pass --prod to build and deploy
+    required: false
+    default: 'false'
+
+outputs:
+  url:
+    description: Deployment URL
+    value: ${{ steps.deploy.outputs.url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Verify Vercel credentials
+      shell: bash
+      env:
+        VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+      run: |
+        set -euo pipefail
+        if [ -z "${VERCEL_TOKEN:-}" ]; then
+          echo "::error title=Missing VERCEL_TOKEN::Add GitHub secrets VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID. Run ./scripts/sync-vercel-github-secrets.sh locally (requires vercel login + gh auth)."
+          exit 1
+        fi
+        if [ -z "${VERCEL_ORG_ID:-}" ] || [ -z "${VERCEL_PROJECT_ID:-}" ]; then
+          echo "::error title=Missing Vercel project IDs::Set VERCEL_ORG_ID and VERCEL_PROJECT_ID secrets. Run ./scripts/sync-vercel-github-secrets.sh"
+          exit 1
+        fi
+        if ! vercel whoami --token="$VERCEL_TOKEN" >/dev/null 2>&1; then
+          echo "::error title=Invalid VERCEL_TOKEN::Token rejected by Vercel. Create a new token at https://vercel.com/account/tokens (Full Account scope) and run ./scripts/sync-vercel-github-secrets.sh"
+          exit 1
+        fi
+
+    - name: Pull Vercel env
+      shell: bash
+      env:
+        VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+      run: vercel pull --yes --environment=${{ inputs.environment }} --token="$VERCEL_TOKEN"
+
+    - name: Build
+      shell: bash
+      env:
+        VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+      run: |
+        if [ "${{ inputs.production }}" = "true" ]; then
+          vercel build --prod --token="$VERCEL_TOKEN"
+        else
+          vercel build --token="$VERCEL_TOKEN"
+        fi
+
+    - name: Deploy
+      id: deploy
+      shell: bash
+      env:
+        VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
+      run: |
+        if [ "${{ inputs.production }}" = "true" ]; then
+          URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+        else
+          URL=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+        fi
+        echo "url=$URL" >> "$GITHUB_OUTPUT"
+        echo "Deployed: $URL"

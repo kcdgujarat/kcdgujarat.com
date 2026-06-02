@@ -1,13 +1,14 @@
 name: Deploy Production
 
-# Manual production deploy only. Trigger from GitHub → Actions → Deploy Production → Run workflow.
+# Manual production deploy only. GitHub → Actions → Deploy Production → Run workflow.
 #
-# Enable approval gate (one-time):
-#   Repo → Settings → Environments → production → Required reviewers → add yourself
-#   This workflow uses `environment: production`, so reviewers must approve before deploy runs.
+# Approval gate (one-time):
+#   Repo → Settings → Environments → production → Required reviewers
 #
-# Optional: pass a preview URL to promote an already-tested build (instant, no rebuild):
-#   vercel promote reuses the exact preview artifact.
+# Secrets (rotate when CI says "token is not valid"):
+#   ./scripts/sync-vercel-github-secrets.sh
+#
+# Optional: pass a preview URL to promote an already-tested build (no rebuild).
 
 on:
   workflow_dispatch:
@@ -21,10 +22,6 @@ concurrency:
   group: vercel-production
   cancel-in-progress: false
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
   production:
     name: Vercel production (kcdgujarat.com)
@@ -33,6 +30,10 @@ jobs:
     environment:
       name: production
       url: https://kcdgujarat.com
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
         if: inputs.preview_url == ''
@@ -49,29 +50,27 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
+      - name: Verify Vercel credentials
+        if: inputs.preview_url != ''
+        run: |
+          set -euo pipefail
+          vercel whoami --token="$VERCEL_TOKEN"
+
       - name: Promote preview to production
         if: inputs.preview_url != ''
         id: promote
         run: |
-          URL=$(vercel promote "${{ inputs.preview_url }}" --token=${{ secrets.VERCEL_TOKEN }})
+          URL=$(vercel promote "${{ inputs.preview_url }}" --token="$VERCEL_TOKEN")
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "Promoted to production: $URL"
-
-      - name: Pull Vercel env (production)
-        if: inputs.preview_url == ''
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build
-        if: inputs.preview_url == ''
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy production
         if: inputs.preview_url == ''
         id: deploy
-        run: |
-          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
-          echo "Deployed to production: $URL"
+        uses: ./.github/actions/vercel-deploy
+        with:
+          environment: production
+          production: 'true'
 
       - name: Wait for edge promotion
         run: sleep 30
