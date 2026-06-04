@@ -1,15 +1,12 @@
 name: Deploy Production
 
 # Promotes the latest successful Vercel deployment from `main` to production.
-# No `production` git branch — push to `main`, let Vercel build, then run this
-# workflow (with environment approval) to go live on kcdgujarat.com.
+# Push to `main` → Vercel builds → run this workflow (with approval) to go live.
 #
-# Vercel setup (one time):
-#   • Git → Production Branch = `main`
-#   • Settings → Environments → Production → disable
-#     "Auto-assign Custom Production Domains" (main builds stay staged until promote)
+# Vercel (recommended): Git → Production Branch = `main`, and disable
+# "Auto-assign Custom Production Domains" so builds stay STAGED until promote.
 #
-# GitHub secrets: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_ORG_ID (team id; omit on hobby personal)
+# GitHub secrets: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_ORG_ID (team only)
 
 on:
   workflow_dispatch:
@@ -22,7 +19,7 @@ jobs:
   promote:
     name: Promote latest main deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     environment:
       name: production
       url: https://kcdgujarat.com
@@ -50,20 +47,61 @@ jobs:
           }
 
           api() {
-            curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN" "$@"
+            local out
+            out=$(mktemp)
+            local status
+            status=$(curl -sS -o "$out" -w "%{http_code}" -H "Authorization: Bearer $VERCEL_TOKEN" "$@") || {
+              echo "::error::curl failed"
+              exit 1
+            }
+            if [ "$status" -ge 400 ]; then
+              echo "::error::Vercel API HTTP $status for $*"
+              cat "$out"
+              exit 1
+            fi
+            cat "$out"
+            rm -f "$out"
           }
 
           echo "→ Latest READY deployment on branch main"
-          deployment=$(
-            api "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&branch=main&state=READY&limit=1$(vercel_team_q '&')" \
-              | jq -r '.deployments[0].uid // empty'
+          list_json=$(
+            api "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&branch=main&state=READY&limit=5$(vercel_team_q '&')"
           )
+
+          deployment=$(echo "$list_json" | jq -r '.deployments[0].uid // empty')
+          target=$(echo "$list_json" | jq -r '.deployments[0].target // empty')
+          substate=$(echo "$list_json" | jq -r '.deployments[0].readySubstate // empty')
+          project_name=$(echo "$list_json" | jq -r '.deployments[0].name // empty')
 
           if [ -z "$deployment" ]; then
             echo "::error::No READY deployment on main. Push to main and wait for the Vercel build to finish."
             exit 1
           fi
 
-          echo "→ Promoting ${deployment} to production (no rebuild)"
-          api -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/promote/${deployment}$(vercel_team_q '?')"
-          echo "✓ Production domains now serve deployment ${deployment}"
+          echo "→ Deployment ${deployment} (target=${target:-preview}, substate=${substate:-n/a})"
+
+          if [ "$substate" = "PROMOTED" ] && [ "$target" = "production" ]; then
+            echo "✓ This deployment is already serving production traffic."
+            exit 0
+          fi
+
+          if [ "$target" = "production" ]; then
+            echo "→ Promoting staged production deployment (instant, no rebuild)"
+            api -X POST \
+              -H "Content-Type: application/json" \
+              -d '{}' \
+              "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/promote/${deployment}$(vercel_team_q '?')"
+            echo "✓ Production domains now point to ${deployment}"
+            exit 0
+          fi
+
+          echo "→ Main deploy is preview — creating production deployment from same build"
+          promote_json=$(
+            api -X POST \
+              -H "Content-Type: application/json" \
+              -d "{\"deploymentId\":\"${deployment}\",\"name\":\"${project_name}\",\"target\":\"production\",\"meta\":{\"action\":\"promote\"}}" \
+              "https://api.vercel.com/v13/deployments$(vercel_team_q '?')"
+          )
+          new_id=$(echo "$promote_json" | jq -r '.id // .uid // empty')
+          inspector=$(echo "$promote_json" | jq -r '.inspectorUrl // empty')
+          echo "✓ Production deploy started${new_id:+ (${new_id})}${inspector:+ — ${inspector}}"

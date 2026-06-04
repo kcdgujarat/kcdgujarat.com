@@ -31,7 +31,10 @@ Vercel + GitHub production promote — $REPO
 2. Vercel → Settings → Environments → Production
    - Branch Tracking: main
    - Turn OFF "Auto-assign Custom Production Domains"
-     (main deploys stay staged until you promote)
+     (instant promote via API; optional but recommended)
+
+   If main still deploys as Preview, the workflow rebuilds for production
+   automatically (same code, production env vars).
 
 3. GitHub secrets (repo → Settings → Secrets → Actions):
    VERCEL_TOKEN        — Vercel → Account → Tokens → Create
