@@ -28,7 +28,6 @@ interface HeaderProps {
   registrationOpen?: boolean;
   comingSoon?: boolean;
   cfpOpen?: boolean;
-  cfpUrl?: string;
   showSpeakers?: boolean;
   showTeam?: boolean;
 }
@@ -39,7 +38,6 @@ export function Header({
   registrationOpen = false,
   comingSoon = false,
   cfpOpen = false,
-  cfpUrl,
   showSpeakers = false,
   showTeam = false,
 }: HeaderProps) {
@@ -62,7 +60,7 @@ export function Header({
 
   // Primary CTA: CFP takes precedence; registration shown only when open.
   const showCta = cfpOpen || registrationOpen;
-  const primaryHref = cfpOpen ? (cfpUrl || '/cfp') : (registrationUrl || '/register');
+  const primaryHref = cfpOpen ? '/cfp' : (registrationUrl || '/register');
   const primaryLabel = cfpOpen ? 'Submit a Talk' : 'Register';
 
   return (

@@ -87,7 +87,6 @@ export default async function HomePage() {
   const registrationOpen = registration.open;
 
   const registrationUrl = registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
-  const cfpUrl = cfp.url || process.env.NEXT_PUBLIC_CFP_URL;
   const eventDateLabel = eventDate ? formatEventDate(eventDate) : 'Conference Day, 2026';
 
   const fullEventLd = {
@@ -110,13 +109,12 @@ export default async function HomePage() {
         city={city}
         registrationUrl={registrationUrl}
         registrationOpen={registrationOpen}
-        cfpUrl={cfpUrl}
         cfpOpen={cfpOpen}
         cfpDeadline={cfp.deadline}
         showSpeakers={cfp.showSpeakers}
       />
       <AboutSection />
-      <WhatToExpect cfpUrl={cfpUrl} cfpDeadline={cfp.deadline} cfpOpen={cfpOpen} />
+      <WhatToExpect cfpDeadline={cfp.deadline} cfpOpen={cfpOpen} />
       <KeyDatesSection items={keyDates} eventDate={eventDate} />
       {cfp.showSpeakers && <SpeakersPreview speakers={speakers} />}
       <DayAtGlance
@@ -126,7 +124,7 @@ export default async function HomePage() {
         timeline={event.timeline}
       />
       {sessions.length > 0 && null}
-      {cfpOpen && <CfpSection cfpUrl={cfpUrl} homeSection={cfp.homeSection} />}
+      {cfpOpen && <CfpSection homeSection={cfp.homeSection} />}
       <VenueSection venueName={venueName} venueAddress={venueAddress} mapEmbedUrl={mapEmbedUrl} />
       {showTeam && <TeamPreview team={team} />}
       <SponsorStrip sponsors={sponsors} />

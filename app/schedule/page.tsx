@@ -35,16 +35,12 @@ export default async function SchedulePage() {
             Want your talk on this schedule? Submit
             {cfp.deadline ? ` before ${formatEventDate(cfp.deadline)}.` : ' while the CFP is open.'}
           </p>
-          {cfp.url && (
-            <Link
-              href={cfp.url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white"
-            >
-              Submit a Talk
-            </Link>
-          )}
+          <Link
+            href="/cfp"
+            className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white"
+          >
+            Submit a Talk
+          </Link>
         </div>
       </Container>
     );

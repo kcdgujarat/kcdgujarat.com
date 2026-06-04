@@ -69,7 +69,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           registrationOpen={registrationOpen}
           comingSoon={comingSoon}
           cfpOpen={cfpOpen}
-          cfpUrl={cfp.url}
           showSpeakers={showSpeakers}
           showTeam={showTeam}
         />
@@ -79,7 +78,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             socials={socialLinks}
             contactEmail={event.contactEmail}
             cfpOpen={cfpOpen}
-            cfpUrl={cfp.url}
             showSpeakers={showSpeakers}
             showTeam={showTeam}
           />

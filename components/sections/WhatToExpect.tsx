@@ -29,12 +29,11 @@ const ITEMS = [
 ];
 
 interface Props {
-  cfpUrl?: string;
   cfpDeadline?: string;
   cfpOpen?: boolean;
 }
 
-export function WhatToExpect({ cfpUrl, cfpDeadline, cfpOpen = true }: Props) {
+export function WhatToExpect({ cfpDeadline, cfpOpen = true }: Props) {
   return (
     <section className="py-20" id="what-to-expect">
       <Container>
@@ -74,7 +73,7 @@ export function WhatToExpect({ cfpUrl, cfpDeadline, cfpOpen = true }: Props) {
             </div>
             <div className="flex items-center gap-3">
               <Link
-                href={cfpUrl || '/cfp'}
+                href="/cfp"
                 className="inline-flex h-11 items-center justify-center rounded-full bg-kcd-primary px-6 text-xs font-bold uppercase tracking-wider !text-white"
               >
                 Submit a Talk

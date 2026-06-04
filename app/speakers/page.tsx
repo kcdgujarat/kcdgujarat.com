@@ -34,16 +34,12 @@ export default async function SpeakersPage() {
           <p className="mx-auto mt-2 max-w-2xl text-sm text-kcd-ink/70">
             Submit your talk proposal {cfp.deadline ? `before ${formatEventDate(cfp.deadline)}.` : 'while the CFP is open.'}
           </p>
-          {cfp.url && (
-            <Link
-              href={cfp.url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white"
-            >
-              Submit a Talk
-            </Link>
-          )}
+          <Link
+            href="/cfp"
+            className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white"
+          >
+            Submit a Talk
+          </Link>
         </div>
       </Container>
     );

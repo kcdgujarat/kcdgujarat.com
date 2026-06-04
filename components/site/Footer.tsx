@@ -8,7 +8,6 @@ interface FooterProps {
   socials?: SiteSocialLinks;
   contactEmail?: string;
   cfpOpen?: boolean;
-  cfpUrl?: string;
   showSpeakers?: boolean;
   showTeam?: boolean;
 }
@@ -17,7 +16,6 @@ export function Footer({
   socials = {},
   contactEmail,
   cfpOpen = false,
-  cfpUrl,
   showSpeakers = false,
   showTeam = false,
 }: FooterProps) {
@@ -32,7 +30,7 @@ export function Footer({
     { href: '/venue', label: 'Venue' },
   ];
   const getInvolvedLinks = [
-    ...(cfpOpen ? [{ href: cfpUrl || '/cfp', label: 'Submit a Talk' }] : []),
+    ...(cfpOpen ? [{ href: '/cfp', label: 'Submit a Talk' }] : []),
     { href: '/sponsorship', label: 'Become a Sponsor' },
     ...(showTeam ? [{ href: '/team', label: 'Organizers & Team' }] : []),
   ];

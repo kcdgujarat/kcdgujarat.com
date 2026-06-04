@@ -3,11 +3,10 @@ import { ButtonLink } from '@/components/ui/button';
 
 interface Props {
   registrationUrl?: string;
-  cfpUrl?: string;
   soldOut?: boolean;
 }
 
-export function CtaSection({ registrationUrl, cfpUrl, soldOut = false }: Props) {
+export function CtaSection({ registrationUrl, soldOut = false }: Props) {
   return (
     <section className="py-20">
       <Container>
@@ -40,7 +39,7 @@ export function CtaSection({ registrationUrl, cfpUrl, soldOut = false }: Props) 
               </ButtonLink>
             )}
             <ButtonLink
-              href={cfpUrl || '/cfp'}
+              href="/cfp"
               size="lg"
               variant="outline"
               className="rounded-full !border-white/40 !bg-transparent !text-white hover:!bg-white/10"

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { ButtonLink } from '@/components/ui/button';
@@ -15,11 +14,10 @@ const FORMAT_ICONS: Record<CfpFormatIcon, LucideIcon> = {
 };
 
 type CfpSectionProps = {
-  cfpUrl?: string;
   homeSection: CfpHomeSection;
 };
 
-export function CfpSection({ cfpUrl, homeSection }: CfpSectionProps) {
+export function CfpSection({ homeSection }: CfpSectionProps) {
   return (
     <section id="cfp" className="py-20">
       <Container>
@@ -42,13 +40,10 @@ export function CfpSection({ cfpUrl, homeSection }: CfpSectionProps) {
             );
           })}
         </div>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <ButtonLink href={cfpUrl || '#'} size="lg">
-            Submit on Sessionize
+        <div className="mt-10 flex justify-center">
+          <ButtonLink href="/cfp" size="lg">
+            Submit a Talk
           </ButtonLink>
-          <Link href="/cfp" className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline">
-            CFP details →
-          </Link>
         </div>
       </Container>
     </section>

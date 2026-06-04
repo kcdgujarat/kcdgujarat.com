@@ -10,7 +10,6 @@ interface HeroSectionProps {
   city?: string;
   registrationUrl?: string;
   registrationOpen?: boolean;
-  cfpUrl?: string;
   cfpOpen?: boolean;
   cfpDeadline?: string;
   showSpeakers?: boolean;
@@ -23,7 +22,6 @@ export function HeroSection({
   city = 'Gujarat, India',
   registrationUrl,
   registrationOpen = false,
-  cfpUrl,
   cfpOpen = false,
   cfpDeadline,
   showSpeakers = false,
@@ -90,7 +88,7 @@ export function HeroSection({
               {cfpOpen ? (
                 <>
                   <Link
-                    href={cfpUrl || '/cfp'}
+                    href="/cfp"
                     className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
                   >
                     Submit a Talk
