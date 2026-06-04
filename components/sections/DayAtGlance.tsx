@@ -34,7 +34,7 @@ export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen =
           description={
             cfpOpen
               ? 'Schedule + talks drop after CFP closes. Here is the day shape we are planning.'
-              : 'One full day of talks, workshops, and community — across five parallel tracks.'
+              : 'One full day of talks, workshops, and community — across five tracks.'
           }
           align="center"
         />
@@ -69,7 +69,7 @@ export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen =
 
           {/* Tracks */}
           <div className="rounded-3xl border border-kcd-border bg-white p-6 shadow-card md:p-8">
-            <h3 className="font-display text-lg font-semibold text-kcd-ink">Five parallel tracks</h3>
+            <h3 className="font-display text-lg font-semibold text-kcd-ink">Parallel tracks covering talks on the following topics</h3>
             <p className="mt-2 text-sm text-kcd-ink/70">Pick your path — switch any time.</p>
             <ul className="mt-6 space-y-3">
               {TRACKS.map((t) => (
