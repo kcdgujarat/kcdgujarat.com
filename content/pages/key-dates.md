@@ -9,8 +9,6 @@ items:
     value: "2026-07-27"
   - label: "Speakers announced"
     value: "2026-07-31"
-  - label: "Early-bird tickets"
-    value: "2026-06-08"
   - label: "Conference day"
     value: "2026-09-19"
 ---
