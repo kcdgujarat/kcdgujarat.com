@@ -3,7 +3,6 @@ import type { Sponsor } from '@/lib/content';
 import { cn } from '@/lib/utils';
 
 const TIER_LABEL: Record<Sponsor['tier'], string> = {
-  diamond: 'Diamond',
   platinum: 'Platinum',
   gold: 'Gold',
   silver: 'Silver',
@@ -12,7 +11,6 @@ const TIER_LABEL: Record<Sponsor['tier'], string> = {
 };
 
 const TIER_SIZE: Record<Sponsor['tier'], string> = {
-  diamond: 'h-24 md:h-28',
   platinum: 'h-20 md:h-24',
   gold: 'h-16 md:h-20',
   silver: 'h-14 md:h-16',
@@ -21,7 +19,6 @@ const TIER_SIZE: Record<Sponsor['tier'], string> = {
 };
 
 const TIER_COLS: Record<Sponsor['tier'], string> = {
-  diamond: 'grid-cols-1 sm:grid-cols-2',
   platinum: 'grid-cols-2 sm:grid-cols-3',
   gold: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4',
   silver: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5',

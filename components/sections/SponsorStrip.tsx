@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { SponsorTier } from '@/components/site/SponsorTier';
 import { ButtonLink } from '@/components/ui/button';
 
-const TIERS: Sponsor['tier'][] = ['diamond', 'platinum', 'gold', 'silver', 'community', 'media'];
+const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'community', 'media'];
 
 export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
   const byTier = (t: Sponsor['tier']) => sponsors.filter((s) => s.tier === t);
@@ -22,7 +22,7 @@ export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
           <div className="rounded-3xl border border-dashed border-kcd-border bg-white p-10 text-center">
             <p className="font-display text-xl font-semibold text-kcd-ink">Sponsor slots are open</p>
             <p className="mt-2 text-sm text-kcd-ink/70">
-              Be the first to back the inaugural KCD in Gujarat. Diamond, Platinum, Gold, Silver, Community, and Media tiers available.
+              Be the first to back the inaugural KCD in Gujarat. Platinum, Gold, Silver, Bronze and Community tiers available.
             </p>
           </div>
         )}

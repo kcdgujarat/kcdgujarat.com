@@ -39,7 +39,7 @@ Routes (under `app/`):
 - `/` — Home. Hero, about KCD, what to expect, key dates, "previous editions" teaser, CTA buttons (Register, CFP), navigation links into the four standalone pages, sponsor strip, FAQs, code of conduct link, organizers, contact.
 - `/speakers` — Speaker grid (photo, name, role, company, talk title), each clickable to `/speakers/[slug]` for full bio + session details.
 - `/schedule` — Multi‑track agenda. Filter/toggle by track. Each session links to `/schedule/[slug]` with abstract, speaker(s), room, time.
-- `/sponsors` — Tiered logo wall (Diamond / Platinum / Gold / Silver / Community / Media). Each tier rendered with appropriate prominence; clicking a sponsor opens its site in a new tab.
+- `/sponsors` — Tiered logo wall (Platinum / Gold / Silver / Community). Each tier rendered with appropriate prominence; clicking a sponsor opens its site in a new tab.
 - `/venue` — Venue name, address, embedded map, travel/parking info, accommodation suggestions, accessibility info.
 - `/cfp` — Call for proposals (links out to Sessionize).
 - `/register` — Registration (links out to the ticketing provider; this page exists so we control SEO/OG).

@@ -13,7 +13,6 @@ export const metadata = buildMetadata({
 });
 
 const FALLBACK_TIERS = [
-  { name: 'Diamond', slug: 'diamond', price: '— top tier —', perks: ['Keynote slot', 'Top placement on all materials', 'Booth premium location', 'Recruitment table'] },
   { name: 'Platinum', slug: 'platinum', price: 'priority placement', perks: ['Workshop slot', 'Premium booth', 'Logo on stage backdrop'] },
   { name: 'Gold', slug: 'gold', price: 'standard placement', perks: ['Booth space', 'Logo on website + lanyard'] },
   { name: 'Silver', slug: 'silver', price: 'community tier', perks: ['Logo on website', 'Recognition during opening'] },
