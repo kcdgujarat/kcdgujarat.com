@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   content: [
@@ -52,9 +53,19 @@ const config: Config = {
       boxShadow: {
         card: '0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.06)',
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': '#111827',
+            '--tw-prose-headings': '#111827',
+            '--tw-prose-bold': '#111827',
+            '--tw-prose-links': '#4285f4',
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
 
 export default config;

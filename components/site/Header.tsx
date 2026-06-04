@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
-import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { Container } from './Container';
 import { ButtonLink } from '@/components/ui/button';
@@ -23,6 +22,8 @@ const NAV: NavItem[] = [
 ];
 
 interface HeaderProps {
+  /** Current path from the server (via proxy `x-pathname` header). */
+  pathname?: string;
   registrationUrl?: string;
   registrationOpen?: boolean;
   comingSoon?: boolean;
@@ -33,6 +34,7 @@ interface HeaderProps {
 }
 
 export function Header({
+  pathname = '/',
   registrationUrl,
   registrationOpen = false,
   comingSoon = false,
@@ -42,7 +44,6 @@ export function Header({
   showTeam = false,
 }: HeaderProps) {
   const [open, setOpen] = React.useState(false);
-  const pathname = usePathname();
   const isHome = pathname === '/';
 
   // On the homepage, anchor links become pure hash links so the browser

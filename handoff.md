@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-06-02 (social links + markdown-only stack)_
+_Last updated: 2026-06-02 (CFP markdown render + typography)_
 
 ## 1. Goal
 
@@ -35,7 +35,7 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 ### Content flags (`content/pages/`)
 
 - `event.md` — headline, dates, city, venue, timeline, `contactEmail` (no social links here).
-- `cfp.md` — `startDate` / `endDate` → auto `open` + `phase` (Asia/Kolkata); `showSpeakers`, `url`.
+- `cfp.md` — `startDate` / `endDate` → auto `open` + `phase` (Asia/Kolkata); `showSpeakers`, `url`; `homeSection` for homepage `/#cfp` cards (eyebrow, title, intro, `cards[]` with `icon`: megaphone | wrench | graduation-cap).
 - `registration.md` — `startDate` / optional `endDate` → auto `open` + `phase`; `url`.
 - `sponsorship.md` — tiers, `contactEmail`, prospectus via `static/prospectus.pdf`.
 - `key-dates.md` — homepage KeyDatesSection.
@@ -73,6 +73,8 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 28. **Social links file** — `content/pages/social.md` + `getSocialLinks()` + `SocialLinks` component. Fixed empty icons caused by Payload `settings.socialLinks` + `twitter` vs `x` key mismatch.
 29. **CFP / registration date phases** — `upcoming` / `open` / `closed` from `startDate`/`endDate` in markdown.
 30. **Dev content hot reload** — `scripts/dev.mjs` + `lib/content-revision.ts` + `ensureDevContentFresh()`.
+31. **CFP markdown** — `@tailwindcss/typography` + `MarkdownBody`; `/cfp` renders `cfp.bodyHtml` on all phases (was hidden during `upcoming`/`closed`).
+32. **CFP silent failure** — invalid `homeSection.cards[].icon` (e.g. `group`) made `getCfpConfig()` fall back to `open: false`; now throws with path/message. Icons: megaphone, wrench, graduation-cap, users, group.
 
 ## 5. Failed attempts
 

@@ -126,7 +126,7 @@ export default async function HomePage() {
         timeline={event.timeline}
       />
       {sessions.length > 0 && null}
-      {cfpOpen && <CfpSection cfpUrl={cfpUrl} />}
+      {cfpOpen && <CfpSection cfpUrl={cfpUrl} homeSection={cfp.homeSection} />}
       <VenueSection venueName={venueName} venueAddress={venueAddress} mapEmbedUrl={mapEmbedUrl} />
       {showTeam && <TeamPreview team={team} />}
       <SponsorStrip sponsors={sponsors} />

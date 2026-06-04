@@ -62,6 +62,56 @@ export const FaqFrontmatter = RenderFlag.extend({
 });
 export type FaqFrontmatter = z.infer<typeof FaqFrontmatter>;
 
+export const CfpFormatIcon = z.enum(['megaphone', 'wrench', 'graduation-cap', 'users', 'group']);
+export type CfpFormatIcon = z.infer<typeof CfpFormatIcon>;
+
+export const CfpHomeFormatCard = z.object({
+  icon: CfpFormatIcon.default('megaphone'),
+  title: z.string(),
+  description: z.string(),
+});
+export type CfpHomeFormatCard = z.infer<typeof CfpHomeFormatCard>;
+
+const CFP_HOME_DEFAULTS = {
+  eyebrow: 'CFP',
+  title: 'Call for Proposals',
+  description:
+    'We are looking for talks, workshops, and lightning sessions across our tracks. First-time speakers warmly encouraged.',
+  cards: [
+    {
+      icon: 'megaphone' as const,
+      title: 'Talks',
+      description: '30-minute sessions sharing real-world experience and lessons learned.',
+    },
+    {
+      icon: 'wrench' as const,
+      title: 'Workshops',
+      description: 'Hands-on sessions that send attendees home with something usable.',
+    },
+    {
+      icon: 'graduation-cap' as const,
+      title: 'Lightning',
+      description: 'Five-minute talks. Great for first-time speakers.',
+    },
+  ],
+};
+
+/** Homepage `/#cfp` section — partial fields fall back to defaults. */
+export const CfpHomeSection = z
+  .object({
+    eyebrow: z.string().optional(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    cards: z.array(CfpHomeFormatCard).optional(),
+  })
+  .transform((partial) => ({
+    eyebrow: partial.eyebrow ?? CFP_HOME_DEFAULTS.eyebrow,
+    title: partial.title ?? CFP_HOME_DEFAULTS.title,
+    description: partial.description ?? CFP_HOME_DEFAULTS.description,
+    cards: partial.cards ?? CFP_HOME_DEFAULTS.cards,
+  }));
+export type CfpHomeSection = z.infer<typeof CfpHomeSection>;
+
 export const CfpConfigFrontmatter = z
   .object({
     /** First day the CFP is open (YYYY-MM-DD, Asia/Kolkata). */
@@ -81,9 +131,12 @@ export const CfpConfigFrontmatter = z
       .default(
         'We are looking for talks, workshops, and lightning sessions across Platform, DevSecOps, AI/ML, Networking, and Beginner tracks.',
       ),
+    /** Homepage `/#cfp` anchor section (eyebrow, title, intro, format cards). */
+    homeSection: CfpHomeSection.optional(),
   })
   .transform((data) => ({
     ...data,
+    homeSection: data.homeSection ?? CfpHomeSection.parse({}),
     open: isDateRangeActive(data.startDate, data.endDate),
     phase: getWindowPhase(data.startDate, data.endDate),
     /** Alias kept for components that display the submission deadline. */

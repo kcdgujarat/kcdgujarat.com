@@ -53,10 +53,15 @@ export function proxy(req: NextRequest) {
   if (COMING_SOON && !isAllowedDuringComingSoon(path)) {
     const url = req.nextUrl.clone();
     url.pathname = COMING_SOON_NOT_FOUND;
-    return NextResponse.rewrite(url);
+    const res = NextResponse.rewrite(url);
+    res.headers.set('x-pathname', path);
+    return res;
   }
 
   const res = NextResponse.next();
+  // Lets the root layout pass the current path into client chrome without usePathname()
+  // (avoids "Router action dispatched before initialization" on App Router pages).
+  res.headers.set('x-pathname', path);
   // Skip CSP on the Payload admin/api routes — Payload manages its own headers.
   if (!path.startsWith('/admin') && !path.startsWith('/api')) {
     res.headers.set('Content-Security-Policy', CSP);

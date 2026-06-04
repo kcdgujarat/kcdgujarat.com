@@ -15,6 +15,7 @@ import {
   TeamFrontmatter,
   PartnerFrontmatter,
   CfpConfigFrontmatter,
+  CfpHomeSection,
   RegistrationConfigFrontmatter,
   EventConfigFrontmatter,
   SocialLinksFrontmatter,
@@ -211,16 +212,9 @@ export type CfpConfig = CfpConfigFrontmatter & {
 
 export async function getCfpConfig(): Promise<CfpConfig> {
   ensureDevContentFresh();
+  let raw: string;
   try {
-    const raw = await fs.readFile(path.join(ROOT, 'pages', 'cfp.md'), 'utf8');
-    const { data, content } = matter(raw);
-    const parsed = CfpConfigFrontmatter.parse(data);
-    const body = content.trim();
-    return {
-      ...parsed,
-      body,
-      bodyHtml: body ? await renderMarkdown(body) : '',
-    };
+    raw = await fs.readFile(path.join(ROOT, 'pages', 'cfp.md'), 'utf8');
   } catch {
     return {
       startDate: '',
@@ -232,10 +226,26 @@ export async function getCfpConfig(): Promise<CfpConfig> {
       eyebrow: 'CFP',
       title: 'Call for Proposals',
       description: '',
+      homeSection: CfpHomeSection.parse({}),
       body: '',
       bodyHtml: '',
     };
   }
+
+  const { data, content } = matter(raw);
+  const result = CfpConfigFrontmatter.safeParse(data);
+  if (!result.success) {
+    const details = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    throw new Error(`Invalid content/pages/cfp.md — ${details}`);
+  }
+
+  const parsed = result.data;
+  const body = content.trim();
+  return {
+    ...parsed,
+    body,
+    bodyHtml: body ? await renderMarkdown(body) : '',
+  };
 }
 
 export type SponsorshipConfig = SponsorshipConfigFrontmatter & {
