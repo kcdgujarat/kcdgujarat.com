@@ -3,8 +3,6 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
 import { Code2, Wrench, Users, Sparkles, Megaphone } from 'lucide-react';
-import { formatEventDate } from '@/lib/utils';
-
 const ITEMS = [
   {
     icon: Code2,
@@ -29,11 +27,11 @@ const ITEMS = [
 ];
 
 interface Props {
-  cfpDeadline?: string;
+  cfpClosesLabel?: string;
   cfpOpen?: boolean;
 }
 
-export function WhatToExpect({ cfpDeadline, cfpOpen = true }: Props) {
+export function WhatToExpect({ cfpClosesLabel, cfpOpen = true }: Props) {
   return (
     <section className="py-20" id="what-to-expect">
       <Container>
@@ -67,7 +65,7 @@ export function WhatToExpect({ cfpDeadline, cfpOpen = true }: Props) {
                 <h3 className="font-display text-lg font-semibold text-kcd-ink">Call for Proposals</h3>
                 <p className="text-sm text-kcd-ink/70">
                   Submit your talk proposals for KCD Gujarat 2026.
-                  {cfpDeadline ? ` Deadline: ${formatEventDate(cfpDeadline)}.` : ''}
+                  {cfpClosesLabel ? ` Closes ${cfpClosesLabel}.` : ''}
                 </p>
               </div>
             </div>

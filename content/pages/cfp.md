@@ -1,8 +1,11 @@
 ---
-# CFP window — open/closed state is derived automatically from startDate/endDate
-# (Asia/Kolkata calendar days, inclusive). No manual toggle needed.
+# CFP window — open/closed is automatic from the dates (and optional times) below.
+# All times are 24-hour HH:mm in Asia/Kolkata unless you set `timezone`.
+# Omit startTime/endTime for full calendar days (midnight through 23:59).
 startDate: "2026-06-05"
+startTime: "21:00"   # opens at 9:00 AM on startDate
 endDate: "2026-07-14"
+endTime: "23:59"     # closes at 6:00 PM on endDate (inclusive through that minute)
 url: "https://sessionize.com/kcd-gujarat-2026"
 
 # Toggle the speaker lineup independently of CFP state.

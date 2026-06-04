@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { SpeakerCard } from '@/components/site/SpeakerCard';
 import { getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
-import { formatEventDate } from '@/lib/utils';
+import { formatEventDate, formatWindowMoment } from '@/lib/utils';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
@@ -18,8 +18,8 @@ export default async function SpeakersPage() {
   const [speakers, cfp] = await Promise.all([getSpeakers(), getCfpConfig()]);
   if (!cfp.showSpeakers) notFound();
 
-  const startLabel = formatEventDate(cfp.startDate);
-  const endLabel = formatEventDate(cfp.endDate);
+  const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
+  const endLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
 
   if (cfp.phase === 'open') {
     return (
@@ -32,7 +32,7 @@ export default async function SpeakersPage() {
         <div className="rounded-3xl border border-dashed border-kcd-border bg-white p-8 text-center shadow-card md:p-10">
           <p className="font-display text-xl font-semibold text-kcd-ink">Want to speak at KCD Gujarat 2026?</p>
           <p className="mx-auto mt-2 max-w-2xl text-sm text-kcd-ink/70">
-            Submit your talk proposal {cfp.deadline ? `before ${formatEventDate(cfp.deadline)}.` : 'while the CFP is open.'}
+            Submit your talk proposal{endLabel ? ` before ${endLabel}.` : ' while the CFP is open.'}
           </p>
           <Link
             href="/cfp"

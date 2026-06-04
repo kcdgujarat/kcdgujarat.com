@@ -5,14 +5,14 @@ import { SocialLinks } from '@/components/site/SocialLinks';
 import { ButtonLink } from '@/components/ui/button';
 import { getCfpConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
-import { formatEventDate } from '@/lib/utils';
+import { formatWindowMoment } from '@/lib/utils';
 
 export const revalidate = 3600;
 
 export async function generateMetadata() {
   const cfp = await getCfpConfig();
-  const startLabel = formatEventDate(cfp.startDate);
-  const endLabel = formatEventDate(cfp.endDate);
+  const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
+  const endLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
 
   if (cfp.phase === 'upcoming') {
     return buildMetadata({
@@ -44,8 +44,8 @@ export async function generateMetadata() {
 export default async function CfpPage() {
   const [cfp, socialLinks] = await Promise.all([getCfpConfig(), getSocialLinks()]);
   const cfpUrl = cfp.url || process.env.NEXT_PUBLIC_CFP_URL;
-  const startLabel = formatEventDate(cfp.startDate);
-  const endLabel = formatEventDate(cfp.endDate);
+  const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
+  const endLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
 
   const header =
     cfp.phase === 'upcoming'

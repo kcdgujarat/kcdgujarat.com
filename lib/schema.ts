@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { normalizeSiteSocialLinks } from '@/lib/site-social';
-import { isDateRangeActive, isRegistrationWindowActive, getWindowPhase } from '@/lib/utils';
+import {
+  isDateTimeRangeActive,
+  isRegistrationWindowActive,
+  getDateTimeWindowPhase,
+  getWindowPhase,
+} from '@/lib/utils';
 
 /** When `false`, the entry stays in Git but is hidden on the site. Defaults to `true`. */
 export const RenderFlag = z.object({
@@ -112,12 +117,23 @@ export const CfpHomeSection = z
   }));
 export type CfpHomeSection = z.infer<typeof CfpHomeSection>;
 
+/** 24-hour clock, Asia/Kolkata wall time unless `timezone` is set. */
+export const TimeOfDay = z.string().regex(/^([01]?\d|2[0-3]):[0-5]\d$/, {
+  message: 'Use 24-hour HH:mm (e.g. 09:00, 18:30)',
+});
+
 export const CfpConfigFrontmatter = z
   .object({
-    /** First day the CFP is open (YYYY-MM-DD, Asia/Kolkata). */
+    /** First day the CFP opens (YYYY-MM-DD). */
     startDate: z.string(),
-    /** Last day submissions are accepted (YYYY-MM-DD, Asia/Kolkata). */
+    /** Optional opening time on `startDate` (HH:mm, 24h). Defaults to 00:00. */
+    startTime: TimeOfDay.optional(),
+    /** Last day submissions are accepted (YYYY-MM-DD). */
     endDate: z.string(),
+    /** Optional closing time on `endDate` (HH:mm, 24h). Defaults to 23:59 inclusive. */
+    endTime: TimeOfDay.optional(),
+    /** IANA timezone for the window. Defaults to Asia/Kolkata. */
+    timezone: z.string().optional().default('Asia/Kolkata'),
     url: z.string().url().optional(),
     announcedAt: z.string().optional(),
     /** Show the speaker lineup on the home page and in the nav, independent of CFP state. */
@@ -134,14 +150,21 @@ export const CfpConfigFrontmatter = z
     /** Homepage `/#cfp` anchor section (eyebrow, title, intro, format cards). */
     homeSection: CfpHomeSection.optional(),
   })
-  .transform((data) => ({
-    ...data,
-    homeSection: data.homeSection ?? CfpHomeSection.parse({}),
-    open: isDateRangeActive(data.startDate, data.endDate),
-    phase: getWindowPhase(data.startDate, data.endDate),
-    /** Alias kept for components that display the submission deadline. */
-    deadline: data.endDate,
-  }));
+  .transform((data) => {
+    const window = {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      timeZone: data.timezone,
+    };
+    return {
+      ...data,
+      homeSection: data.homeSection ?? CfpHomeSection.parse({}),
+      open: isDateTimeRangeActive(data.startDate, data.endDate, window),
+      phase: getDateTimeWindowPhase(data.startDate, data.endDate, window),
+      /** Alias kept for components that display the submission deadline. */
+      deadline: data.endDate,
+    };
+  });
 export type CfpConfigFrontmatter = z.infer<typeof CfpConfigFrontmatter>;
 
 export const TimelineItem = RenderFlag.extend({

@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { ScheduleGrid } from '@/components/site/ScheduleGrid';
 import { getSessions, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
-import { formatEventDate } from '@/lib/utils';
+import { formatEventDate, formatWindowMoment } from '@/lib/utils';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
@@ -18,8 +18,8 @@ export default async function SchedulePage() {
   const [sessions, cfp] = await Promise.all([getSessions(), getCfpConfig()]);
   if (!cfp.showSpeakers) notFound();
 
-  const startLabel = formatEventDate(cfp.startDate);
-  const endLabel = formatEventDate(cfp.endDate);
+  const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
+  const endLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
 
   if (cfp.phase === 'open') {
     return (
@@ -33,7 +33,7 @@ export default async function SchedulePage() {
           <p className="font-display text-xl font-semibold text-kcd-ink">CFP is open</p>
           <p className="mx-auto mt-2 max-w-2xl text-sm text-kcd-ink/70">
             Want your talk on this schedule? Submit
-            {cfp.deadline ? ` before ${formatEventDate(cfp.deadline)}.` : ' while the CFP is open.'}
+            {endLabel ? ` before ${endLabel}.` : ' while the CFP is open.'}
           </p>
           <Link
             href="/cfp"

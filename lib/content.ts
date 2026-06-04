@@ -222,6 +222,7 @@ export async function getCfpConfig(): Promise<CfpConfig> {
       open: false,
       phase: 'upcoming' as const,
       deadline: '',
+      timezone: 'Asia/Kolkata',
       showSpeakers: false,
       eyebrow: 'CFP',
       title: 'Call for Proposals',

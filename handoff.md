@@ -35,7 +35,7 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 ### Content flags (`content/pages/`)
 
 - `event.md` — headline, dates, city, venue, timeline, `contactEmail` (no social links here).
-- `cfp.md` — `startDate` / `endDate` → auto `open` + `phase` (Asia/Kolkata); `showSpeakers`, `url`; `homeSection` for homepage `/#cfp` cards (eyebrow, title, intro, `cards[]` with `icon`: megaphone | wrench | graduation-cap).
+- `cfp.md` — `startDate` / `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h, Asia/Kolkata) → auto `open` + `phase`; `showSpeakers`, `url`; `homeSection` for homepage `/#cfp` cards.
 - `registration.md` — `startDate` / optional `endDate` → auto `open` + `phase`; `url`.
 - `sponsorship.md` — tiers, `contactEmail`, prospectus via `static/prospectus.pdf`.
 - `key-dates.md` — homepage KeyDatesSection.
@@ -54,7 +54,7 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 ### Deployments (Vercel Git + GitHub Actions — no VERCEL_TOKEN)
 
 - **Preview** — Vercel Git integration auto-deploys `main` and PRs. `deploy-preview.yml` waits for the Vercel GitHub check and smoke-tests the preview URL.
-- **Production** — `deploy-production.yml` is manual (`workflow_dispatch`) with GitHub `environment: production` approval. It pushes `main` → `production` branch; Vercel deploys that branch to kcdgujarat.com.
+- **Production** — `deploy-production.yml` is manual (`workflow_dispatch`) with GitHub `environment: production` approval. Pushes `main` → `production` only; Vercel deploys asynchronously (track in Vercel dashboard).
 - **One-time setup:** `./scripts/setup-vercel-ci.sh`
 - **Vercel:** Project → Git → Production Branch = `production` (not `main`). Repo must be connected.
 - **GitHub:** Environments → `production` → Required reviewers. Create branch once: `git push origin main:production`

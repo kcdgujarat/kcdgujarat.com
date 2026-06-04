@@ -24,7 +24,7 @@ import {
   getKeyDates,
   getSocialLinks,
 } from '@/lib/content';
-import { siteUrl, formatEventDate } from '@/lib/utils';
+import { siteUrl, formatEventDate, formatWindowMoment } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -84,6 +84,7 @@ export default async function HomePage() {
       getKeyDates(),
     ]);
   const cfpOpen = cfp.open;
+  const cfpClosesLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
   const registrationOpen = registration.open;
 
   const registrationUrl = registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
@@ -110,11 +111,11 @@ export default async function HomePage() {
         registrationUrl={registrationUrl}
         registrationOpen={registrationOpen}
         cfpOpen={cfpOpen}
-        cfpDeadline={cfp.deadline}
+        cfpClosesLabel={cfpClosesLabel}
         showSpeakers={cfp.showSpeakers}
       />
       <AboutSection />
-      <WhatToExpect cfpDeadline={cfp.deadline} cfpOpen={cfpOpen} />
+      <WhatToExpect cfpClosesLabel={cfpClosesLabel} cfpOpen={cfpOpen} />
       <KeyDatesSection items={keyDates} eventDate={eventDate} />
       {cfp.showSpeakers && <SpeakersPreview speakers={speakers} />}
       <DayAtGlance
