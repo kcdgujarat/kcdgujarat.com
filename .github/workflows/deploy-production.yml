@@ -1,41 +1,69 @@
 name: Deploy Production
 
-# Manual production deploy — no VERCEL_TOKEN required.
+# Promotes the latest successful Vercel deployment from `main` to production.
+# No `production` git branch — push to `main`, let Vercel build, then run this
+# workflow (with environment approval) to go live on kcdgujarat.com.
 #
-# After GitHub environment approval, fast-forwards the `production` branch to
-# match `main`. Vercel Git integration deploys `production` to kcdgujarat.com.
+# Vercel setup (one time):
+#   • Git → Production Branch = `main`
+#   • Settings → Environments → Production → disable
+#     "Auto-assign Custom Production Domains" (main builds stay staged until promote)
 #
-# One-time setup:
-#   1. Vercel → Project → Settings → Git → Production Branch = `production`
-#   2. GitHub → Settings → Environments → production → Required reviewers
-#   3. Create the branch once: git push origin main:production
+# GitHub secrets: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_ORG_ID (team id; omit on hobby personal)
 
 on:
   workflow_dispatch:
 
 concurrency:
-  group: vercel-production
+  group: vercel-production-promote
   cancel-in-progress: false
 
 jobs:
-  production:
-    name: Promote main → production
+  promote:
+    name: Promote latest main deploy
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment:
       name: production
       url: https://kcdgujarat.com
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Push main to production branch
+      - name: Promote latest main deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git push origin "HEAD:refs/heads/production" --force-with-lease
-          echo "→ Vercel will deploy the production branch to kcdgujarat.com"
+          set -euo pipefail
+
+          for name in VERCEL_TOKEN VERCEL_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::Missing GitHub secret: $name"
+              exit 1
+            fi
+          done
+
+          vercel_team_q() {
+            local lead="$1"
+            if [ -n "${VERCEL_ORG_ID:-}" ]; then
+              printf '%steamId=%s' "$lead" "$VERCEL_ORG_ID"
+            fi
+          }
+
+          api() {
+            curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN" "$@"
+          }
+
+          echo "→ Latest READY deployment on branch main"
+          deployment=$(
+            api "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&branch=main&state=READY&limit=1$(vercel_team_q '&')" \
+              | jq -r '.deployments[0].uid // empty'
+          )
+
+          if [ -z "$deployment" ]; then
+            echo "::error::No READY deployment on main. Push to main and wait for the Vercel build to finish."
+            exit 1
+          fi
+
+          echo "→ Promoting ${deployment} to production (no rebuild)"
+          api -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/promote/${deployment}$(vercel_team_q '?')"
+          echo "✓ Production domains now serve deployment ${deployment}"

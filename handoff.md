@@ -51,13 +51,12 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 - `NEXT_PUBLIC_COMING_SOON`, `NEXT_PUBLIC_REGISTRATION_URL`, `NEXT_PUBLIC_CFP_URL`, `REVALIDATE_SECRET`
 - **No** `DATABASE_URL` / Payload vars needed.
 
-### Deployments (Vercel Git + GitHub Actions — no VERCEL_TOKEN)
+### Deployments (Vercel Git + promote on approve)
 
-- **Preview** — Vercel Git integration auto-deploys `main` and PRs. `deploy-preview.yml` waits for the Vercel GitHub check and smoke-tests the preview URL.
-- **Production** — `deploy-production.yml` is manual (`workflow_dispatch`) with GitHub `environment: production` approval. Pushes `main` → `production` only; Vercel deploys asynchronously (track in Vercel dashboard).
-- **One-time setup:** `./scripts/setup-vercel-ci.sh`
-- **Vercel:** Project → Git → Production Branch = `production` (not `main`). Repo must be connected.
-- **GitHub:** Environments → `production` → Required reviewers. Create branch once: `git push origin main:production`
+- **main** — every push triggers a Vercel build on `main` (staged if auto-assign production domains is off).
+- **Production** — `deploy-production.yml` (`workflow_dispatch` + `environment: production` approval) calls Vercel API to **promote the latest READY `main` deployment** — no `production` git branch.
+- **Secrets:** `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_ORG_ID` (team only). Sync IDs: `./scripts/sync-vercel-github-secrets.sh`
+- **One-time setup:** `./scripts/setup-vercel-ci.sh` — Production Branch = `main`, disable auto-assign production domains.
 
 ## 3. Files in flight
 

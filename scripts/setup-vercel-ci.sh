@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# One-time CI/CD setup for kcdgujarat.com (no VERCEL_TOKEN needed).
+# One-time CI/CD setup for kcdgujarat.com
 #
-# Previews: Vercel Git integration deploys `main` + PRs automatically.
-# Production: GitHub Actions pushes `main` → `production` branch after manual approval.
+# • Push to main → Vercel builds automatically (staged until promoted)
+# • Actions → Deploy Production → approve → promotes latest main deploy to production
 #
 # Prerequisites:
 #   gh auth login
+#   vercel login   (optional; for reading project/team ids)
 #
 # Usage:
 #   ./scripts/setup-vercel-ci.sh
@@ -20,47 +21,47 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 
 cat <<EOF
 
-Vercel + GitHub CI setup for $REPO
-==================================
+Vercel + GitHub production promote — $REPO
+==========================================
 
-1. Vercel dashboard → kcdgujarat.com → Settings → Git
-   - Connect GitHub repo: $REPO
-   - Production Branch: production  (must NOT be main)
+1. Vercel → Project → Settings → Git
+   - Connect this repo
+   - Production Branch: main
 
-2. Create the production branch (once, from your machine):
-   git fetch origin
-   git push origin origin/main:production
+2. Vercel → Settings → Environments → Production
+   - Branch Tracking: main
+   - Turn OFF "Auto-assign Custom Production Domains"
+     (main deploys stay staged until you promote)
 
-3. GitHub → $REPO → Settings → Environments → production
-   - Add Required reviewers for manual approval
+3. GitHub secrets (repo → Settings → Secrets → Actions):
+   VERCEL_TOKEN        — Vercel → Account → Tokens → Create
+   VERCEL_PROJECT_ID   — Project → Settings → General → Project ID
+   VERCEL_ORG_ID       — Team ID (Settings → General). Leave unset for personal hobby.
 
-4. Remove stale secrets (optional — no longer used by deploy workflows):
-   gh secret delete VERCEL_TOKEN --repo "$REPO" || true
-   gh secret delete VERCEL_ORG_ID --repo "$REPO" || true
-   gh secret delete VERCEL_PROJECT_ID --repo "$REPO" || true
+4. GitHub → Environments → production → add Required reviewers
 
-Deploy flow after setup:
-  • Push to main        → Vercel preview (automatic)
-  • Open PR             → Vercel preview (automatic)
-  • Actions → Deploy Production → approve → pushes main to production branch
+Deploy flow:
+  • git push origin main     → Vercel builds (preview/staged on main)
+  • Actions → Deploy Production → Approve → latest main deploy goes live
+
+You do NOT need a \`production\` git branch.
 
 EOF
 
-read -r -p "Create/update GitHub production environment with required reviewers? [y/N] " ans
+read -r -p "Open GitHub production environment settings in browser? [y/N] " ans
 case "$ans" in
   [yY]|[yY][eE][sS])
     gh api -X PUT "repos/$REPO/environments/production" -f wait_timer=0 >/dev/null || true
-    echo "→ Open https://github.com/$REPO/settings/environments to add required reviewers."
+    open "https://github.com/$REPO/settings/environments" 2>/dev/null || true
+    echo "→ Add required reviewers on the production environment."
     ;;
 esac
 
-read -r -p "Create production branch from main now? [y/N] " ans
-case "$ans" in
-  [yY]|[yY][eE][sS])
-    git fetch origin main
-    git push origin "origin/main:refs/heads/production"
-    echo "✓ production branch created/updated"
-    ;;
-esac
+if command -v vercel >/dev/null 2>&1 && [ -f .vercel/project.json ]; then
+  echo ""
+  echo "From .vercel/project.json:"
+  jq '{ VERCEL_PROJECT_ID: .projectId, VERCEL_ORG_ID: .orgId }' .vercel/project.json 2>/dev/null || true
+  echo "Set these as GitHub secrets (VERCEL_TOKEN you create in the Vercel dashboard)."
+fi
 
 echo "Done."
