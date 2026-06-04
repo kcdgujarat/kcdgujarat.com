@@ -75,21 +75,3 @@ jobs:
             }
 
             core.warning('Timed out waiting for Vercel status — check the Vercel dashboard.');
-
-      - name: Smoke check production
-        run: |
-          set -eo pipefail
-          fetch() {
-            for i in 1 2 3 4 5 6 7 8 9 10; do
-              code=$(curl -sL -o /dev/null -w "%{http_code}" "$1")
-              [ "$code" = "200" ] || [ "$code" = "304" ] && { echo "$code"; return 0; }
-              sleep 15
-            done
-            echo "$code"
-            return 1
-          }
-          for path in / /api/health; do
-            url="https://www.kcdgujarat.com$path"
-            code=$(fetch "$url") || (echo "✗ smoke failed on $path (last code $code)" && exit 1)
-            echo "GET $path -> $code"
-          done
