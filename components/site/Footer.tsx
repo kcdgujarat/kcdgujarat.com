@@ -10,9 +10,17 @@ interface FooterProps {
   cfpOpen?: boolean;
   cfpUrl?: string;
   showSpeakers?: boolean;
+  showTeam?: boolean;
 }
 
-export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, showSpeakers = false }: FooterProps) {
+export function Footer({
+  socials = {},
+  contactEmail,
+  cfpOpen = false,
+  cfpUrl,
+  showSpeakers = false,
+  showTeam = false,
+}: FooterProps) {
   const eventLinks = [
     ...(showSpeakers
       ? [
@@ -26,7 +34,7 @@ export function Footer({ socials = {}, contactEmail, cfpOpen = false, cfpUrl, sh
   const getInvolvedLinks = [
     ...(cfpOpen ? [{ href: cfpUrl || '/cfp', label: 'Submit a Talk' }] : []),
     { href: '/sponsorship', label: 'Become a Sponsor' },
-    { href: '/team', label: 'Organizers & Team' },
+    ...(showTeam ? [{ href: '/team', label: 'Organizers & Team' }] : []),
   ];
   return (
     <footer className="mt-24 border-t border-white/10 bg-kcd-navy text-white">

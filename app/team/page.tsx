@@ -1,8 +1,9 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { buildMetadata } from '@/lib/seo';
-import { getTeam, type TeamMember } from '@/lib/content';
+import { getEventConfig, getTeam, type TeamMember } from '@/lib/content';
 
 export const revalidate = 3600;
 
@@ -19,6 +20,9 @@ const GROUPS: { key: TeamMember['group']; title: string; eyebrow: string; anchor
 ];
 
 export default async function TeamPage() {
+  const event = await getEventConfig();
+  if (!event.showTeam) notFound();
+
   const team = await getTeam();
   const grouped = GROUPS.map((g) => ({
     ...g,

@@ -9,7 +9,7 @@ import { Container } from './Container';
 import { ButtonLink } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type NavItem = { href: string; label: string; speakersOnly?: boolean; cfpOnly?: boolean };
+type NavItem = { href: string; label: string; speakersOnly?: boolean; cfpOnly?: boolean; teamOnly?: boolean };
 
 const NAV: NavItem[] = [
   { href: '/#about', label: 'About' },
@@ -17,7 +17,7 @@ const NAV: NavItem[] = [
   { href: '/schedule', label: 'Schedule', speakersOnly: true },
   { href: '/#cfp', label: 'CFP', cfpOnly: true },
   { href: '/#venue', label: 'Venue' },
-  { href: '/#team', label: 'Team' },
+  { href: '/#team', label: 'Team', teamOnly: true },
   { href: '/#sponsors', label: 'Sponsors' },
   { href: '/#faq', label: 'FAQ' },
 ];
@@ -29,9 +29,18 @@ interface HeaderProps {
   cfpOpen?: boolean;
   cfpUrl?: string;
   showSpeakers?: boolean;
+  showTeam?: boolean;
 }
 
-export function Header({ registrationUrl, registrationOpen = false, comingSoon = false, cfpOpen = false, cfpUrl, showSpeakers = false }: HeaderProps) {
+export function Header({
+  registrationUrl,
+  registrationOpen = false,
+  comingSoon = false,
+  cfpOpen = false,
+  cfpUrl,
+  showSpeakers = false,
+  showTeam = false,
+}: HeaderProps) {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
   const isHome = pathname === '/';
@@ -46,6 +55,7 @@ export function Header({ registrationUrl, registrationOpen = false, comingSoon =
   const navItems = NAV.filter((item) => {
     if (item.speakersOnly && !showSpeakers) return false;
     if (item.cfpOnly && !cfpOpen) return false;
+    if (item.teamOnly && !showTeam) return false;
     return true;
   });
 

@@ -24,6 +24,11 @@ contactEmail: "contact@kcdgujarat.com"
 
 # Social profiles → edit content/pages/social.md (LinkedIn, X, Instagram, etc.)
 
+# ─── Team section ─────────────────────────────────────────────────────────────
+# - showTeam: false → hides home #team block, Team nav, footer link, and /team (default).
+# - showTeam: true  → shows team preview on home, /team page, and nav links.
+showTeam: false
+
 # ─── Day-at-a-Glance timeline ─────────────────────────────────────────────────
 # Each entry appears in the "Schedule overview" card. icon is an emoji.
 timeline:
@@ -34,13 +39,13 @@ timeline:
     label: "Keynote Sessions"
     icon: "🎤"
   - time: "11:00"
-    label: "Parallel Tracks Begin"
+    label: "Breakout Sessions"
     icon: "🚀"
   - time: "13:00"
     label: "Lunch Break"
     icon: "🍽️"
   - time: "14:00"
-    label: "Afternoon Parallel Tracks"
+    label: "Afternoon Parallel Breakout Sessions"
     icon: "⚡"
   - time: "16:00"
     label: "Networking Break"

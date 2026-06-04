@@ -43,6 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
   const cfpOpen = cfp.open;
   const showSpeakers = cfp.showSpeakers;
+  const showTeam = event.showTeam;
   const registrationOpen = registration.open;
   const registrationUrl =
     registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
@@ -67,6 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           cfpOpen={cfpOpen}
           cfpUrl={cfp.url}
           showSpeakers={showSpeakers}
+          showTeam={showTeam}
         />
         <main id="main">{children}</main>
         {!comingSoon && (
@@ -76,6 +78,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             cfpOpen={cfpOpen}
             cfpUrl={cfp.url}
             showSpeakers={showSpeakers}
+            showTeam={showTeam}
           />
         )}
         <Analytics />

@@ -293,7 +293,7 @@ export async function getEventConfig(): Promise<EventConfig> {
       timeline: parsed.timeline ? publishedOnly(parsed.timeline) : parsed.timeline,
     };
   } catch {
-    return { city: 'Gujarat, India' };
+    return { city: 'Gujarat, India', showTeam: false };
   }
 }
 

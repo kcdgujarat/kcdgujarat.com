@@ -69,13 +69,15 @@ export default async function HomePage() {
     );
   }
 
+  const showTeam = event.showTeam;
+
   const [speakers, sessions, sponsors, faqs, team, partners, cfp, registration, keyDates] =
     await Promise.all([
       getSpeakers(),
       getSessions(),
       getSponsors(),
       getFaqs(),
-      getTeam(),
+      showTeam ? getTeam() : Promise.resolve([]),
       getPartners(),
       getCfpConfig(),
       getRegistrationConfig(),
@@ -126,7 +128,7 @@ export default async function HomePage() {
       {sessions.length > 0 && null}
       {cfpOpen && <CfpSection cfpUrl={cfpUrl} />}
       <VenueSection venueName={venueName} venueAddress={venueAddress} mapEmbedUrl={mapEmbedUrl} />
-      <TeamPreview team={team} />
+      {showTeam && <TeamPreview team={team} />}
       <SponsorStrip sponsors={sponsors} />
       <CommunityPartners partners={partners} />
       <FaqSection faqs={faqs} />

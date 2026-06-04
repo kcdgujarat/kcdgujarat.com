@@ -125,6 +125,8 @@ export const EventConfigFrontmatter = z.object({
   venueAddress: z.string().optional(),
   mapEmbedUrl: z.string().optional(),
   contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
+  /** Home `#team` section, header/footer Team links, and `/team` route. */
+  showTeam: z.boolean().default(false),
   timeline: z.array(TimelineItem).optional(),
 });
 export type EventConfigFrontmatter = z.infer<typeof EventConfigFrontmatter>;

@@ -1,13 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { getSessions, getSpeakers, getSponsors, getCfpConfig } from '@/lib/content';
+import { getSessions, getSpeakers, getSponsors, getCfpConfig, getEventConfig } from '@/lib/content';
 import { siteUrl } from '@/lib/utils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [speakers, sessions, sponsors, cfp] = await Promise.all([
+  const [speakers, sessions, sponsors, cfp, event] = await Promise.all([
     getSpeakers(),
     getSessions(),
     getSponsors(),
     getCfpConfig(),
+    getEventConfig(),
   ]);
 
   const now = new Date();
@@ -17,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/venue',
     '/cfp',
     '/register',
-    '/team',
+    ...(event.showTeam ? ['/team'] : []),
     '/sponsorship',
     '/code-of-conduct',
     '/faq',

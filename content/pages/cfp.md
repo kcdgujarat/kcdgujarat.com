@@ -1,7 +1,7 @@
 ---
 # CFP window — open/closed state is derived automatically from startDate/endDate
 # (Asia/Kolkata calendar days, inclusive). No manual toggle needed.
-startDate: "2026-06-15"
+startDate: "2026-06-05"
 endDate: "2026-07-15"
 url: "https://sessionize.com/kcd-gujarat-2026"
 
