@@ -1,5 +1,5 @@
 ---
-startDate: "2026-06-08"
+startDate: "2026-06-09"
 endDate: "2026-09-20"
 url: "https://konfhub.com/kcd-gujarat"
 
