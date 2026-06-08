@@ -4,7 +4,7 @@ import {
   isDateTimeRangeActive,
   isRegistrationWindowActive,
   getDateTimeWindowPhase,
-  getWindowPhase,
+  getRegistrationWindowPhase,
 } from '@/lib/utils';
 
 /** When `false`, the entry stays in Git but is hidden on the site. Defaults to `true`. */
@@ -228,10 +228,16 @@ export type SponsorshipConfigFrontmatter = z.infer<typeof SponsorshipConfigFront
 
 export const RegistrationConfigFrontmatter = z
   .object({
-    /** First day registration opens (YYYY-MM-DD, Asia/Kolkata). */
+    /** First day registration opens (YYYY-MM-DD). */
     startDate: z.string(),
-    /** Optional last day registration stays open (YYYY-MM-DD, Asia/Kolkata). */
+    /** Optional opening time on `startDate` (HH:mm, 24h). Defaults to 00:00. */
+    startTime: TimeOfDay.optional(),
+    /** Optional last day registration stays open (YYYY-MM-DD). */
     endDate: z.string().optional(),
+    /** Optional closing time on `endDate` (HH:mm, 24h). Defaults to 23:59 inclusive. */
+    endTime: TimeOfDay.optional(),
+    /** IANA timezone for the window. Defaults to Asia/Kolkata. */
+    timezone: z.string().optional().default('Asia/Kolkata'),
     /** URL for the ticketing platform. */
     url: z.string().url().optional(),
     /** /register page header copy */
@@ -242,11 +248,18 @@ export const RegistrationConfigFrontmatter = z
       .optional()
       .default('Tickets are issued via our ticketing partner. Click below to continue.'),
   })
-  .transform((data) => ({
-    ...data,
-    open: isRegistrationWindowActive(data.startDate, data.endDate),
-    phase: getWindowPhase(data.startDate, data.endDate),
-  }));
+  .transform((data) => {
+    const window = {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      timeZone: data.timezone,
+    };
+    return {
+      ...data,
+      open: isRegistrationWindowActive(data.startDate, data.endDate, window),
+      phase: getRegistrationWindowPhase(data.startDate, data.endDate, window),
+    };
+  });
 export type RegistrationConfigFrontmatter = z.infer<typeof RegistrationConfigFrontmatter>;
 
 export const KeyDatesFrontmatter = z.object({

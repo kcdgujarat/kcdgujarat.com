@@ -356,6 +356,7 @@ export async function getRegistrationConfig(): Promise<RegistrationConfig> {
       startDate: '',
       open: false,
       phase: 'upcoming',
+      timezone: 'Asia/Kolkata',
       eyebrow: 'Register',
       title: 'Reserve your seat',
       description: '',

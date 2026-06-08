@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn, isExternalHref } from '@/lib/utils';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'outline';
 type Size = 'sm' | 'md' | 'lg';
@@ -46,9 +46,21 @@ interface ButtonLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> 
   size?: Size;
 }
 
-export function ButtonLink({ className, variant = 'primary', size = 'md', ...props }: ButtonLinkProps) {
+export function ButtonLink({
+  className,
+  variant = 'primary',
+  size = 'md',
+  href,
+  target,
+  rel,
+  ...props
+}: ButtonLinkProps) {
+  const external = isExternalHref(href);
   return (
     <a
+      href={href}
+      target={target ?? (external ? '_blank' : undefined)}
+      rel={rel ?? (external ? 'noopener noreferrer' : undefined)}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white',

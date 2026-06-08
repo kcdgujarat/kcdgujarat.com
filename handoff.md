@@ -36,7 +36,7 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 
 - `event.md` — headline, dates, city, venue, timeline, `contactEmail` (no social links here).
 - `cfp.md` — `startDate` / `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h, Asia/Kolkata) → auto `open` + `phase`; `showSpeakers`, `url`; `homeSection` for homepage `/#cfp` cards.
-- `registration.md` — `startDate` / optional `endDate` → auto `open` + `phase`; `url`.
+- `registration.md` — `startDate` / optional `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h) → auto `open` + `phase`; `url`.
 - `sponsorship.md` — tiers, `contactEmail`, prospectus via `static/prospectus.pdf`.
 - `key-dates.md` — homepage KeyDatesSection.
 

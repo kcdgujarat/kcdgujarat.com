@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/site/Container';
-import { formatEventDate } from '@/lib/utils';
+import { externalLinkProps, formatEventDate } from '@/lib/utils';
 
 interface HeroSectionProps {
   headline?: string;
@@ -97,6 +97,7 @@ export function HeroSection({
                   {registrationOpen && (
                     <Link
                       href={registrationUrl || '/register'}
+                      {...externalLinkProps(registrationUrl)}
                       className="inline-flex h-12 items-center justify-center rounded-full border-2 border-kcd-ink px-7 text-sm font-bold uppercase tracking-wider text-kcd-ink hover:bg-kcd-ink hover:text-white"
                     >
                       Book Tickets
@@ -108,6 +109,7 @@ export function HeroSection({
                   {registrationOpen && (
                     <Link
                       href={registrationUrl || '/register'}
+                      {...externalLinkProps(registrationUrl)}
                       className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
                     >
                       Book Tickets

@@ -5,6 +5,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** True for absolute http(s) URLs (e.g. Sessionize, KonfHub). */
+export function isExternalHref(href?: string): boolean {
+  return typeof href === 'string' && /^https?:\/\//i.test(href);
+}
+
+/** `target` / `rel` for partner links that should open in a new tab. */
+export function externalLinkProps(href?: string): { target?: '_blank'; rel?: string } {
+  if (!isExternalHref(href)) return {};
+  return { target: '_blank', rel: 'noopener noreferrer' };
+}
+
 export function formatEventDate(input: string | Date | null | undefined, locale = 'en-IN') {
   if (!input) return '';
   const d = typeof input === 'string' ? new Date(input) : input;
@@ -59,12 +70,15 @@ export function isOnOrAfterDate(
 export function isRegistrationWindowActive(
   startDate: string,
   endDate?: string,
-  now = new Date(),
-  timeZone = DEFAULT_TIMEZONE,
+  options: DateTimeWindowOptions = {},
 ): boolean {
-  if (!isOnOrAfterDate(startDate, now, timeZone)) return false;
+  const { startTime = '00:00', endTime = '23:59', now = new Date(), timeZone = DEFAULT_TIMEZONE } =
+    options;
+  const nowMs = now.getTime();
+  const startMs = zonedDateTimeToMs(startDate, startTime, timeZone);
+  if (nowMs < startMs) return false;
   if (!endDate) return true;
-  return isDateRangeActive(startDate, endDate, now, timeZone);
+  return nowMs <= zonedDateTimeEndMs(endDate, endTime, timeZone);
 }
 
 /** True when `today` (in Asia/Kolkata) falls on or between start/end (inclusive). */
@@ -175,18 +189,20 @@ export function getDateTimeWindowPhase(
   return 'open';
 }
 
-/** Date window with optional end — registration-style (no end means open-ended after start). */
-export function getWindowPhase(
+/** Registration window with optional end (no end means open-ended after start). */
+export function getRegistrationWindowPhase(
   startDate: string,
   endDate?: string,
-  now = new Date(),
-  timeZone = DEFAULT_TIMEZONE,
+  options: DateTimeWindowOptions = {},
 ): DateWindowPhase {
   if (!startDate) return 'upcoming';
-  if (!endDate) return isOnOrAfterDate(startDate, now, timeZone) ? 'open' : 'upcoming';
-  const today = calendarDateInTimezone(now, timeZone);
-  if (today < startDate) return 'upcoming';
-  if (today > endDate) return 'closed';
+  const { startTime = '00:00', endTime = '23:59', now = new Date(), timeZone = DEFAULT_TIMEZONE } =
+    options;
+  const nowMs = now.getTime();
+  const startMs = zonedDateTimeToMs(startDate, startTime, timeZone);
+  if (nowMs < startMs) return 'upcoming';
+  if (!endDate) return 'open';
+  if (nowMs > zonedDateTimeEndMs(endDate, endTime, timeZone)) return 'closed';
   return 'open';
 }
 
