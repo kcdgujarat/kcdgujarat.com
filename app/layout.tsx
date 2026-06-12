@@ -55,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       style={{ colorScheme: 'light' }}
     >
       <body className="bg-kcd-bg text-kcd-ink antialiased">
+        <div className="jharokha-bg" aria-hidden="true" />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-kcd-primary focus:px-4 focus:py-2 focus:text-white"
@@ -69,7 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           showSpeakers={showSpeakers}
           showTeam={showTeam}
         />
-        <main id="main">{children}</main>
+        <main id="main" className="relative z-[1]">{children}</main>
         {!comingSoon && (
           <Footer
             socials={socialLinks}

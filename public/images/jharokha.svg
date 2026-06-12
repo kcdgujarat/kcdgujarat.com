@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 380" width="240" height="380" fill="none" role="img" aria-label="Gujarati jharokha ornament">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6D673"/>
+      <stop offset="0.5" stop-color="#E8B321"/>
+      <stop offset="1" stop-color="#B8860B"/>
+    </linearGradient>
+    <pattern id="jali" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 8H16 M8 0V16" stroke="url(#gold)" stroke-width="2.2" fill="none"/>
+    </pattern>
+    <pattern id="balusters" width="13" height="30" patternUnits="userSpaceOnUse">
+      <path d="M6.5 0V30" stroke="url(#gold)" stroke-width="3"/>
+      <circle cx="6.5" cy="6" r="2.4" fill="url(#gold)"/>
+    </pattern>
+    <clipPath id="win">
+      <path d="M64 150 L64 250 L176 250 L176 150 Q168 116 120 106 Q72 116 64 150 Z"/>
+    </clipPath>
+  </defs>
+
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <!-- Kalash finial -->
+    <path d="M120 6 L126 22 L120 30 L114 22 Z" fill="url(#gold)"/>
+    <circle cx="120" cy="36" r="6" fill="url(#gold)"/>
+    <rect x="113" y="42" width="14" height="7" rx="2" fill="url(#gold)"/>
+
+    <!-- Chhajja (eave) + torana fringe -->
+    <rect x="72" y="49" width="96" height="6" rx="2" fill="url(#gold)"/>
+    <path d="M72 55 L168 55 L188 76 L52 76 Z" fill="url(#gold)"/>
+    <path d="M54 76 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0 q6 8 12 0" stroke="url(#gold)" stroke-width="2.2" fill="none"/>
+
+    <!-- Top frame beam -->
+    <rect x="43" y="86" width="154" height="10" fill="url(#gold)"/>
+
+    <!-- Side columns -->
+    <rect x="43" y="96" width="19" height="9" rx="1" fill="url(#gold)"/>
+    <rect x="48" y="104" width="9" height="150" fill="url(#gold)"/>
+    <rect x="43" y="254" width="19" height="9" rx="1" fill="url(#gold)"/>
+    <rect x="178" y="96" width="19" height="9" rx="1" fill="url(#gold)"/>
+    <rect x="183" y="104" width="9" height="150" fill="url(#gold)"/>
+    <rect x="178" y="254" width="19" height="9" rx="1" fill="url(#gold)"/>
+
+    <!-- Jali lattice -->
+    <rect x="57" y="98" width="126" height="156" fill="url(#jali)" clip-path="url(#win)"/>
+
+    <!-- Cusped (multifoil) arch -->
+    <path d="M57 150 Q66 110 120 98 Q174 110 183 150" stroke="url(#gold)" stroke-width="3" fill="none"/>
+    <path d="M64 150 Q72 116 120 106 Q168 116 176 150" stroke="url(#gold)" stroke-width="2" fill="none"/>
+    <path d="M64 150 q7 9 14 0 q7 9 14 0 q7 9 14 0 q7 9 14 0 q7 9 14 0 q7 9 14 0 q7 9 14 0 q7 9 14 0" stroke="url(#gold)" stroke-width="2" fill="none"/>
+
+    <!-- Window sill -->
+    <rect x="57" y="250" width="126" height="8" fill="url(#gold)"/>
+
+    <!-- Balcony rail (kakshasana) -->
+    <rect x="36" y="264" width="168" height="9" rx="3" fill="url(#gold)"/>
+    <rect x="40" y="273" width="160" height="24" fill="url(#balusters)"/>
+    <rect x="36" y="297" width="168" height="9" rx="3" fill="url(#gold)"/>
+
+    <!-- Support brackets -->
+    <path d="M70 306 C70 330 92 338 100 352 L86 352 C80 336 56 330 56 306 Z" fill="url(#gold)"/>
+    <path d="M170 306 C170 330 148 338 140 352 L154 352 C160 336 184 330 184 306 Z" fill="url(#gold)"/>
+    <path d="M120 308 C128 316 128 326 120 332 C112 326 112 316 120 308 Z" fill="url(#gold)"/>
+  </g>
+</svg>

@@ -35,7 +35,8 @@ export function Footer({
     ...(showTeam ? [{ href: '/team', label: 'Organizers & Team' }] : []),
   ];
   return (
-    <footer className="mt-24 border-t border-white/10 bg-kcd-navy text-white">
+    <footer className="relative isolate mt-24 overflow-hidden border-t border-white/10 bg-kcd-navy text-white">
+      <div className="jharokha-footer pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       <Container className="grid gap-10 py-12 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-3 font-display text-lg font-semibold">
