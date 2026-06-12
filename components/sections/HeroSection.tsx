@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Container } from '@/components/site/Container';
-import { externalLinkProps, formatEventDate } from '@/lib/utils';
+import { formatEventDate } from '@/lib/utils';
 
 interface HeroSectionProps {
   headline?: string;
   subheadline?: string;
   eventDate?: string | Date | null;
   city?: string;
-  registrationUrl?: string;
   registrationOpen?: boolean;
   cfpOpen?: boolean;
   /** Pre-formatted CFP close label (date, or date + time). */
@@ -21,7 +20,6 @@ export function HeroSection({
   subheadline,
   eventDate,
   city = 'Gujarat, India',
-  registrationUrl,
   registrationOpen = false,
   cfpOpen = false,
   cfpClosesLabel,
@@ -86,51 +84,28 @@ export function HeroSection({
               </p>
             )}
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              {cfpOpen ? (
+              {registrationOpen && (
+                <Link
+                  href="/register"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
+                >
+                  Register Now
+                </Link>
+              )}
+              {showSpeakers && (
                 <>
                   <Link
-                    href="/cfp"
-                    className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
+                    href="/schedule"
+                    className="inline-flex h-12 items-center justify-center rounded-full border-2 border-kcd-ink px-7 text-sm font-bold uppercase tracking-wider text-kcd-ink hover:bg-kcd-ink hover:text-white"
                   >
-                    Submit a Talk
+                    View Schedule
                   </Link>
-                  {registrationOpen && (
-                    <Link
-                      href={registrationUrl || '/register'}
-                      {...externalLinkProps(registrationUrl)}
-                      className="inline-flex h-12 items-center justify-center rounded-full border-2 border-kcd-ink px-7 text-sm font-bold uppercase tracking-wider text-kcd-ink hover:bg-kcd-ink hover:text-white"
-                    >
-                      Book Tickets
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <>
-                  {registrationOpen && (
-                    <Link
-                      href={registrationUrl || '/register'}
-                      {...externalLinkProps(registrationUrl)}
-                      className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
-                    >
-                      Book Tickets
-                    </Link>
-                  )}
-                  {showSpeakers && (
-                    <>
-                      <Link
-                        href="/schedule"
-                        className="inline-flex h-12 items-center justify-center rounded-full border-2 border-kcd-ink px-7 text-sm font-bold uppercase tracking-wider text-kcd-ink hover:bg-kcd-ink hover:text-white"
-                      >
-                        View Schedule
-                      </Link>
-                      <Link
-                        href="/speakers"
-                        className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
-                      >
-                        Meet the speakers →
-                      </Link>
-                    </>
-                  )}
+                  <Link
+                    href="/speakers"
+                    className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
+                  >
+                    Meet the speakers →
+                  </Link>
                 </>
               )}
             </div>

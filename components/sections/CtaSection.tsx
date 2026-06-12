@@ -2,11 +2,10 @@ import { Container } from '@/components/site/Container';
 import { ButtonLink } from '@/components/ui/button';
 
 interface Props {
-  registrationUrl?: string;
   soldOut?: boolean;
 }
 
-export function CtaSection({ registrationUrl, soldOut = false }: Props) {
+export function CtaSection({ soldOut = false }: Props) {
   return (
     <section className="py-20">
       <Container>
@@ -34,18 +33,10 @@ export function CtaSection({ registrationUrl, soldOut = false }: Props) {
                 🎟️ Sold Out
               </span>
             ) : (
-              <ButtonLink href={registrationUrl || '/register'} size="lg" className="rounded-full">
-                Book Tickets
+              <ButtonLink href="/register" size="lg" className="rounded-full">
+                Register Now
               </ButtonLink>
             )}
-            <ButtonLink
-              href="/cfp"
-              size="lg"
-              variant="outline"
-              className="rounded-full !border-white/40 !bg-transparent !text-white hover:!bg-white/10"
-            >
-              Submit a Talk
-            </ButtonLink>
           </div>
         </div>
       </Container>

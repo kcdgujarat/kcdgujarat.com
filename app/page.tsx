@@ -87,7 +87,6 @@ export default async function HomePage() {
   const cfpClosesLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
   const registrationOpen = registration.open;
 
-  const registrationUrl = registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
   const eventDateLabel = eventDate ? formatEventDate(eventDate) : 'Conference Day, 2026';
 
   const fullEventLd = {
@@ -108,7 +107,6 @@ export default async function HomePage() {
         subheadline={subheadline}
         eventDate={eventDate}
         city={city}
-        registrationUrl={registrationUrl}
         registrationOpen={registrationOpen}
         cfpOpen={cfpOpen}
         cfpClosesLabel={cfpClosesLabel}

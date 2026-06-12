@@ -24,7 +24,6 @@ const NAV: NavItem[] = [
 interface HeaderProps {
   /** Current path from the server (via proxy `x-pathname` header). */
   pathname?: string;
-  registrationUrl?: string;
   registrationOpen?: boolean;
   comingSoon?: boolean;
   cfpOpen?: boolean;
@@ -34,7 +33,6 @@ interface HeaderProps {
 
 export function Header({
   pathname = '/',
-  registrationUrl,
   registrationOpen = false,
   comingSoon = false,
   cfpOpen = false,
@@ -58,10 +56,10 @@ export function Header({
     return true;
   });
 
-  // Primary CTA: CFP takes precedence; registration shown only when open.
-  const showCta = cfpOpen || registrationOpen;
-  const primaryHref = cfpOpen ? '/cfp' : (registrationUrl || '/register');
-  const primaryLabel = cfpOpen ? 'Submit a Talk' : 'Register';
+  // Primary CTA: register only, routed to the internal /register page.
+  const showCta = registrationOpen;
+  const primaryHref = '/register';
+  const primaryLabel = 'Register Now';
 
   return (
     <header className="sticky top-0 z-40">

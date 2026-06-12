@@ -46,8 +46,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const showSpeakers = cfp.showSpeakers;
   const showTeam = event.showTeam;
   const registrationOpen = registration.open;
-  const registrationUrl =
-    registration.url || process.env.NEXT_PUBLIC_REGISTRATION_URL;
   const pathname = (await headers()).get('x-pathname') ?? '/';
   return (
     <html
@@ -65,7 +63,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </a>
         <Header
           pathname={pathname}
-          registrationUrl={registrationUrl}
           registrationOpen={registrationOpen}
           comingSoon={comingSoon}
           cfpOpen={cfpOpen}
