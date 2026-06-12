@@ -30,6 +30,10 @@ export function HeroSection({
     `A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in ${city}. Speaker line-up, schedule, and venue dropping shortly.`;
   const dateLabel = eventDate ? formatEventDate(eventDate) : '2026';
 
+  // Shared CTA style — every hero button is an identical solid pill.
+  const ctaPrimary =
+    'inline-flex h-12 items-center justify-center rounded-full border-2 border-transparent bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90';
+
   return (
     <section className="relative isolate -mt-px">
       {/* Panel A — cream w/ rainbow gradient blur and statue illustration */}
@@ -47,7 +51,7 @@ export function HeroSection({
         {/* Statue — desktop: full-height right edge; mobile: anchored bottom-right */}
         <div
           aria-hidden
-          className="pointer-events-none absolute bottom-0 right-0 max-md:h-[min(40vh,260px)] max-md:w-[82%] md:top-0 md:h-full md:w-[42%]"
+          className="pointer-events-none absolute bottom-0 right-0 max-md:h-[min(32vh,210px)] max-md:w-[82%] max-md:translate-y-4 md:top-0 md:h-full md:w-[42%]"
         >
           <Image
             src="/images/sardarpatel.svg"
@@ -85,19 +89,13 @@ export function HeroSection({
             )}
             <div className="mt-7 flex flex-wrap items-center gap-3">
               {registrationOpen && (
-                <Link
-                  href="/register"
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90"
-                >
+                <Link href="/register" className={ctaPrimary}>
                   Register Now
                 </Link>
               )}
               {showSpeakers && (
                 <>
-                  <Link
-                    href="/schedule"
-                    className="inline-flex h-12 items-center justify-center rounded-full border-2 border-kcd-ink px-7 text-sm font-bold uppercase tracking-wider text-kcd-ink hover:bg-kcd-ink hover:text-white"
-                  >
+                  <Link href="/schedule" className={ctaPrimary}>
                     View Schedule
                   </Link>
                   <Link
@@ -108,6 +106,14 @@ export function HeroSection({
                   </Link>
                 </>
               )}
+              {cfpOpen && (
+                <Link href="/cfp" className={ctaPrimary}>
+                  Submit a Talk
+                </Link>
+              )}
+              <Link href="/sponsorship" className={ctaPrimary}>
+                Become a Sponsor
+              </Link>
             </div>
           </div>
         </Container>
