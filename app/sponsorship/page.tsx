@@ -51,7 +51,10 @@ export default async function SponsorshipPage() {
           </Card>
         ))}
       </div>
-      <div className="mt-12 rounded-2xl border border-kcd-border bg-kcd-subtle p-8 text-center">
+      <p className="mt-8 text-sm text-kcd-ink/70">
+        *INR equivalent is approximate, based on prevailing exchange rates at the time of invoicing.
+      </p>
+      <div className="mt-6 rounded-2xl border border-kcd-border bg-kcd-subtle p-8 text-center">
         <p className="text-base text-kcd-ink">Interested in sponsoring? We&apos;d love to talk.</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           {email && (
