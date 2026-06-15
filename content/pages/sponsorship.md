@@ -15,7 +15,7 @@ prospectus: "prospectus.pdf"
 tiers:
   - name: "Platinum"
     slug: "platinum"
-    price: "US$ 5000"
+    price: "US$ 5000 (~₹4.7L*)"
     perks:
       - "Large Booth for Maximum on-ground Visibility (10x8 Feet)"
       - "Stage Presence - Opening Keynote (5 Minutes)* + Technical Talk"
@@ -28,7 +28,7 @@ tiers:
 
   - name: "Gold"
     slug: "gold"
-    price: "US$ 3500"
+    price: "US$ 3500 (~₹3.3L*)"
     perks:
       - "Medium Booth for on-ground engagement (8x8 Feet)"
       - "Stage Presence - Technical Talk / Breakout Session + 2-minute stage mention"
@@ -41,7 +41,7 @@ tiers:
 
   - name: "Silver"
     slug: "silver"
-    price: "US$ 2500"
+    price: "US$ 2500 (~₹2.4L*)"
     perks:
       - "Standard booth for showcasing your products and engaging with attendees (6x8 Feet)"
       - "Lightning Talk"
@@ -54,7 +54,7 @@ tiers:
 
   - name: "Bronze"
     slug: "bronze"
-    price: "US$ 1200"
+    price: "US$ 1200 (~₹1.1L*)"
     perks:
       - "Table Space (no booth)"
       - "Option to Upgrade Booth at Discounted Rate"
@@ -67,7 +67,7 @@ tiers:
 
   - name: "Diversity"
     slug: "diversity"
-    price: "US$ 800"
+    price: "US$ 800 (~₹75K*)"
     perks:
       - "Recognition as the 'Diversity Sponsor' of KCD Gujarat"
       - "Branding across diversity-focused communications and initiatives"
@@ -79,7 +79,7 @@ tiers:
   
   - name: "Swag"
     slug: "swag"
-    price: "US$ 800"
+    price: "US$ 800 (~₹75K*)"
     perks:
       - "Branding on official event swag (e.g., Tshirts, kits, goodies)"
       - "Opportunity to co-brand exclusive merchandise"
