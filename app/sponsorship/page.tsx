@@ -27,15 +27,20 @@ const FALLBACK_TIERS = [
 type Tier = { name: string; slug: string; price?: string; perks: readonly string[] };
 
 function TierCard({ tier }: { tier: Tier }) {
+  const [priceMain, priceRest] = tier.price ? tier.price.split(/\s*\(/, 2) : [];
+  const priceSub = priceRest ? priceRest.replace(/\)\s*$/, '') : undefined;
   return (
     <Card className="flex h-full flex-col">
       <CardBody className="flex flex-1 flex-col">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-2">
           <CardTitle>{tier.name}</CardTitle>
-          {tier.price && (
-            <span className="shrink-0 rounded-full bg-kcd-subtle px-3 py-1 text-sm font-bold uppercase tracking-wide text-kcd-ink">
-              {tier.price}
-            </span>
+          {priceMain && (
+            <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="rounded-full bg-kcd-subtle px-3 py-1 text-sm font-bold uppercase tracking-wide text-kcd-ink">
+                {priceMain}
+              </span>
+              {priceSub && <span className="text-sm font-medium text-kcd-muted">{priceSub}</span>}
+            </p>
           )}
         </div>
         {tier.perks.length > 0 && (
@@ -123,6 +128,9 @@ export default async function SponsorshipPage() {
             <TierCard key={t.slug} tier={t} />
           ))}
         </div>
+        <p className="mt-4 text-sm text-kcd-muted">
+          * INR amounts are indicative and depend on the prevailing exchange rate; billing is in USD.
+        </p>
       </section>
 
       {/* Additional opportunities */}
@@ -137,6 +145,9 @@ export default async function SponsorshipPage() {
               <TierCard key={t.slug} tier={t} />
             ))}
           </div>
+          <p className="mt-4 text-sm text-kcd-muted">
+            * INR amounts are indicative and depend on the prevailing exchange rate; billing is in USD.
+          </p>
         </section>
       )}
 
