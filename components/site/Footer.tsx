@@ -32,7 +32,7 @@ export function Footer({
   const getInvolvedLinks = [
     ...(cfpOpen ? [{ href: '/cfp', label: 'Submit a Talk' }] : []),
     { href: '/sponsorship', label: 'Become a Sponsor' },
-    ...(showTeam ? [{ href: '/team', label: 'Organizers & Team' }] : []),
+    ...(showTeam ? [{ href: '/#team', label: 'Organisers' }] : []),
   ];
   return (
     <footer className="relative isolate mt-24 overflow-hidden border-t border-white/10 bg-kcd-navy text-white">

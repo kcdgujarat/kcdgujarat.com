@@ -27,7 +27,7 @@ contactEmail: "contact@kcdgujarat.com"
 # ─── Team section ─────────────────────────────────────────────────────────────
 # - showTeam: false → hides home #team block, Team nav, footer link, and /team (default).
 # - showTeam: true  → shows team preview on home, /team page, and nav links.
-showTeam: false
+showTeam: true
 
 # ─── Day-at-a-Glance timeline ─────────────────────────────────────────────────
 # Each entry appears in the "Schedule overview" card. icon is an emoji.
