@@ -19,6 +19,10 @@ We keep checkout on a dedicated platform so you have a clean experience. You wil
 
 ### What's included
 
-- Full-day access to all tracks, workshops, and networking sessions
-- Lunch and refreshments
-- Conference swag while supplies last
+- Full-day access to all tracks and workshops
+- Participation Certificate
+- Personalized ID Card
+- Premium Swag Kit
+- Breakfast, Lunch & Tea/Coffee Breaks
+- Sponsor Booth Access
+- Networking with Speakers & Attendees

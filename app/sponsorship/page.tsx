@@ -1,3 +1,4 @@
+import { Check } from 'lucide-react';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
@@ -9,66 +10,159 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Sponsorship',
   path: '/sponsorship',
-  description: 'Sponsor KCD Gujarat 2026 — tiers, benefits, and how to get in touch.',
+  description: 'Sponsor KCD Gujarat 2026 — why sponsor, who you reach, tiers, benefits, and how to get in touch.',
 });
 
+const DEFAULT_INTRO =
+  'KCD Gujarat 2026 brings the cloud native community of Gujarat and western India together for a community-driven, CNCF-backed day of talks, workshops, and connection. Sponsoring puts your brand in front of a highly engaged, technical audience — and directly fuels the growth of open source and cloud native across the region.';
+
 const FALLBACK_TIERS = [
-  { name: 'Platinum', slug: 'platinum', price: 'priority placement', perks: ['Workshop slot', 'Premium booth', 'Logo on stage backdrop'] },
-  { name: 'Gold', slug: 'gold', price: 'standard placement', perks: ['Booth space', 'Logo on website + lanyard'] },
-  { name: 'Silver', slug: 'silver', price: 'community tier', perks: ['Logo on website', 'Recognition during opening'] },
-  { name: 'Community', slug: 'community', price: 'in-kind', perks: ['Booth or signage', 'Cross-promotion'] },
-  { name: 'Media', slug: 'media', price: 'in-kind', perks: ['Logo on website', 'Cross-promotion'] },
+  { name: 'Platinum', slug: 'platinum', price: 'priority placement', group: 'package', perks: ['Workshop slot', 'Premium booth', 'Logo on stage backdrop'] },
+  { name: 'Gold', slug: 'gold', price: 'standard placement', group: 'package', perks: ['Booth space', 'Logo on website + lanyard'] },
+  { name: 'Silver', slug: 'silver', price: 'community tier', group: 'package', perks: ['Logo on website', 'Recognition during opening'] },
+  { name: 'Community', slug: 'community', price: 'in-kind', group: 'additional', perks: ['Booth or signage', 'Cross-promotion'] },
+  { name: 'Media', slug: 'media', price: 'in-kind', group: 'additional', perks: ['Logo on website', 'Cross-promotion'] },
 ] as const;
+
+type Tier = { name: string; slug: string; price?: string; perks: readonly string[] };
+
+function TierCard({ tier }: { tier: Tier }) {
+  return (
+    <Card className="flex h-full flex-col">
+      <CardBody className="flex flex-1 flex-col">
+        <div className="flex items-start justify-between gap-3">
+          <CardTitle>{tier.name}</CardTitle>
+          {tier.price && (
+            <span className="shrink-0 rounded-full bg-kcd-subtle px-3 py-1 text-sm font-bold uppercase tracking-wide text-kcd-ink">
+              {tier.price}
+            </span>
+          )}
+        </div>
+        {tier.perks.length > 0 && (
+          <ul className="mt-4 space-y-2 text-sm text-kcd-ink">
+            {tier.perks.map((p) => (
+              <li key={p} className="flex gap-2">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-kcd-orange" aria-hidden />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardBody>
+    </Card>
+  );
+}
+
+function SubHeading({ children }: { children: React.ReactNode }) {
+  return <h2 className="font-display text-2xl font-bold text-kcd-ink sm:text-3xl">{children}</h2>;
+}
 
 export default async function SponsorshipPage() {
   const [event, sponsorship] = await Promise.all([getEventConfig(), getSponsorshipConfig()]);
 
-  const tiers = sponsorship.tiers.length > 0 ? sponsorship.tiers : FALLBACK_TIERS;
+  const allTiers = sponsorship.tiers.length > 0 ? sponsorship.tiers : FALLBACK_TIERS;
+  const packages = allTiers.filter((t) => t.group !== 'additional');
+  const additional = allTiers.filter((t) => t.group === 'additional');
+
+  const intro = sponsorship.intro || DEFAULT_INTRO;
+  const reasons = sponsorship.reasons ?? [];
+  const audience = sponsorship.audience ?? [];
+  const deadline = sponsorship.deadline;
+  const terms = sponsorship.terms;
   const email = sponsorship.contactEmail || event.contactEmail;
   const prospectusUrl = sponsorship.prospectusUrl;
 
   return (
     <Container className="py-16">
-      <SectionHeader
-        eyebrow="Sponsorship"
-        title="Partner with KCD Gujarat 2026"
-        description="A community event with high-quality, engaged audiences. We offer multiple tiers — find one that fits your goals."
-      />
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((t) => (
-          <Card key={t.slug}>
-            <CardBody>
-              <CardTitle>{t.name}</CardTitle>
-              {t.price && <CardDescription>{t.price}</CardDescription>}
-              {t.perks.length > 0 && (
-                <ul className="mt-4 space-y-1 text-sm text-kcd-ink">
-                  {t.perks.map((p) => (
-                    <li key={p}>• {p}</li>
-                  ))}
-                </ul>
-              )}
-            </CardBody>
-          </Card>
-        ))}
-      </div>
-      <p className="mt-8 text-sm text-kcd-ink/70">
-        *INR equivalent is approximate, based on prevailing exchange rates at the time of invoicing.
-      </p>
-      <div className="mt-6 rounded-2xl border border-kcd-border bg-kcd-subtle p-8 text-center">
-        <p className="text-base text-kcd-ink">Interested in sponsoring? We&apos;d love to talk.</p>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+      <SectionHeader eyebrow="Sponsorship" title="Partner with KCD Gujarat 2026" description={intro} />
+
+      {/* Why sponsor */}
+      {reasons.length > 0 && (
+        <section className="mt-4">
+          <SubHeading>Why sponsor?</SubHeading>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {reasons.map((r) => (
+              <Card key={r.title} className="h-full">
+                <CardBody>
+                  <span className="mb-3 inline-block h-2 w-8 rounded-full bg-kcd-orange" aria-hidden />
+                  <CardTitle className="text-base">{r.title}</CardTitle>
+                  {r.description && <CardDescription>{r.description}</CardDescription>}
+                </CardBody>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Who you'll reach */}
+      {audience.length > 0 && (
+        <section className="mt-16 overflow-hidden rounded-3xl bg-kcd-navy p-8 text-white md:p-12">
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">Who you&apos;ll reach</h2>
+          <p className="mt-2 max-w-2xl text-white/70">
+            A focused, technical audience from across Gujarat and western India.
+          </p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {audience.map((a) => (
+              <li key={a} className="flex gap-3 text-sm text-white/90">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-kcd-orange" aria-hidden />
+                <span>{a}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Sponsorship packages */}
+      <section className="mt-16">
+        <SubHeading>Sponsorship packages</SubHeading>
+        <p className="mt-2 max-w-2xl text-kcd-muted">
+          Headline tiers, in descending order of prominence. Every tier includes branding and on-site presence.
+        </p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {packages.map((t) => (
+            <TierCard key={t.slug} tier={t} />
+          ))}
+        </div>
+      </section>
+
+      {/* Additional opportunities */}
+      {additional.length > 0 && (
+        <section className="mt-16">
+          <SubHeading>Additional opportunities</SubHeading>
+          <p className="mt-2 max-w-2xl text-kcd-muted">
+            Targeted and in-kind ways to support the event and stand out.
+          </p>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {additional.map((t) => (
+              <TierCard key={t.slug} tier={t} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Get in touch */}
+      <div className="mt-16 rounded-3xl border border-kcd-border bg-kcd-subtle p-8 text-center md:p-12">
+        <h2 className="font-display text-2xl font-bold text-kcd-ink sm:text-3xl">Ready to partner with us?</h2>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-kcd-ink/80">
+          Tell us a little about your goals and we&apos;ll match you to the right package. Download the
+          prospectus for the full benefit breakdown.
+        </p>
+        {deadline && <p className="mt-4 text-sm font-semibold text-kcd-ink">{deadline}</p>}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           {email && (
-            <ButtonLink href={`mailto:${email}?subject=Sponsorship%20-%20KCD%20Gujarat%202026`} className="rounded-full">
+            <ButtonLink href={`mailto:${email}?subject=Sponsorship%20-%20KCD%20Gujarat%202026`} size="lg" className="rounded-full">
               Email the team
             </ButtonLink>
           )}
           {prospectusUrl && (
-            <ButtonLink href={prospectusUrl} variant="outline" className="rounded-full" target="_blank" rel="noreferrer">
+            <ButtonLink href={prospectusUrl} size="lg" variant="outline" className="rounded-full" target="_blank" rel="noreferrer">
               Download Prospectus
             </ButtonLink>
           )}
         </div>
       </div>
+
+      {terms && <p className="mx-auto mt-8 max-w-3xl text-center text-xs text-kcd-muted">{terms}</p>}
     </Container>
   );
 }

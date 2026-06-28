@@ -213,8 +213,17 @@ export const SponsorshipTier = RenderFlag.extend({
   slug: z.string().min(1),
   price: z.string().optional().default(''),
   perks: z.array(z.string()).default([]),
+  /** `package` = priced headline tier; `additional` = add-on / in-kind opportunity. */
+  group: z.enum(['package', 'additional']).default('package'),
 });
 export type SponsorshipTier = z.infer<typeof SponsorshipTier>;
+
+/** A "why sponsor" reason card. */
+export const SponsorshipReason = z.object({
+  title: z.string(),
+  description: z.string().default(''),
+});
+export type SponsorshipReason = z.infer<typeof SponsorshipReason>;
 
 export const SponsorshipConfigFrontmatter = z.object({
   contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
@@ -222,6 +231,16 @@ export const SponsorshipConfigFrontmatter = z.object({
   prospectus: z.string().optional(),
   /** Optional full URL override; takes precedence over `prospectus`. */
   prospectusUrl: z.union([z.string().url(), z.literal('')]).optional(),
+  /** Lead-in pitch shown under the page title. */
+  intro: z.string().optional(),
+  /** "Why sponsor" reason cards. */
+  reasons: z.array(SponsorshipReason).optional(),
+  /** "Who you'll reach" audience bullet points. */
+  audience: z.array(z.string()).optional(),
+  /** Optional contract deadline note (e.g. "Signed contracts due 15 August 2026"). */
+  deadline: z.string().optional(),
+  /** Short sponsor terms / code-of-conduct note shown at the foot of the page. */
+  terms: z.string().optional(),
   tiers: z.array(SponsorshipTier).default([]),
 });
 export type SponsorshipConfigFrontmatter = z.infer<typeof SponsorshipConfigFrontmatter>;

@@ -78,6 +78,14 @@ export default async function CfpPage() {
         </p>
       )}
 
+      {cfp.phase === 'open' && (
+        <div className="mb-8">
+          <ButtonLink href={cfpUrl || '#'} size="lg">
+            Submit on Sessionize
+          </ButtonLink>
+        </div>
+      )}
+
       <MarkdownBody html={cfp.bodyHtml} className={cfp.phase === 'open' ? undefined : 'mt-8'} />
 
       {cfp.phase === 'upcoming' && (

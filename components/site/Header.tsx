@@ -32,7 +32,6 @@ interface HeaderProps {
 }
 
 export function Header({
-  pathname = '/',
   registrationOpen = false,
   comingSoon = false,
   cfpOpen = false,
@@ -40,14 +39,11 @@ export function Header({
   showTeam = false,
 }: HeaderProps) {
   const [open, setOpen] = React.useState(false);
-  const isHome = pathname === '/';
 
-  // On the homepage, anchor links become pure hash links so the browser
-  // does an in-page smooth scroll without navigating. On any other page
-  // the full `/#section` href is kept so the browser loads `/` and jumps
-  // straight to the anchor without re-scrolling from the top.
-  const resolveHref = (href: string) =>
-    isHome && href.startsWith('/#') ? href.slice(1) : href;
+  // Every nav link points at the homepage section (`/#section`). From any page
+  // this navigates home and scrolls to the anchor (offset by the sticky header
+  // via `scroll-margin-top` in globals.css). No bare `#hash` links — those only
+  // work on `/` and silently break on sub-pages like /cfp or /venue.
 
   const navItems = NAV.filter((item) => {
     if (item.speakersOnly && !showSpeakers) return false;
@@ -83,7 +79,7 @@ export function Header({
                 <ul className="flex items-center gap-1 text-sm font-medium">
                   {navItems.map((item) => (
                     <li key={item.href}>
-                      <Link className="kcd-glass-link" href={resolveHref(item.href)}>
+                      <Link className="kcd-glass-link" href={item.href}>
                         <span>{item.label}</span>
                       </Link>
                     </li>
@@ -118,7 +114,7 @@ export function Header({
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
-                    href={resolveHref(item.href)}
+                    href={item.href}
                     className="kcd-glass-link w-full justify-start"
                     onClick={() => setOpen(false)}
                   >

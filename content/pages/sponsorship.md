@@ -7,11 +7,55 @@ contactEmail: "contact@kcdgujarat.com"
 # Omit to default to static/prospectus.pdf when that file exists.
 prospectus: "prospectus.pdf"
 
+# Lead-in pitch shown under the page title.
+intro: >-
+  KCD Gujarat 2026 brings the cloud native community of Gujarat and western
+  India together for a community-driven, CNCF-backed day of talks, workshops,
+  and connection. Sponsoring puts your brand in front of a highly engaged,
+  technical audience — and directly fuels the growth of open source and cloud
+  native across the region.
+
+# ─── Why sponsor ──────────────────────────────────────────────────────────────
+reasons:
+  - title: "High-Profile Audience"
+    description: "Reach developers, platform engineers, SREs, and architects who are actively building on Kubernetes and cloud native."
+  - title: "Qualified Leads"
+    description: "Connect with practitioners and decision-makers evaluating cloud native tools, platforms, and services."
+  - title: "Talent Acquisition"
+    description: "Meet and hire skilled cloud native engineers and tap into the on-site job board."
+  - title: "Thought Leadership"
+    description: "Share your expertise through talks, workshops, and demos in a vendor-neutral setting."
+  - title: "Brand Visibility"
+    description: "Put your logo on stage, across the venue, website, lanyards, and marketing — in front of an engaged crowd."
+  - title: "Support Open Source"
+    description: "Back the CNCF community and the growth of cloud native in Gujarat and western India."
+  - title: "Community Access"
+    description: "Build lasting relationships with the regional community, contributors, and maintainers."
+  - title: "Solutions Showcase"
+    description: "Demo your products at a booth and get direct, hands-on feedback from real users."
+
+# ─── Who you'll reach ───────────────────────────────────────────────────────────
+audience:
+  - "Developers, platform & DevOps engineers, SREs, and software architects"
+  - "Startup founders, CTOs, and enterprise technology decision-makers"
+  - "Students and early-career engineers entering cloud native"
+  - "CNCF community members, contributors, and maintainers from Gujarat & western India"
+
+# Optional contract deadline note — set once confirmed, e.g.
+#   deadline: "Signed contracts for all sponsorship levels are due 15 August 2026."
+
+# Short sponsor terms / code-of-conduct note shown at the foot of the page.
+terms: >-
+  All sponsors agree to uphold the CNCF Code of Conduct. Attendee contact
+  details are shared only with explicit opt-in consent, in line with our privacy
+  commitments. Packages are confirmed on a first-come, first-served basis.
+
 # ─── Sponsorship tiers ────────────────────────────────────────────────────────
 # `slug` is a unique package id for this page (e.g. platinum, bronze, diversity).
 # Logo-wall tiers for content/sponsors/*.md use: diamond | platinum | gold | silver | community | media
 # `price` is display-only (e.g. "₹5,00,000" or "— top tier —").
 # `perks` is a list of benefit bullet points shown on the /sponsorship page.
+# `group`: "package" (priced headline tiers) or "additional" (add-on / in-kind opportunities).
 tiers:
   - name: "Platinum"
     slug: "platinum"
@@ -68,6 +112,7 @@ tiers:
   - name: "Diversity"
     slug: "diversity"
     price: "US$ 800 (~₹75K*)"
+    group: "additional"
     perks:
       - "Recognition as the 'Diversity Sponsor' of KCD Gujarat"
       - "Branding across diversity-focused communications and initiatives"
@@ -76,10 +121,11 @@ tiers:
       - "Opportunity to support diversity scholarships/tickets"
       - "On-stage acknowledgment during the event"
       - "2 Complimentary Tickets"
-  
+
   - name: "Swag"
     slug: "swag"
     price: "US$ 800 (~₹75K*)"
+    group: "additional"
     perks:
       - "Branding on official event swag (e.g., Tshirts, kits, goodies)"
       - "Opportunity to co-brand exclusive merchandise"
@@ -88,19 +134,21 @@ tiers:
       - "Visibility during swag distribution at the event"
       - "Option to include custom inserts (stickers, flyers, coupons) in swag kits"
       - "2 Complimentary Tickets"
-  
+
   - name: "Community Partner"
     slug: "community"
     price: "In Kind"
+    group: "additional"
     perks:
       - "1 Ticket"
       - "Presence in the community zone: a dedicated space within the event venue"
       - "Keynote Mention"
       - "Logo on website"
-  
+
   - name: "Venue Partner"
     slug: "venue"
     price: "In Kind"
+    group: "additional"
     perks:
       - "Logo on banners and social media channels"
       - "Branding at the venue entrance and across event standees"
