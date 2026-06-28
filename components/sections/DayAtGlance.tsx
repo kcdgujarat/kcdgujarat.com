@@ -26,7 +26,7 @@ interface Props {
 export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen = false, showSpeakers = false, timeline }: Props) {
   const items = timeline && timeline.length > 0 ? timeline : DEFAULT_TIMELINE;
   return (
-    <section id="schedule" className="bg-kcd-surface py-20">
+    <section id="schedule" className="py-20">
       <Container>
         <SectionHeader
           eyebrow={eventDateLabel}

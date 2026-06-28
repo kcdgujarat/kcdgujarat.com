@@ -13,7 +13,6 @@ import { FaqSection } from '@/components/sections/FaqSection';
 import { ComingSoon } from '@/components/sections/ComingSoon';
 import {
   getFaqs,
-  getSessions,
   getSpeakers,
   getSponsors,
   getTeam,
@@ -71,10 +70,9 @@ export default async function HomePage() {
 
   const showTeam = event.showTeam;
 
-  const [speakers, sessions, sponsors, faqs, team, partners, cfp, registration, keyDates] =
+  const [speakers, sponsors, faqs, team, partners, cfp, registration, keyDates] =
     await Promise.all([
       getSpeakers(),
-      getSessions(),
       getSponsors(),
       getFaqs(),
       showTeam ? getTeam() : Promise.resolve([]),
@@ -112,23 +110,40 @@ export default async function HomePage() {
         cfpClosesLabel={cfpClosesLabel}
         showSpeakers={cfp.showSpeakers}
       />
-      <AboutSection />
-      <WhatToExpect cfpClosesLabel={cfpClosesLabel} cfpOpen={cfpOpen} />
-      <KeyDatesSection items={keyDates} eventDate={eventDate} />
-      {cfp.showSpeakers && <SpeakersPreview speakers={speakers} />}
-      <DayAtGlance
-        eventDateLabel={eventDateLabel}
-        cfpOpen={cfpOpen}
-        showSpeakers={cfp.showSpeakers}
-        timeline={event.timeline}
-      />
-      {sessions.length > 0 && null}
-      {cfpOpen && <CfpSection homeSection={cfp.homeSection} />}
-      <VenueSection venueName={venueName} venueAddress={venueAddress} mapEmbedUrl={mapEmbedUrl} />
-      {showTeam && <TeamPreview team={team} />}
-      <SponsorStrip sponsors={sponsors} />
-      <CommunityPartners partners={partners} />
-      <FaqSection faqs={faqs} />
+      {/* Render order; nulls dropped so the cream/surface alternation stays
+          uniform regardless of which sections are gated off this cycle. */}
+      {[
+        <AboutSection key="about" />,
+        <WhatToExpect key="expect" cfpClosesLabel={cfpClosesLabel} cfpOpen={cfpOpen} />,
+        <KeyDatesSection key="keydates" items={keyDates} eventDate={eventDate} />,
+        cfp.showSpeakers && speakers.length > 0 ? (
+          <SpeakersPreview key="speakers" speakers={speakers} />
+        ) : null,
+        <DayAtGlance
+          key="schedule"
+          eventDateLabel={eventDateLabel}
+          cfpOpen={cfpOpen}
+          showSpeakers={cfp.showSpeakers}
+          timeline={event.timeline}
+        />,
+        cfpOpen ? <CfpSection key="cfp" homeSection={cfp.homeSection} /> : null,
+        <VenueSection
+          key="venue"
+          venueName={venueName}
+          venueAddress={venueAddress}
+          mapEmbedUrl={mapEmbedUrl}
+        />,
+        showTeam ? <TeamPreview key="team" team={team} /> : null,
+        <SponsorStrip key="sponsors" sponsors={sponsors} />,
+        partners.length > 0 ? <CommunityPartners key="partners" partners={partners} /> : null,
+        faqs.length > 0 ? <FaqSection key="faq" faqs={faqs} /> : null,
+      ]
+        .filter(Boolean)
+        .map((section, i) => (
+          <div key={i} className={i % 2 === 1 ? 'bg-kcd-surface' : undefined}>
+            {section}
+          </div>
+        ))}
     </>
   );
 }

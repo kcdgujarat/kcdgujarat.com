@@ -9,7 +9,7 @@ export function SpeakersPreview({ speakers }: { speakers: Speaker[] }) {
   const display = featured.length > 0 ? featured : speakers.slice(0, 8);
   if (display.length === 0) return null;
   return (
-    <section id="speakers" className="bg-kcd-subtle/50 py-20">
+    <section id="speakers" className="py-20">
       <Container>
         <SectionHeader
           eyebrow="Speakers"

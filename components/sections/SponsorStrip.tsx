@@ -10,7 +10,7 @@ const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'community', 'me
 export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
   const byTier = (t: Sponsor['tier']) => sponsors.filter((s) => s.tier === t);
   return (
-    <section id="sponsors" className="bg-kcd-surface py-20">
+    <section id="sponsors" className="py-20">
       <Container>
         <SectionHeader
           eyebrow="Our sponsors"

@@ -1,6 +1,6 @@
 ---
 name: "CNCG Gurugram"
-description: "Cloud Native Computing Group, Gurugram — a community of cloud-native developers in Gurugram & National Capital Region."
 url: "https://ocgroups.dev/cncf/group/atcn6qw"
+logo: "/images/cncg-gurugram.png"
 order: 40
 ---

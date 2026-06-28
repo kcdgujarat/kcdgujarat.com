@@ -12,7 +12,7 @@ interface VenueSectionProps {
 
 export function VenueSection({ venueName, venueAddress, mapEmbedUrl }: VenueSectionProps) {
   return (
-    <section id="venue" className="bg-kcd-subtle/50 py-20">
+    <section id="venue" className="py-20">
       <Container>
         <SectionHeader
           eyebrow="Venue"
