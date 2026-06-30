@@ -19,6 +19,7 @@ const NAV: NavItem[] = [
   { href: '/#team', label: 'Organisers', teamOnly: true },
   { href: '/#sponsors', label: 'Sponsors' },
   { href: '/#faq', label: 'FAQ' },
+  { href: '/badge', label: '🎟️ Badge' },
 ];
 
 interface HeaderProps {
