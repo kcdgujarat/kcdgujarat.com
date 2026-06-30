@@ -30,7 +30,7 @@ export function OrganiserCard({ member }: { member: TeamMember }) {
               alt={member.name}
               fill
               sizes="(min-width: 640px) 288px, 256px"
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
             />
           )}
         </div>
@@ -44,7 +44,7 @@ export function OrganiserCard({ member }: { member: TeamMember }) {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
           {member.photoUrl && (
             <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-kcd-subtle">
-              <Image src={member.photoUrl} alt={member.name} fill sizes="112px" className="object-cover" />
+              <Image src={member.photoUrl} alt={member.name} fill sizes="112px" className="object-cover object-top" />
             </div>
           )}
           <div className="min-w-0 pr-8">

@@ -129,7 +129,7 @@ export default async function SponsorshipPage() {
           ))}
         </div>
         <p className="mt-4 text-sm text-kcd-muted">
-          * INR amounts are indicative and depend on the prevailing exchange rate; billing is in USD.
+          * INR equivalent is approximate, based on prevailing exchange rates at the time of invoicing.
         </p>
       </section>
 
@@ -146,7 +146,7 @@ export default async function SponsorshipPage() {
             ))}
           </div>
           <p className="mt-4 text-sm text-kcd-muted">
-            * INR amounts are indicative and depend on the prevailing exchange rate; billing is in USD.
+            * INR equivalent is approximate, based on prevailing exchange rates at the time of invoicing.
           </p>
         </section>
       )}
