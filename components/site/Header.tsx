@@ -18,6 +18,7 @@ const NAV: NavItem[] = [
   { href: '/#venue', label: 'Venue' },
   { href: '/#team', label: 'Organisers', teamOnly: true },
   { href: '/#sponsors', label: 'Sponsors' },
+  { href: '/#partners', label: 'Partners' },
   { href: '/#faq', label: 'FAQ' },
 ];
 
