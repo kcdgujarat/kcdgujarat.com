@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Download, Upload, X } from 'lucide-react';
 
 // ─── Canvas dimensions ────────────────────────────────────────────────────────
-const PLAIN_SIZE = 420;   // square template (1:1 matches original 1024×1024)
-const PHOTO_W    = 840;   // landscape "with photo" canvas — 2:1
-const PHOTO_H    = 420;   //
+// Using full resolution of the provided images for the best download quality
+const PLAIN_SIZE = 1280;   // square template (1280×1280)
+const PHOTO_W    = 2560;   // landscape "with photo" canvas — 2:1 (2560×1280)
+const PHOTO_H    = 1280;   //
 
 export function BadgeGenerator() {
   const canvasRef    = React.useRef<HTMLCanvasElement>(null);
@@ -28,73 +29,58 @@ export function BadgeGenerator() {
 
     setRendering(true);
 
-    // 2× hi-DPI for crisp PNG download
-    const dpr = 2;
-    canvas.width  = PHOTO_W * dpr;
-    canvas.height = PHOTO_H * dpr;
-    canvas.style.width  = `${PHOTO_W}px`;
-    canvas.style.height = `${PHOTO_H}px`;
-    ctx.scale(dpr, dpr);
+    // Set actual pixel dimensions to full resolution
+    canvas.width  = PHOTO_W;
+    canvas.height = PHOTO_H;
 
-    // ── Load images ─────────────────────────────────────────────────────
-    const [templateImg, photoImg] = await Promise.all([
-      loadImage('/images/badge-template.png'),
-      loadImage(photo),
-    ]);
+    try {
+      // ── Load images ─────────────────────────────────────────────────────
+      const [templateImg, photoImg] = await Promise.all([
+        loadImage('/images/EventBadgeEmpty.png'),
+        loadImage(photo),
+      ]);
 
-    // ── Right half: template image (420×420), right-aligned ─────────────
-    ctx.drawImage(templateImg, PHOTO_W / 2, 0, PHOTO_H, PHOTO_H);
+      // ── Draw the full landscape background ─────────────────────────────
+      // EventBadgeEmpty is already 2560x1280 with the left/right theme!
+      ctx.drawImage(templateImg, 0, 0, PHOTO_W, PHOTO_H);
 
-    // ── Left half: template background with a slight fade ───────────────
-    // Draw the template on the left so the building and pattern continue
-    ctx.drawImage(templateImg, 0, 0, PHOTO_W / 2, PHOTO_H);
-    
-    // Add a semi-transparent cream overlay to the left side to mute the background
-    // and make the photo stand out, while masking the duplicate text/logos
-    ctx.fillStyle = 'rgba(240, 237, 228, 0.85)';
-    ctx.fillRect(0, 0, PHOTO_W / 2, PHOTO_H);
+      // ── Photo circle — centred in the left half ────────────────────────
+      const CX = PHOTO_W / 4;   // 640 — horizontal centre of left half
+      const CY = PHOTO_H / 2;   // 640 — vertical centre
+      const R  = 440;           // radius of the photo
 
-    // Subtle gradient border between left & right halves
-    const sep = ctx.createLinearGradient(PHOTO_W / 2 - 24, 0, PHOTO_W / 2, 0);
-    sep.addColorStop(0, 'rgba(240,237,228,0)');
-    sep.addColorStop(1, 'rgba(240,237,228,0.9)');
-    ctx.fillStyle = sep;
-    ctx.fillRect(PHOTO_W / 2 - 24, 0, 24, PHOTO_H);
+      // White ring backdrop
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(CX, CY, R + 16, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,1)';
+      ctx.fill();
+      ctx.restore();
 
-    // ── Photo circle — centred in the left half ──────────────────────────
-    const CX = PHOTO_W / 4;   // 210 — horizontal centre of left half
-    const CY = PHOTO_H / 2;   // 210 — vertical centre
-    const R  = 150;            // radius
+      // Clip + cover-fit the user photo
+      const { naturalWidth: iw, naturalHeight: ih } = photoImg;
+      const fitScale = (R * 2) / Math.min(iw, ih);
+      const dw = iw * fitScale;
+      const dh = ih * fitScale;
 
-    // White ring backdrop (blends with cream bg)
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(CX, CY, R + 6, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.70)';
-    ctx.fill();
-    ctx.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(photoImg, CX - dw / 2, CY - dh / 2, dw, dh);
+      ctx.restore();
 
-    // Clip + cover-fit the user photo
-    const { naturalWidth: iw, naturalHeight: ih } = photoImg;
-    const fitScale = (R * 2) / Math.min(iw, ih);
-    const dw = iw * fitScale;
-    const dh = ih * fitScale;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(CX, CY, R, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.drawImage(photoImg, CX - dw / 2, CY - dh / 2, dw, dh);
-    ctx.restore();
-
-    // Blue ring around photo
-    ctx.beginPath();
-    ctx.arc(CX, CY, R + 4, 0, Math.PI * 2);
-    ctx.strokeStyle = '#4285F4';
-    ctx.lineWidth   = 4;
-    ctx.stroke();
-
-    setRendering(false);
+      // Blue ring around photo
+      ctx.beginPath();
+      ctx.arc(CX, CY, R + 8, 0, Math.PI * 2);
+      ctx.strokeStyle = '#4285F4';
+      ctx.lineWidth   = 12;
+      ctx.stroke();
+    } catch (err) {
+      console.error('Failed to render badge:', err);
+    } finally {
+      setRendering(false);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -114,7 +100,7 @@ export function BadgeGenerator() {
   function handleDownloadPlain() {
     const a = document.createElement('a');
     a.download = 'KCD-Gujarat-2026-Im-Attending.png';
-    a.href     = '/images/badge-template.png';
+    a.href     = '/images/EventBadgeNoImage.png';
     a.click();
     setDownloaded('plain');
     setTimeout(() => setDownloaded(null), 2000);
@@ -126,7 +112,7 @@ export function BadgeGenerator() {
     if (!canvas) return;
     const a = document.createElement('a');
     a.download = 'KCD-Gujarat-2026-Im-Attending-Photo.png';
-    a.href     = canvas.toDataURL('image/png');
+    a.href     = canvas.toDataURL('image/png', 1.0);
     a.click();
     setDownloaded('photo');
     setTimeout(() => setDownloaded(null), 2000);
@@ -148,14 +134,14 @@ export function BadgeGenerator() {
           <p className="text-xs font-semibold uppercase tracking-widest text-kcd-muted">
             Without photo
           </p>
-          <div className="overflow-hidden rounded-2xl border border-kcd-border shadow-card">
+          <div className="overflow-hidden rounded-2xl border border-kcd-border shadow-card w-full max-w-[420px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/badge-template.png"
+              src="/images/EventBadgeNoImage.png"
               alt="KCD Gujarat 2026 I'm Attending badge"
               width={PLAIN_SIZE}
               height={PLAIN_SIZE}
-              style={{ width: PLAIN_SIZE, height: PLAIN_SIZE, display: 'block' }}
+              className="w-full h-auto block"
             />
           </div>
           <Button
@@ -225,25 +211,27 @@ export function BadgeGenerator() {
           </div>
 
           {/* Badge preview: photo LEFT | template RIGHT */}
-          <div className="relative overflow-hidden rounded-2xl border border-kcd-border shadow-card">
+          <div className="relative overflow-hidden rounded-2xl border border-kcd-border shadow-card w-full max-w-[840px]">
             {!photoSrc && (
-              <div
-                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-kcd-bg/80 backdrop-blur-[2px]"
-              >
-                <Upload className="h-7 w-7 text-kcd-muted" />
-                <p className="text-center text-xs font-medium text-kcd-muted px-8">
-                  Upload a photo to preview this version
-                </p>
+              <div className="relative w-full">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img 
+                  src="/images/EventBadgewithPlaceholder.png" 
+                  alt="Badge placeholder" 
+                  className="w-full h-auto block" 
+                />
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-kcd-bg/60 backdrop-blur-[1px]">
+                  <Upload className="h-7 w-7 text-kcd-ink" />
+                  <p className="text-center text-xs font-semibold text-kcd-ink px-8">
+                    Upload a photo to preview this version
+                  </p>
+                </div>
               </div>
             )}
             <canvas
               ref={canvasRef}
               id="badge-canvas"
-              width={PHOTO_W}
-              height={PHOTO_H}
-              className="block"
-              /* displayed at half its pixel size so it fits the page */
-              style={{ width: PHOTO_W / 2, height: PHOTO_H / 2 }}
+              className={photoSrc ? "w-full h-auto block" : "hidden"}
             />
           </div>
 
