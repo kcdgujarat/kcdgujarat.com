@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/sponsorship',
     '/code-of-conduct',
     '/faq',
+    '/badge',
   ];
   if (cfp.showSpeakers && cfp.phase === 'closed') {
     staticPaths.push('/speakers', '/schedule');

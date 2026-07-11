@@ -20,6 +20,7 @@ const NAV: NavItem[] = [
   { href: '/#sponsors', label: 'Sponsors' },
   { href: '/#partners', label: 'Partners' },
   { href: '/#faq', label: 'FAQ' },
+  { href: '/badge', label: '🎟️ Badge' },
 ];
 
 interface HeaderProps {
