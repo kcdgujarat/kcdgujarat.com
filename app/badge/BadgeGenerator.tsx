@@ -44,10 +44,10 @@ export function BadgeGenerator() {
       // EventBadgeEmpty is already 2560x1280 with the left/right theme!
       ctx.drawImage(templateImg, 0, 0, PHOTO_W, PHOTO_H);
 
-      // ── Photo circle — centred in the left half ────────────────────────
+      // ── Photo circle — centred in the left half, balanced spacing ─────
       const CX = PHOTO_W / 4;   // 640 — horizontal centre of left half
-      const CY = PHOTO_H / 2;   // 640 — vertical centre
-      const R  = 440;           // radius of the photo
+      const CY = 600;           // Lowered slightly to balance the top/bottom gap
+      const R  = 420;           // Increased radius to fill the space better without overlapping
 
       // White ring backdrop
       ctx.save();
@@ -97,25 +97,39 @@ export function BadgeGenerator() {
   }
 
   // ── Download plain ────────────────────────────────────────────────────────
-  function handleDownloadPlain() {
-    const a = document.createElement('a');
-    a.download = 'KCD-Gujarat-2026-Im-Attending.png';
-    a.href     = '/images/EventBadgeNoImage.png';
-    a.click();
-    setDownloaded('plain');
-    setTimeout(() => setDownloaded(null), 2000);
+  async function handleDownloadPlain() {
+    try {
+      const res = await fetch('/images/EventBadgeNoImage.png');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = 'KCD-Gujarat-2026-Im-Attending.png';
+      a.href     = url;
+      a.click();
+      URL.revokeObjectURL(url);
+      setDownloaded('plain');
+      setTimeout(() => setDownloaded(null), 2000);
+    } catch (e) {
+      console.error('Failed to download plain image:', e);
+    }
   }
 
   // ── Download with-photo ───────────────────────────────────────────────────
   function handleDownloadPhoto() {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const a = document.createElement('a');
-    a.download = 'KCD-Gujarat-2026-Im-Attending-Photo.png';
-    a.href     = canvas.toDataURL('image/png', 1.0);
-    a.click();
-    setDownloaded('photo');
-    setTimeout(() => setDownloaded(null), 2000);
+    
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = 'KCD-Gujarat-2026-Im-Attending-Photo.png';
+      a.href     = url;
+      a.click();
+      URL.revokeObjectURL(url);
+      setDownloaded('photo');
+      setTimeout(() => setDownloaded(null), 2000);
+    }, 'image/png', 1.0);
   }
 
   return (
@@ -286,7 +300,10 @@ export function BadgeGenerator() {
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new window.Image();
-    img.crossOrigin = 'anonymous';
+    // Do not set crossOrigin for data URIs to avoid CORS errors in WebKit browsers
+    if (!src.startsWith('data:')) {
+      img.crossOrigin = 'anonymous';
+    }
     img.onload  = () => resolve(img);
     img.onerror = reject;
     img.src     = src;
