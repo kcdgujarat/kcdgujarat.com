@@ -27,7 +27,7 @@ const GROUPS: { type: PartnerType; eyebrow: string; title: string; description?:
   },
   {
     type: 'media',
-    eyebrow: 'Media Partner',
+    eyebrow: 'Media Partners',
     title: 'Spreading the word',
     description: 'Helping us reach the cloud-native community far and wide.',
   },
