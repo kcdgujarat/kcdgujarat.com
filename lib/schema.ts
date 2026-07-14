@@ -296,8 +296,8 @@ export type KeyDatesFrontmatter = z.infer<typeof KeyDatesFrontmatter>;
 export const PartnerFrontmatter = RenderFlag.extend({
   name: z.string(),
   description: z.string().optional(),
-  /** Partner category — drives the badge shown on the card. */
-  type: z.enum(['community', 'media', 'venue']).optional().default('community'),
+  /** Partner category — drives the section a partner is grouped under. */
+  type: z.enum(['cloud-native', 'community', 'media', 'venue']).optional().default('community'),
   url: z.string().url().optional(),
   logo: z.string().optional(),
   order: z.number().optional().default(100),

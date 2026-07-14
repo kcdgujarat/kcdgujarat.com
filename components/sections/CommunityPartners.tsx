@@ -12,11 +12,18 @@ type PartnerType = NonNullable<Partner['type']>;
 
 const GROUPS: { type: PartnerType; eyebrow: string; title: string; description?: string }[] = [
   {
+    type: 'cloud-native',
+    eyebrow: 'Cloud Native Community Partners',
+    title: 'Powered by the cloud-native community',
+    description:
+      'CNCF community groups across India rallying the cloud-native ecosystem behind KCD Gujarat 2026.',
+  },
+  {
     type: 'community',
-    eyebrow: 'Community Partners',
+    eyebrow: 'Other Community Partners',
     title: 'Built with our community',
     description:
-      'We’re proud to collaborate with organizations that share our passion for cloud-native technologies and community building.',
+      'We’re proud to collaborate with organizations that share our passion for technology and community building.',
   },
   {
     type: 'media',
@@ -83,7 +90,7 @@ export function CommunityPartners({ partners }: Props) {
         {groups.map((g, i) => (
           <div key={g.type} className={i > 0 ? 'mt-16' : undefined}>
             <SectionHeader eyebrow={g.eyebrow} title={g.title} description={g.description} align="center" />
-            {g.type === 'community' ? (
+            {g.type === 'community' || g.type === 'cloud-native' ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {g.items.map((p) => (
                   <CommunityPartnerCard key={p.slug} partner={p} />
