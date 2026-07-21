@@ -18,12 +18,12 @@ const TIER_SIZE: Record<Sponsor['tier'], string> = {
   media: 'h-12 md:h-14',
 };
 
-const TIER_COLS: Record<Sponsor['tier'], string> = {
-  platinum: 'grid-cols-2 sm:grid-cols-3',
-  gold: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4',
-  silver: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5',
-  community: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6',
-  media: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6',
+const TIER_WIDTH: Record<Sponsor['tier'], string> = {
+  platinum: 'w-full sm:w-80 md:w-96',
+  gold: 'w-full sm:w-64 md:w-72',
+  silver: 'w-full sm:w-52 md:w-60',
+  community: 'w-full sm:w-44 md:w-48',
+  media: 'w-full sm:w-44 md:w-48',
 };
 
 export function SponsorTier({ tier, sponsors }: { tier: Sponsor['tier']; sponsors: Sponsor[] }) {
@@ -33,14 +33,17 @@ export function SponsorTier({ tier, sponsors }: { tier: Sponsor['tier']; sponsor
       <h3 id={`tier-${tier}`} className="mb-6 text-center text-sm font-semibold uppercase tracking-widest text-kcd-muted">
         {TIER_LABEL[tier]}
       </h3>
-      <div className={cn('mx-auto grid max-w-5xl place-items-center gap-6', TIER_COLS[tier])}>
+      <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-6">
         {sponsors.map((s) => (
           <a
             key={s.slug}
             href={s.url}
             target="_blank"
             rel="noreferrer noopener"
-            className="flex w-full items-center justify-center rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card"
+            className={cn(
+              'flex items-center justify-center rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card',
+              TIER_WIDTH[tier],
+            )}
             aria-label={s.name}
           >
             {s.logoUrl ? (
