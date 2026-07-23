@@ -4,3 +4,4 @@ url: "https://awsugvad.in/"
 logo: "/images/awsug-vadodara.svg"
 order: 25
 ---
+
