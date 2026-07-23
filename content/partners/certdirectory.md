@@ -2,5 +2,5 @@
 name: "CertDirectory"
 url: "https://certdirectory.io/"
 logo: "/images/certdirectory.png"
-order: 120
+order: 24
 ---

@@ -2,5 +2,5 @@
 name: "Konfhub"
 url: "https://konfhub.com/"
 logo: "/images/konfhub.png"
-order: 80
+order: 20
 ---
