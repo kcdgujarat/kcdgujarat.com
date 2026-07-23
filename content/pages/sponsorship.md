@@ -52,7 +52,7 @@ terms: >-
 
 # ─── Sponsorship tiers ────────────────────────────────────────────────────────
 # `slug` is a unique package id for this page (e.g. platinum, bronze, diversity).
-# Logo-wall tiers for content/sponsors/*.md use: diamond | platinum | gold | silver | community | media
+# Logo-wall tiers for content/sponsors/*.md use: platinum | gold | silver | community | diversity | media
 # `price` is display-only (e.g. "₹5,00,000" or "— top tier —").
 # `perks` is a list of benefit bullet points shown on the /sponsorship page.
 # `group`: "package" (priced headline tiers) or "additional" (add-on / in-kind opportunities).

@@ -156,7 +156,7 @@ Abstract goes here.
 ---
 # content/sponsors/kodekloud.md
 name: "KodeKloud"
-tier: "gold"                  # diamond | platinum | gold | silver | community | media
+tier: "gold"                  # platinum | gold | silver | community | diversity | media
 logo: "/images/sponsors/kodekloud.svg"   # prefer SVG
 url: "https://kodekloud.com"
 order: 10

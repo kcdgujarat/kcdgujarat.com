@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-06-02 (CFP markdown render + typography)_
+_Last updated: 2026-07-23 (uniform sponsor cards)_
 
 ## 1. Goal
 
@@ -19,6 +19,13 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 - `lib/site-social.ts` — `SiteSocialLinks` type + `normalizeSiteSocialLinks()` (maps legacy `twitter` → `x`).
 - `lib/content.ts` — `getSocialLinks()` reads `content/pages/social.md`; throws on invalid YAML (no silent `{}`).
 - `proxy.ts` — CSP + coming-soon gating. Do **not** add `middleware.ts` (Next.js 16 conflict).
+
+### Sponsors (logo wall)
+
+- Markdown under `content/sponsors/*.md`. Tier enum: `platinum | gold | silver | community | diversity | media`.
+- Rendered by `SponsorTier` (centered flex wrap, fixed card size `h-28 w-44` → `md:h-36 md:w-56`) on homepage `SponsorStrip` and `/sponsors`. Logo height still scales by tier.
+- `render: false` hides a sponsor (e.g. `sample-sponsor.md`).
+- Current published: Valkey (gold), SUSE (diversity) — SUSE logo path is `/images/sponsors/suse.svg` (asset may still need adding).
 
 ### Social links (`content/pages/social.md`)
 
@@ -60,20 +67,16 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 
 ## 3. Files in flight
 
-Working tree **clean** as of last commit: `0eaa235` — `(feat): no more payload cms, fixes social renders`.
+Untracked / local sponsor content: `content/sponsors/suse.md`, `content/sponsors/valkey.md`, `public/images/sponsors/valkey.svg`. Missing: `public/images/sponsors/suse.svg`.
 
 After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm build`.
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-06-02)
+## 4. Recent changes (2026-07-23)
 
-27. **Payload + Postgres removed** — markdown-only site; deleted `payload.config.ts`, `collections/`, `app/(payload)/`, `lib/payload.ts`. Docker compose is app-only.
-28. **Social links file** — `content/pages/social.md` + `getSocialLinks()` + `SocialLinks` component. Fixed empty icons caused by Payload `settings.socialLinks` + `twitter` vs `x` key mismatch.
-29. **CFP / registration date phases** — `upcoming` / `open` / `closed` from `startDate`/`endDate` in markdown.
-30. **Dev content hot reload** — `scripts/dev.mjs` + `lib/content-revision.ts` + `ensureDevContentFresh()`.
-31. **CFP markdown** — `@tailwindcss/typography` + `MarkdownBody`; `/cfp` renders `cfp.bodyHtml` on all phases (was hidden during `upcoming`/`closed`).
-32. **CFP silent failure** — invalid `homeSection.cards[].icon` (e.g. `group`) made `getCfpConfig()` fall back to `open: false`; now throws with path/message. Icons: megaphone, wrench, graduation-cap, users, group.
+33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
+34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
 
 ## 5. Failed attempts
 
@@ -85,7 +88,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 6. Single next thing to try
 
-**Update CLAUDE.md** to reflect markdown-only stack (remove Payload/Postgres from locked stack, env vars, folder layout). Confirm Vercel deploy without `DATABASE_URL` and smoke-test social icons on preview after editing `social.md`.
+**Add `public/images/sponsors/suse.svg`** so the Diversity sponsor logo renders (markdown already points at that path). Then commit sponsor content + tier support together.
 
 ---
 

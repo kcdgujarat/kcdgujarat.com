@@ -7,24 +7,22 @@ const TIER_LABEL: Record<Sponsor['tier'], string> = {
   gold: 'Gold',
   silver: 'Silver',
   community: 'Community',
+  diversity: 'Diversity',
   media: 'Media',
 };
 
-const TIER_SIZE: Record<Sponsor['tier'], string> = {
-  platinum: 'h-20 md:h-24',
-  gold: 'h-16 md:h-20',
-  silver: 'h-14 md:h-16',
-  community: 'h-12 md:h-14',
-  media: 'h-12 md:h-14',
+/** Logo height inside a fixed card — keeps boxes uniform while preserving tier prominence. */
+const TIER_LOGO: Record<Sponsor['tier'], string> = {
+  platinum: 'h-16 md:h-20',
+  gold: 'h-14 md:h-16',
+  silver: 'h-12 md:h-14',
+  community: 'h-10 md:h-12',
+  diversity: 'h-10 md:h-12',
+  media: 'h-10 md:h-12',
 };
 
-const TIER_WIDTH: Record<Sponsor['tier'], string> = {
-  platinum: 'w-full sm:w-80 md:w-96',
-  gold: 'w-full sm:w-64 md:w-72',
-  silver: 'w-full sm:w-52 md:w-60',
-  community: 'w-full sm:w-44 md:w-48',
-  media: 'w-full sm:w-44 md:w-48',
-};
+const CARD =
+  'flex h-28 w-44 shrink-0 items-center justify-center rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card sm:h-32 sm:w-52 md:h-36 md:w-56';
 
 export function SponsorTier({ tier, sponsors }: { tier: Sponsor['tier']; sponsors: Sponsor[] }) {
   if (sponsors.length === 0) return null;
@@ -40,18 +38,15 @@ export function SponsorTier({ tier, sponsors }: { tier: Sponsor['tier']; sponsor
             href={s.url}
             target="_blank"
             rel="noreferrer noopener"
-            className={cn(
-              'flex items-center justify-center rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card',
-              TIER_WIDTH[tier],
-            )}
+            className={CARD}
             aria-label={s.name}
           >
             {s.logoUrl ? (
-              <div className={cn('relative w-full', TIER_SIZE[tier])}>
-                <Image src={s.logoUrl} alt={s.name} fill className="object-contain" sizes="200px" />
+              <div className={cn('relative w-full', TIER_LOGO[tier])}>
+                <Image src={s.logoUrl} alt={s.name} fill className="object-contain" sizes="224px" />
               </div>
             ) : (
-              <span className={cn('flex items-center text-base font-semibold text-kcd-ink', TIER_SIZE[tier])}>
+              <span className={cn('flex items-center text-center text-sm font-semibold text-kcd-ink', TIER_LOGO[tier])}>
                 {s.name}
               </span>
             )}

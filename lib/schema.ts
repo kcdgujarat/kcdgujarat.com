@@ -53,7 +53,7 @@ export type SessionFrontmatter = z.infer<typeof SessionFrontmatter>;
 
 export const SponsorFrontmatter = RenderFlag.extend({
   name: z.string(),
-  tier: z.enum(['platinum', 'gold', 'silver', 'community', 'media']),
+  tier: z.enum(['platinum', 'gold', 'silver', 'community', 'diversity', 'media']),
   logo: z.string().optional(),
   url: z.string().url(),
   order: z.number().optional().default(100),
