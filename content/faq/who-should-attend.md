@@ -1,6 +1,19 @@
 ---
 question: "Who should attend?"
-order: 20
+section: "General"
+featured: true
+order: 40
 ---
 
-Anyone curious about Kubernetes and the cloud-native ecosystem — from absolute beginners to seasoned platform engineers, SREs, and DevSecOps practitioners. We curate beginner-friendly tracks alongside deep technical content.
+KCD Gujarat is designed for:
+
+- DevOps Engineers
+- Platform Engineers
+- SREs
+- Cloud Engineers
+- Software Developers
+- Kubernetes Practitioners
+- Engineering Managers
+- Students
+- Open Source Contributors
+- Anyone interested in Cloud Native technologies

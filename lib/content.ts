@@ -151,6 +151,29 @@ export async function getFaqs(): Promise<Faq[]> {
   return md.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
 }
 
+export type FaqSection = { section: string; faqs: Faq[] };
+
+/**
+ * FAQs grouped by their `section`. Sections appear in the order their first
+ * (lowest-`order`) question does, so section sequencing is controlled by the
+ * same `order` numbers that sort questions within a section.
+ */
+export async function getFaqSections(): Promise<FaqSection[]> {
+  const faqs = await getFaqs();
+  const groups: FaqSection[] = [];
+  const index = new Map<string, FaqSection>();
+  for (const faq of faqs) {
+    let group = index.get(faq.section);
+    if (!group) {
+      group = { section: faq.section, faqs: [] };
+      index.set(faq.section, group);
+      groups.push(group);
+    }
+    group.faqs.push(faq);
+  }
+  return groups;
+}
+
 export type Partner = PartnerFrontmatter & {
   slug: string;
   logoUrl?: string;

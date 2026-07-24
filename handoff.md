@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-07-23 (uniform sponsor cards)_
+_Last updated: 2026-07-24 (full FAQ page with sections)_
 
 ## 1. Goal
 
@@ -73,7 +73,11 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-07-23)
+## 4. Recent changes (2026-07-24)
+
+35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. 28 FAQ markdown files under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
+
+## 4b. Earlier changes (2026-07-23)
 
 33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
@@ -88,7 +92,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 6. Single next thing to try
 
-**Add `public/images/sponsors/suse.svg`** so the Diversity sponsor logo renders (markdown already points at that path). Then commit sponsor content + tier support together.
+**Add `public/images/sponsors/suse.svg`** so the Diversity sponsor logo renders (markdown already points at that path). Then commit sponsor content + tier support together. (FAQ page + content is done and building; commit it too.)
 
 ---
 

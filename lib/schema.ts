@@ -63,6 +63,10 @@ export type SponsorFrontmatter = z.infer<typeof SponsorFrontmatter>;
 
 export const FaqFrontmatter = RenderFlag.extend({
   question: z.string(),
+  /** Heading the question is grouped under on `/faq` (e.g. General, Registration, CFP). */
+  section: z.string().optional().default('General'),
+  /** When `true`, also surfaced in the curated homepage `/#faq` accordion. */
+  featured: z.boolean().optional().default(false),
   order: z.number().optional().default(100),
 });
 export type FaqFrontmatter = z.infer<typeof FaqFrontmatter>;

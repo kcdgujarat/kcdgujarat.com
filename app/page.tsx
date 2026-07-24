@@ -81,6 +81,9 @@ export default async function HomePage() {
       getRegistrationConfig(),
       getKeyDates(),
     ]);
+  // Homepage shows a curated subset; the full grouped list lives on /faq.
+  const featuredFaqs = faqs.filter((f) => f.featured);
+  const homeFaqs = featuredFaqs.length > 0 ? featuredFaqs : faqs;
   const cfpOpen = cfp.open;
   const cfpClosesLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
   const registrationOpen = registration.open;
@@ -136,7 +139,9 @@ export default async function HomePage() {
         showTeam ? <TeamPreview key="team" team={team} /> : null,
         <SponsorStrip key="sponsors" sponsors={sponsors} />,
         partners.length > 0 ? <CommunityPartners key="partners" partners={partners} /> : null,
-        faqs.length > 0 ? <FaqSection key="faq" faqs={faqs} /> : null,
+        homeFaqs.length > 0 ? (
+          <FaqSection key="faq" faqs={homeFaqs} hasMore={faqs.length > homeFaqs.length} />
+        ) : null,
       ]
         .filter(Boolean)
         .map((section, i) => (
