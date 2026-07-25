@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-07-24 (full FAQ page with sections)_
+_Last updated: 2026-07-25 (ticket transfer + GST/PG FAQs)_
 
 ## 1. Goal
 
@@ -75,7 +75,8 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 4. Recent changes (2026-07-24)
 
-35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. 28 FAQ markdown files under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
+35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. FAQ markdown under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
+36. **Registration FAQs** — tickets are transferable (`can-i-transfer-my-ticket.md`); GST + PG fees borne by KCD Gujarat (`are-gst-and-pg-fees-included.md`).
 
 ## 4b. Earlier changes (2026-07-23)
 

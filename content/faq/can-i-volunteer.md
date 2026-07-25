@@ -4,4 +4,4 @@ section: "Community"
 order: 430
 ---
 
-Yes! Volunteer applications will open closer to the event. Follow our website and social channels for announcements.
+Volunteer applications are closed for now. If further requirements arise, we will announce it through our channels.
