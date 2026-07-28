@@ -12,6 +12,7 @@ type NavItem = { href: string; label: string; speakersOnly?: boolean; cfpOnly?: 
 
 const NAV: NavItem[] = [
   { href: '/#about', label: 'About' },
+  { href: '/#key-dates', label: 'Key Dates' },
   { href: '/speakers', label: 'Speakers', speakersOnly: true },
   { href: '/schedule', label: 'Schedule', speakersOnly: true },
   { href: '/#cfp', label: 'CFP', cfpOnly: true },
@@ -59,17 +60,22 @@ export function Header({
   const primaryHref = '/register';
   const primaryLabel = 'Register Now';
 
+  // Inline nav needs ~1280px+ (xl). iPad Pro portrait is 1024px — hamburger
+  // there so brand / links / CTA never overlap.
   return (
     <header className="sticky top-0 z-40">
-      <Container className="py-3">
+      <div className="mx-auto w-full max-w-[100rem] px-3 py-3 sm:px-5 lg:px-8">
         <div
           className={cn(
-            'kcd-glass relative flex items-center gap-4 rounded-full px-3 py-2 sm:px-4',
-            comingSoon ? 'justify-center' : 'justify-between',
+            'kcd-glass relative flex w-full items-center gap-2 rounded-full px-3 py-2 sm:gap-3 sm:px-4',
+            comingSoon ? 'justify-center' : undefined,
           )}
         >
-          <Link href="/" className="flex items-center gap-2 font-display text-base font-semibold text-kcd-ink sm:text-lg">
-            <span className="relative inline-block h-9 w-9 overflow-hidden rounded-full bg-white ring-2 ring-white/40" aria-hidden>
+          <Link
+            href="/"
+            className="relative z-10 flex shrink-0 items-center gap-2 whitespace-nowrap font-display text-base font-semibold text-kcd-ink sm:text-lg"
+          >
+            <span className="relative inline-block h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white ring-2 ring-white/40" aria-hidden>
               <Image src="/images/KCDGujaratLogoSmall500x500.png" alt="" fill sizes="36px" className="object-contain p-0.5" />
             </span>
             <span className="hidden sm:inline">KCD Gujarat 2026</span>
@@ -77,40 +83,48 @@ export function Header({
 
           {!comingSoon && (
             <>
-              <nav aria-label="Primary" className="hidden md:block">
-                <ul className="flex items-center gap-1 text-sm font-medium">
+              <nav
+                aria-label="Primary"
+                className="hidden min-w-0 flex-1 justify-center overflow-hidden xl:flex"
+              >
+                <ul className="flex items-center justify-center gap-0.5 text-sm font-medium 2xl:gap-1">
                   {navItems.map((item) => (
-                    <li key={item.href}>
-                      <Link className="kcd-glass-link" href={item.href}>
+                    <li key={item.href} className="shrink-0">
+                      <Link className="kcd-glass-link whitespace-nowrap !px-2 2xl:!px-[0.9rem]" href={item.href}>
                         <span>{item.label}</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
               </nav>
-              {showCta && (
-                <div className="hidden md:block">
-                  <ButtonLink href={primaryHref} size="sm" className="rounded-full">
+
+              <div className="relative z-10 ml-auto flex shrink-0 items-center gap-2 xl:ml-0">
+                {showCta && (
+                  <ButtonLink
+                    href={primaryHref}
+                    size="sm"
+                    className="hidden rounded-full whitespace-nowrap px-4 sm:inline-flex"
+                  >
                     {primaryLabel}
                   </ButtonLink>
-                </div>
-              )}
-              <button
-                type="button"
-                className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/30 text-kcd-ink backdrop-blur"
-                aria-label={open ? 'Close menu' : 'Open menu'}
-                aria-expanded={open}
-                onClick={() => setOpen((v) => !v)}
-              >
-                {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
+                )}
+                <button
+                  type="button"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/30 text-kcd-ink backdrop-blur xl:hidden"
+                  aria-label={open ? 'Close menu' : 'Open menu'}
+                  aria-expanded={open}
+                  onClick={() => setOpen((v) => !v)}
+                >
+                  {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </button>
+              </div>
             </>
           )}
         </div>
-      </Container>
+      </div>
 
       {!comingSoon && open && (
-        <div className="md:hidden">
+        <div className="xl:hidden">
           <Container className="pb-3">
             <ul className="kcd-glass flex flex-col gap-1 rounded-3xl p-3 text-base font-medium text-kcd-ink">
               {navItems.map((item) => (
@@ -125,8 +139,8 @@ export function Header({
                 </li>
               ))}
               {showCta && (
-                <li className="pt-2">
-                  <ButtonLink href={primaryHref} className="w-full rounded-full">
+                <li className="pt-2 sm:hidden">
+                  <ButtonLink href={primaryHref} className="w-full rounded-full whitespace-nowrap">
                     {primaryLabel}
                   </ButtonLink>
                 </li>

@@ -23,7 +23,7 @@ export function KeyDatesSection({ items, eventDate }: KeyDatesSectionProps) {
     d.label.toLowerCase() === 'conference day' && eventDate ? { ...d, value: eventDate } : d,
   );
   return (
-    <section className="py-20" aria-labelledby="key-dates-heading">
+    <section id="key-dates" className="py-20" aria-labelledby="key-dates-heading">
       <Container>
         <SectionHeader eyebrow="Key dates" title="Save the dates" />
         <div
