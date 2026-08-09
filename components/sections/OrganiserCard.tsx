@@ -23,14 +23,15 @@ export function OrganiserCard({ member }: { member: TeamMember }) {
         aria-haspopup="dialog"
         className="group block h-full w-full overflow-hidden rounded-3xl border border-kcd-border bg-white text-left shadow-card transition-shadow hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kcd-primary"
       >
-        <div className="relative aspect-[4/5] w-full bg-gradient-to-br from-kcd-primary/20 via-kcd-green/15 to-kcd-orange/20">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-br from-kcd-primary/20 via-kcd-green/15 to-kcd-orange/20">
           {member.photoUrl && (
             <Image
               src={member.photoUrl}
               alt={member.name}
               fill
               sizes="(min-width: 640px) 288px, 256px"
-              className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              style={{ objectPosition: member.photoPosition ?? 'center top' }}
             />
           )}
         </div>
@@ -44,7 +45,14 @@ export function OrganiserCard({ member }: { member: TeamMember }) {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
           {member.photoUrl && (
             <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-kcd-subtle">
-              <Image src={member.photoUrl} alt={member.name} fill sizes="112px" className="object-cover object-top" />
+              <Image
+                src={member.photoUrl}
+                alt={member.name}
+                fill
+                sizes="112px"
+                className="object-cover"
+                style={{ objectPosition: member.photoPosition ?? 'center top' }}
+              />
             </div>
           )}
           <div className="min-w-0 pr-8">

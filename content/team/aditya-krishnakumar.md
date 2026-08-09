@@ -5,7 +5,7 @@ company: "SentinelOne"
 group: "organizer"
 credentials: "Kubestronaut, CNCG Ahmedabad contributor"
 photo: "/images/organisers/aditya-krishnakumar.jpeg"
-order: 80
+order: 60
 socials:
     linkedin: https://www.linkedin.com/in/heyadityak
     github: https://github.com/heyadityak

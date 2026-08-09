@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-07-28 (Key Dates header nav)_
+_Last updated: 2026-08-09 (Organisers 3-col grid)_
 
 ## 1. Goal
 
@@ -73,7 +73,12 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-07-28)
+## 4. Recent changes (2026-08-09)
+
+38. **Organisers grid → 3 columns** — After removing Janki Chhatbar + Neel Shah, six organisers remain. `OrganisersGrid` is now `lg:grid-cols-3` (capped `max-w-5xl`) with `previewCount=3` so the first viewport is one full row.
+39. **Organiser photo alignment** — Mixed square/portrait sources caused uneven headroom under `object-cover` (Y-position can’t reframe squares in a 4:5 box). Re-cropped all six organiser JPEGs to consistent 800×1000 (4:5) framing. Optional `photoPosition` frontmatter added for future per-card tweaks.
+
+## 4b. Earlier changes (2026-07-28)
 
 37. **Key Dates header nav + fluid header** — Key Dates → `/#key-dates`. Fluid pill `max-w-[100rem]`. Inline nav only at `xl` (1280px+); iPad Pro / tablets use hamburger + Register so brand/links/CTA never overlap.
 

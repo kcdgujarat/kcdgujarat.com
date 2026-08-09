@@ -7,7 +7,7 @@ import type { TeamMember } from '@/lib/content';
 
 export function OrganisersGrid({
   members,
-  previewCount = 4,
+  previewCount = 3,
 }: {
   members: TeamMember[];
   previewCount?: number;
@@ -18,9 +18,9 @@ export function OrganisersGrid({
 
   return (
     <div>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="mx-auto grid max-w-5xl items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((m) => (
-          <li key={m.slug}>
+          <li key={m.slug} className="min-w-0">
             <OrganiserCard member={m} />
           </li>
         ))}
