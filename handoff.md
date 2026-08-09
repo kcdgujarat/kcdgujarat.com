@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-09 (Organisers 3-col grid)_
+_Last updated: 2026-08-10 (organiser cleanup reverted)_
 
 ## 1. Goal
 
@@ -73,10 +73,9 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-08-09)
+## 4. Recent changes (2026-08-10)
 
-38. **Organisers grid → 3 columns** — After removing Janki Chhatbar + Neel Shah, six organisers remain. `OrganisersGrid` is now `lg:grid-cols-3` (capped `max-w-5xl`) with `previewCount=3` so the first viewport is one full row.
-39. **Organiser photo alignment** — Mixed square/portrait sources caused uneven headroom under `object-cover`. Tried re-cropping all six to 800×1000; **reverted** — originals restored. Optional `photoPosition` frontmatter remains for per-card CSS tweaks.
+40. **Organiser cleanup reverted** — Restored Neel Shah + Janki Chhatbar (markdown + photos). Grid back to `lg:grid-cols-4` / `previewCount=4`. Prior order values and original OrganiserCard/schema restored.
 
 ## 4b. Earlier changes (2026-07-28)
 

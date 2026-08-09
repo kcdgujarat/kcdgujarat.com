@@ -315,8 +315,6 @@ export const TeamFrontmatter = RenderFlag.extend({
   group: z.enum(['organizer', 'core', 'volunteer']).optional().default('volunteer'),
   credentials: z.string().optional().default(''),
   photo: z.string().optional(),
-  /** CSS object-position for the card photo, e.g. "center 28%" — tunes headroom across mixed crops. */
-  photoPosition: z.string().optional(),
   socials: z
     .object({
       twitter: z.string().url().optional(),
