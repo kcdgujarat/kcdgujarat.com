@@ -76,7 +76,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 ## 4. Recent changes (2026-08-09)
 
 38. **Organisers grid → 3 columns** — After removing Janki Chhatbar + Neel Shah, six organisers remain. `OrganisersGrid` is now `lg:grid-cols-3` (capped `max-w-5xl`) with `previewCount=3` so the first viewport is one full row.
-39. **Organiser photo alignment** — Mixed square/portrait sources caused uneven headroom under `object-cover` (Y-position can’t reframe squares in a 4:5 box). Re-cropped all six organiser JPEGs to consistent 800×1000 (4:5) framing. Optional `photoPosition` frontmatter added for future per-card tweaks.
+39. **Organiser photo alignment** — Mixed square/portrait sources caused uneven headroom under `object-cover`. Tried re-cropping all six to 800×1000; **reverted** — originals restored. Optional `photoPosition` frontmatter remains for per-card CSS tweaks.
 
 ## 4b. Earlier changes (2026-07-28)
 
