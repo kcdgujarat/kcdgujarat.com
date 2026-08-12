@@ -1,12 +1,16 @@
 import Link from 'next/link';
+import type { Session } from '@/lib/content';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { TRACKS } from '@/lib/tracks';
-import type { TimelineItem } from '@/lib/schema';
+import {
+  buildScheduleOverview,
+  type ScheduleOverviewItem,
+  type TimelineEntry,
+} from '@/lib/schedule';
 
-type ScheduleTimelineItem = Pick<TimelineItem, 'time' | 'label' | 'icon'>;
-
-const DEFAULT_TIMELINE: ScheduleTimelineItem[] = [
+/** Shown only until sessions are published — the shape of the day we are planning. */
+const PLANNED_TIMELINE: ScheduleOverviewItem[] = [
   { time: '08:00', label: 'Registration & Morning Mixer', icon: '☕' },
   { time: '09:00', label: 'Keynote Sessions', icon: '🎤' },
   { time: '11:00', label: 'Parallel Tracks Begin', icon: '🚀' },
@@ -20,11 +24,21 @@ interface Props {
   eventDateLabel?: string;
   cfpOpen?: boolean;
   showSpeakers?: boolean;
-  timeline?: ScheduleTimelineItem[];
+  /** Non-session agenda (registration, breaks, ceremonies) from `content/pages/event.md`. */
+  timeline?: TimelineEntry[];
+  /** Published sessions — the session blocks are derived from these. */
+  sessions?: Session[];
 }
 
-export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen = false, showSpeakers = false, timeline }: Props) {
-  const items = timeline && timeline.length > 0 ? timeline : DEFAULT_TIMELINE;
+export function DayAtGlance({
+  eventDateLabel = 'Conference Day, 2026',
+  cfpOpen = false,
+  showSpeakers = false,
+  timeline,
+  sessions = [],
+}: Props) {
+  const overview = buildScheduleOverview(sessions, timeline);
+  const items = overview.length > 0 ? overview : PLANNED_TIMELINE;
   return (
     <section id="schedule" className="py-20">
       <Container>
@@ -34,7 +48,7 @@ export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen =
           description={
             cfpOpen
               ? 'Schedule + talks drop after CFP closes. Here is the day shape we are planning.'
-              : 'One full day of talks, workshops, and community — across five tracks.'
+              : 'One full day of talks, lightning sessions, and community — across nine tracks in two halls.'
           }
           align="center"
         />
@@ -71,13 +85,13 @@ export function DayAtGlance({ eventDateLabel = 'Conference Day, 2026', cfpOpen =
           <div className="rounded-3xl border border-kcd-border bg-white p-6 shadow-card md:p-8">
             <h3 className="font-display text-lg font-semibold text-kcd-ink">Parallel tracks covering talks on the following topics</h3>
             <p className="mt-2 text-sm text-kcd-ink/70">Pick your path — switch any time.</p>
-            <ul className="mt-6 space-y-3">
+            <ul className="mt-6 space-y-2">
               {TRACKS.map((t) => (
-                <li key={t.id} className="flex items-center gap-4 rounded-2xl border border-kcd-border/70 p-3">
-                  <span className={`inline-flex h-10 w-12 shrink-0 items-center justify-center rounded-xl font-display text-sm font-bold ${t.color}`}>
+                <li key={t.id} className="flex items-center gap-3 rounded-2xl border border-kcd-border/70 p-2.5">
+                  <span className={`inline-flex h-9 w-11 shrink-0 items-center justify-center rounded-xl font-display text-sm font-bold ${t.color}`}>
                     {t.id}
                   </span>
-                  <span className="font-medium text-kcd-ink">{t.label}</span>
+                  <span className="text-sm font-medium text-kcd-ink">{t.label}</span>
                 </li>
               ))}
             </ul>

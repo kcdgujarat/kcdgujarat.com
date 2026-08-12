@@ -19,7 +19,7 @@ export function PastEvents() {
         <SectionHeader
           eyebrow="From the community"
           title="Glimpses from our meetups"
-          description="CNCG Gujarat has been running monthly meetups, study jams, and hands-on workshops. Here's a taste of what to expect at KCD."
+          description="CNCG Gujarat has been running monthly meetups, study jams, and hands-on sessions. Here's a taste of what to expect at KCD."
           align="center"
         />
         <div className="-mx-1 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:thin] md:grid md:grid-cols-4 md:gap-4 md:overflow-visible">

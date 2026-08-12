@@ -11,7 +11,7 @@ export function SchedulePreview({ sessions }: { sessions: Session[] }) {
         <SectionHeader
           eyebrow="Schedule"
           title="Sessions and tracks"
-          description="A multi-track agenda across Platform, DevSecOps, AI/ML, Networking, and Beginner content."
+          description="One day, two halls, and nine tracks — from platform engineering and security to observability, connectivity, and AI."
         />
         {sessions.length === 0 ? (
           <p className="text-kcd-muted">Schedule will be published after the CFP closes.</p>

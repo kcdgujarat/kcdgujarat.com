@@ -12,7 +12,6 @@ type NavItem = { href: string; label: string; speakersOnly?: boolean; cfpOnly?: 
 
 const NAV: NavItem[] = [
   { href: '/#about', label: 'About' },
-  { href: '/#key-dates', label: 'Key Dates' },
   { href: '/speakers', label: 'Speakers', speakersOnly: true },
   { href: '/schedule', label: 'Schedule', speakersOnly: true },
   { href: '/#cfp', label: 'CFP', cfpOnly: true },

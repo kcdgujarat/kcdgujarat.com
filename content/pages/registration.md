@@ -19,7 +19,7 @@ We keep checkout on a dedicated platform so you have a clean experience. You wil
 
 ### What's included
 
-- Full-day access to all tracks and workshops
+- Full-day access to all tracks and sessions
 - Participation Certificate
 - Personalized ID Card
 - Premium Swag Kit

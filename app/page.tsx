@@ -3,7 +3,6 @@ import { AboutSection } from '@/components/sections/AboutSection';
 import { WhatToExpect } from '@/components/sections/WhatToExpect';
 import { SpeakersPreview } from '@/components/sections/SpeakersPreview';
 import { DayAtGlance } from '@/components/sections/DayAtGlance';
-import { KeyDatesSection } from '@/components/sections/KeyDatesSection';
 import { CfpSection } from '@/components/sections/CfpSection';
 import { VenueSection } from '@/components/sections/VenueSection';
 import { TeamPreview } from '@/components/sections/TeamPreview';
@@ -13,6 +12,7 @@ import { FaqSection } from '@/components/sections/FaqSection';
 import { ComingSoon } from '@/components/sections/ComingSoon';
 import {
   getFaqs,
+  getSessions,
   getSpeakers,
   getSponsors,
   getTeam,
@@ -20,7 +20,6 @@ import {
   getCfpConfig,
   getRegistrationConfig,
   getEventConfig,
-  getKeyDates,
   getSocialLinks,
 } from '@/lib/content';
 import { siteUrl, formatEventDate, formatWindowMoment } from '@/lib/utils';
@@ -70,7 +69,7 @@ export default async function HomePage() {
 
   const showTeam = event.showTeam;
 
-  const [speakers, sponsors, faqs, team, partners, cfp, registration, keyDates] =
+  const [speakers, sponsors, faqs, team, partners, cfp, registration, sessions] =
     await Promise.all([
       getSpeakers(),
       getSponsors(),
@@ -79,7 +78,7 @@ export default async function HomePage() {
       getPartners(),
       getCfpConfig(),
       getRegistrationConfig(),
-      getKeyDates(),
+      getSessions(),
     ]);
   // Homepage shows a curated subset; the full grouped list lives on /faq.
   const featuredFaqs = faqs.filter((f) => f.featured);
@@ -118,7 +117,6 @@ export default async function HomePage() {
       {[
         <AboutSection key="about" />,
         <WhatToExpect key="expect" cfpClosesLabel={cfpClosesLabel} cfpOpen={cfpOpen} />,
-        <KeyDatesSection key="keydates" items={keyDates} eventDate={eventDate} />,
         cfp.showSpeakers && speakers.length > 0 ? (
           <SpeakersPreview key="speakers" speakers={speakers} />
         ) : null,
@@ -128,6 +126,9 @@ export default async function HomePage() {
           cfpOpen={cfpOpen}
           showSpeakers={cfp.showSpeakers}
           timeline={event.timeline}
+          // Withheld until the lineup is public, so the card can't leak the
+          // schedule before the announcement.
+          sessions={cfp.showSpeakers ? sessions : []}
         />,
         cfpOpen ? <CfpSection key="cfp" homeSection={cfp.homeSection} /> : null,
         <VenueSection

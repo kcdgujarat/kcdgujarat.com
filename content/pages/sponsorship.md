@@ -10,8 +10,8 @@ prospectus: "prospectus.pdf"
 # Lead-in pitch shown under the page title.
 intro: >-
   KCD Gujarat 2026 brings the cloud native community of Gujarat and western
-  India together for a community-driven, CNCF-backed day of talks, workshops,
-  and connection. Sponsoring puts your brand in front of a highly engaged,
+  India together for a community-driven, CNCF-backed day of talks and
+  connection. Sponsoring puts your brand in front of a highly engaged,
   technical audience — and directly fuels the growth of open source and cloud
   native across the region.
 
@@ -24,7 +24,7 @@ reasons:
   - title: "Talent Acquisition"
     description: "Meet and hire skilled cloud native engineers and tap into the on-site job board."
   - title: "Thought Leadership"
-    description: "Share your expertise through talks, workshops, and demos in a vendor-neutral setting."
+    description: "Share your expertise through talks and demos in a vendor-neutral setting."
   - title: "Brand Visibility"
     description: "Put your logo on stage, across the venue, website, lanyards, and marketing — in front of an engaged crowd."
   - title: "Support Open Source"

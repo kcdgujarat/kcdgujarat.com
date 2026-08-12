@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { ScheduleGrid } from '@/components/site/ScheduleGrid';
-import { getSessions, getCfpConfig } from '@/lib/content';
+import { getSessions, getCfpConfig, getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate, formatWindowMoment } from '@/lib/utils';
 
@@ -11,11 +11,15 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Schedule',
   path: '/schedule',
-  description: 'Multi-track agenda for KCD Gujarat 2026 — talks, workshops, and lightning sessions.',
+  description: 'Multi-track agenda for KCD Gujarat 2026 — keynotes, talks, and lightning sessions.',
 });
 
 export default async function SchedulePage() {
-  const [sessions, cfp] = await Promise.all([getSessions(), getCfpConfig()]);
+  const [sessions, cfp, event] = await Promise.all([
+    getSessions(),
+    getCfpConfig(),
+    getEventConfig(),
+  ]);
   if (!cfp.showSpeakers) notFound();
 
   const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
@@ -74,9 +78,9 @@ export default async function SchedulePage() {
       <SectionHeader
         eyebrow="Schedule"
         title="Sessions and tracks"
-        description="Filter by track to find sessions that match your interests."
+        description="Filter by track or hall to find the sessions that match your interests."
       />
-      <ScheduleGrid sessions={sessions} />
+      <ScheduleGrid sessions={sessions} timeline={event.timeline} />
     </Container>
   );
 }

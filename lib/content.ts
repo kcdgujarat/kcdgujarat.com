@@ -8,7 +8,6 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import {
   FaqFrontmatter,
-  KeyDatesFrontmatter,
   SessionFrontmatter,
   SpeakerFrontmatter,
   SponsorFrontmatter,
@@ -389,16 +388,3 @@ export async function getRegistrationConfig(): Promise<RegistrationConfig> {
   }
 }
 
-export type KeyDate = { label: string; value: string };
-
-export async function getKeyDates(): Promise<KeyDate[]> {
-  ensureDevContentFresh();
-  try {
-    const raw = await fs.readFile(path.join(ROOT, 'pages', 'key-dates.md'), 'utf8');
-    const { data } = matter(raw);
-    const parsed = KeyDatesFrontmatter.parse(data);
-    return publishedOnly(parsed.items).map(({ label, value }) => ({ label, value }));
-  } catch {
-    return [];
-  }
-}

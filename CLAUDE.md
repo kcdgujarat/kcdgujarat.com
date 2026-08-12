@@ -36,7 +36,7 @@ The site is a **multi‑page Next.js app** (App Router). The home page is a long
 
 Routes (under `app/`):
 
-- `/` — Home. Hero, about KCD, what to expect, key dates, "previous editions" teaser, CTA buttons (Register, CFP), navigation links into the four standalone pages, sponsor strip, FAQs, code of conduct link, organizers, contact.
+- `/` — Home. Hero, about KCD, what to expect, "previous editions" teaser, CTA buttons (Register, CFP), navigation links into the four standalone pages, sponsor strip, FAQs, code of conduct link, organizers, contact.
 - `/speakers` — Speaker grid (photo, name, role, company, talk title), each clickable to `/speakers/[slug]` for full bio + session details.
 - `/schedule` — Multi‑track agenda. Filter/toggle by track. Each session links to `/schedule/[slug]` with abstract, speaker(s), room, time.
 - `/sponsors` — Tiered logo wall (Platinum / Gold / Silver / Community). Each tier rendered with appropriate prominence; clicking a sponsor opens its site in a new tab.
@@ -140,12 +140,12 @@ Short bio in Markdown. Supports **bold**, links, lists.
 # content/sessions/scaling-stateful-workloads.md
 title: "Scaling Stateful Workloads on Kubernetes"
 speakers: ["jane-doe"]
-track: "Platform"            # Platform | DevSecOps | AI/ML | Networking | Beginner
-type: "Talk"                  # Talk | Workshop | Lightning | Panel | Keynote
+track: "Platform Engineering" # must match a `schema` value in lib/tracks.ts
+type: "Talk"                  # Talk | Lightning | Panel | Keynote (no workshop track)
 durationMinutes: 30
 start: "2026-09-12T10:30:00+05:30"
 room: "Hall A"
-level: "Intermediate"         # Beginner | Intermediate | Advanced
+level: "Intermediate"         # All levels | Beginner | Intermediate | Advanced
 tags: ["statefulset", "storage"]
 ---
 

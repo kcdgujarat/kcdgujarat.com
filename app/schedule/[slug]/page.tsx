@@ -4,7 +4,8 @@ import { Container } from '@/components/site/Container';
 import { Badge } from '@/components/ui/badge';
 import { getSessions, getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
-import { formatTime } from '@/lib/utils';
+import { TRACK_BY_SCHEMA } from '@/lib/tracks';
+import { cn, formatTime } from '@/lib/utils';
 
 export const revalidate = 3600;
 
@@ -52,7 +53,11 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
         </div>
         <h1 className="mt-2 font-display text-4xl font-bold text-kcd-ink">{s.title}</h1>
         <div className="mt-4 flex flex-wrap gap-2">
-          {s.track && <Badge>{s.track}</Badge>}
+          {s.track && (
+            <Badge className={cn('border-transparent', TRACK_BY_SCHEMA[s.track]?.color)}>
+              {s.track}
+            </Badge>
+          )}
           {s.type && <Badge>{s.type}</Badge>}
           {s.level && <Badge>{s.level}</Badge>}
           {s.tags?.map((t) => (

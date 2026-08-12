@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
-import { Code2, Wrench, Users, Sparkles, Megaphone } from 'lucide-react';
+import { Code2, Zap, Users, Sparkles, Megaphone } from 'lucide-react';
 const ITEMS = [
   {
     icon: Code2,
@@ -10,9 +10,9 @@ const ITEMS = [
     body: 'Deep-dive talks on Kubernetes, cloud-native technologies, and modern DevOps practices.',
   },
   {
-    icon: Wrench,
-    title: 'Hands-on Workshops',
-    body: 'Interactive, instructor-led learning experiences with industry experts.',
+    icon: Zap,
+    title: 'Lightning Talks',
+    body: 'Ten-minute talks, back to back — a rapid tour of what the community is building.',
   },
   {
     icon: Users,
@@ -38,7 +38,7 @@ export function WhatToExpect({ cfpClosesLabel, cfpOpen = true }: Props) {
         <SectionHeader
           eyebrow="What to expect"
           title="A full day of cloud-native, end to end."
-          description="Talks, workshops, networking, and community moments — all packed into one Saturday in Gujarat."
+          description="Talks, lightning sessions, networking, and community moments — all packed into one Saturday in Gujarat."
           align="center"
         />
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">

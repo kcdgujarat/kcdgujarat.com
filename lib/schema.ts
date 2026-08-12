@@ -41,12 +41,25 @@ export type SpeakerFrontmatter = z.infer<typeof SpeakerFrontmatter>;
 export const SessionFrontmatter = RenderFlag.extend({
   title: z.string(),
   speakers: z.array(z.string()).optional().default([]),
-  track: z.enum(['Platform', 'DevSecOps', 'AI/ML', 'Networking', 'Beginner']).optional(),
-  type: z.enum(['Talk', 'Workshop', 'Lightning', 'Panel', 'Keynote']).optional().default('Talk'),
+  /** Must match a `schema` value in lib/tracks.ts. */
+  track: z
+    .enum([
+      'Platform Engineering',
+      'Application Development + Delivery',
+      'Operations + Performance',
+      'Observability',
+      'Security',
+      'Connectivity',
+      'AI Inference + Agentic',
+      'Cloud Native Experience',
+      'Emerging + Advanced',
+    ])
+    .optional(),
+  type: z.enum(['Talk', 'Lightning', 'Panel', 'Keynote']).optional().default('Talk'),
   durationMinutes: z.number().optional().default(30),
   start: z.string().optional(),
   room: z.string().optional(),
-  level: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional(),
+  level: z.enum(['All levels', 'Beginner', 'Intermediate', 'Advanced']).optional(),
   tags: z.array(z.string()).optional().default([]),
 });
 export type SessionFrontmatter = z.infer<typeof SessionFrontmatter>;
@@ -85,22 +98,23 @@ const CFP_HOME_DEFAULTS = {
   eyebrow: 'CFP',
   title: 'Call for Proposals',
   description:
-    'We are looking for talks, workshops, and lightning sessions across our tracks. First-time speakers warmly encouraged.',
+    'We are looking for talks, panels, and lightning sessions across our tracks. First-time speakers warmly encouraged.',
   cards: [
     {
       icon: 'megaphone' as const,
       title: 'Talks',
-      description: '30-minute sessions sharing real-world experience and lessons learned.',
-    },
-    {
-      icon: 'wrench' as const,
-      title: 'Workshops',
-      description: 'Hands-on sessions that send attendees home with something usable.',
+      description: '25-minute sessions sharing real-world experience and lessons learned.',
     },
     {
       icon: 'graduation-cap' as const,
       title: 'Lightning',
-      description: 'Five-minute talks. Great for first-time speakers.',
+      description: 'Ten-minute talks. Great for first-time speakers.',
+    },
+    {
+      icon: 'group' as const,
+      title: 'Panel Discussion',
+      description:
+        'Panel discussions among multiple speakers exploring a focused topic from different perspectives.',
     },
   ],
 };
@@ -149,7 +163,7 @@ export const CfpConfigFrontmatter = z
       .string()
       .optional()
       .default(
-        'We are looking for talks, workshops, and lightning sessions across Platform, DevSecOps, AI/ML, Networking, and Beginner tracks.',
+        'We are looking for talks, panels, and lightning sessions across the cloud native ecosystem — from platform engineering and security to observability, connectivity, and AI.',
       ),
     /** Homepage `/#cfp` anchor section (eyebrow, title, intro, format cards). */
     homeSection: CfpHomeSection.optional(),
@@ -171,10 +185,21 @@ export const CfpConfigFrontmatter = z
   });
 export type CfpConfigFrontmatter = z.infer<typeof CfpConfigFrontmatter>;
 
+/**
+ * A non-session item on the conference day — registration, breaks, sponsor
+ * slots, ceremonies. Sessions come from `content/sessions`; everything the
+ * agenda needs that no session describes is listed here.
+ */
 export const TimelineItem = RenderFlag.extend({
-  time: z.string(),
+  time: TimeOfDay,
+  /** End of the item. Omit for a marker with no length (e.g. "Event Ends"). */
+  endTime: TimeOfDay.optional(),
   label: z.string(),
   icon: z.string().optional().default('📌'),
+  /** Set only when the item occupies one hall while the other runs sessions. */
+  room: z.string().optional(),
+  /** Include in the homepage "Day at a Glance" summary — minor items opt out. */
+  glance: z.boolean().optional().default(true),
 });
 export type TimelineItem = z.infer<typeof TimelineItem>;
 
@@ -284,18 +309,6 @@ export const RegistrationConfigFrontmatter = z
     };
   });
 export type RegistrationConfigFrontmatter = z.infer<typeof RegistrationConfigFrontmatter>;
-
-export const KeyDatesFrontmatter = z.object({
-  items: z
-    .array(
-      RenderFlag.extend({
-        label: z.string(),
-        value: z.string(),
-      }),
-    )
-    .default([]),
-});
-export type KeyDatesFrontmatter = z.infer<typeof KeyDatesFrontmatter>;
 
 export const PartnerFrontmatter = RenderFlag.extend({
   name: z.string(),

@@ -3,33 +3,30 @@
 # All times are 24-hour HH:mm in Asia/Kolkata unless you set `timezone`.
 # Omit startTime/endTime for full calendar days (midnight through 23:59).
 startDate: "2026-06-05"
-startTime: "21:00"   # opens at 9:00 AM on startDate
+startTime: "21:00"   # opens at 9:00 PM on startDate
 endDate: "2026-07-14"
-endTime: "23:59"     # closes at 6:00 PM on endDate (inclusive through that minute)
+endTime: "23:59"     # closes at 11:59 PM on endDate (inclusive through that minute)
 url: "https://sessionize.com/kcd-gujarat-2026"
 
 # Toggle the speaker lineup independently of CFP state.
 # - showSpeakers: false → Speakers section and nav link are hidden (default, pre-announcement).
 # - showSpeakers: true  → Speakers grid is visible on the home page and in the nav.
-showSpeakers: false
+showSpeakers: true
 
 # /cfp page header (edit without touching React)
 eyebrow: "CFP"
 title: "Call for Proposals"
-description: "We are looking for talks, workshops, and lightning sessions across Platform, DevSecOps, AI/ML, Networking, and Beginner tracks."
+description: "We are looking for talks, panels, and lightning sessions across the tracks below — from platform engineering and security to observability, connectivity, and AI."
 
-# Homepage /#cfp section — intro + Talks / Workshops / Lightning cards
+# Homepage /#cfp section — intro + Talks / Lightning / Panel cards
 homeSection:
   eyebrow: "CFP"
   title: "Call for Proposals"
-  description: "We are looking for talks, workshops, and lightning sessions across our tracks. First-time speakers warmly encouraged."
+  description: "We are looking for talks, panels, and lightning sessions across our tracks. First-time speakers warmly encouraged."
   cards:
     - icon: megaphone
       title: Talks
       description: "25-minute sessions sharing real-world experience and lessons learned."
-    - icon: wrench
-      title: Workshops
-      description: "Hands-on sessions that send attendees home with something usable."
     - icon: graduation-cap
       title: Lightning
       description: "Ten-minute talks. Great for first-time speakers."
@@ -105,13 +102,3 @@ To encourage diverse representation:
 
 - Panels with 3+ participants should include at least one gender-diverse speaker
 - Participants should not all be from the same company
-
-## Workshop — 90 minutes
-
-Hands-on, interactive sessions where attendees actively build, configure, deploy, troubleshoot, or practice something tangible.
-
-Workshops should:
-
-- Clearly explain prerequisites
-- Include interactive participation rather than lecture-style presentations
-- Provide attendees with actionable takeaways

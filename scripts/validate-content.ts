@@ -3,7 +3,6 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import {
   FaqFrontmatter,
-  KeyDatesFrontmatter,
   SessionFrontmatter,
   SpeakerFrontmatter,
   SponsorFrontmatter,
@@ -18,14 +17,14 @@ import {
 
 const ROOT = path.join(process.cwd(), 'content');
 
-const targets: { dir: string; schema: any; name: string; fileSchema?: Record<string, any> }[] = [
+/** `schema` covers every file in `dir`; `pages` instead registers one schema per file. */
+const targets: { dir: string; schema?: any; name: string; fileSchema?: Record<string, any> }[] = [
   { dir: 'speakers', schema: SpeakerFrontmatter, name: 'speaker' },
   { dir: 'sessions', schema: SessionFrontmatter, name: 'session' },
   { dir: 'sponsors', schema: SponsorFrontmatter, name: 'sponsor' },
   { dir: 'faq', schema: FaqFrontmatter, name: 'faq' },
   {
     dir: 'pages',
-    schema: KeyDatesFrontmatter,
     name: 'page',
     fileSchema: {
       'cfp.md': CfpConfigFrontmatter,
@@ -55,6 +54,13 @@ async function main() {
       const raw = await fs.readFile(path.join(full, file), 'utf8');
       const { data } = matter(raw);
       const effectiveSchema = fileSchema?.[file] ?? schema;
+      if (!effectiveSchema) {
+        failed += 1;
+        console.error(
+          `✗ ${dir}/${file} (${name}): no schema registered — add one to fileSchema in scripts/validate-content.ts`,
+        );
+        continue;
+      }
       const result = effectiveSchema.safeParse(data);
       if (!result.success) {
         failed += 1;
