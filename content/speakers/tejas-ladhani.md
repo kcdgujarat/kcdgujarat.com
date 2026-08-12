@@ -2,7 +2,7 @@
 name: "Tejas Ladhani"
 role: "Software Engineer II"
 company: "Motorola Solutions Inc"
-photo: "/images/speakers/tejas-ladhani.jpg"
+photo: "/images/speakers/tejas-ladhani-fe69634d.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/tejas-ladhani/"
 sessions: ["beyond-dom-parsing-webmcp"]

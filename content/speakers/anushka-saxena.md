@@ -2,7 +2,7 @@
 name: "Anushka Saxena"
 role: "Software Engineer"
 company: "DigitalOcean"
-photo: "/images/speakers/anushka-saxena.jpg"
+photo: "/images/speakers/anushka-saxena-5998d7d2.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/-anushka-saxena"
 sessions: ["tracing-ai-agents-prompt-to-postgresql"]

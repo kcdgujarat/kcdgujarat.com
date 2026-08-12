@@ -2,7 +2,7 @@
 name: "Satyam Soni"
 role: "Developer Advocate"
 company: "NitroStack"
-photo: "/images/speakers/satyam-soni.jpg"
+photo: "/images/speakers/satyam-soni-8ddea194.png"
 socials:
   twitter: "https://twitter.com/satyampsoni/"
   linkedin: "https://www.linkedin.com/in/satyampsoni/"

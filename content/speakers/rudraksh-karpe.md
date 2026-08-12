@@ -2,7 +2,7 @@
 name: "Rudraksh Karpe"
 role: "Forward Deployed Engineer"
 company: "Simplismart"
-photo: "/images/speakers/rudraksh-karpe.jpg"
+photo: "/images/speakers/rudraksh-karpe-aa39d6f4.png"
 socials:
   twitter: "https://x.com/rudrakshkarpe"
   linkedin: "https://www.linkedin.com/in/rudrakshkarpe/"

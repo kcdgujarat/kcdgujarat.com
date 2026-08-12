@@ -2,7 +2,7 @@
 name: "Amritansh"
 role: "Associate Software Engineer"
 company: "Red Hat"
-photo: "/images/speakers/amritansh.jpg"
+photo: "/images/speakers/amritansh-7ba53882.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/amrit1502"
 sessions: ["pod-security-end-to-end"]

@@ -2,7 +2,7 @@
 name: "Ishan Mahadevia"
 role: "Senior Tech Lead - DevOps and Observability"
 company: "DES"
-photo: "/images/speakers/ishan-mahadevia.jpg"
+photo: "/images/speakers/ishan-mahadevia-6c429006.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/ishan139/"
 sessions: ["one-bad-label-cardinality-explosion"]

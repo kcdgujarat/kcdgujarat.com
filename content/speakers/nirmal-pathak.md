@@ -1,7 +1,7 @@
 ---
 name: "Nirmal Pathak"
 role: "Cloud Infrastructure Architect"
-photo: "/images/speakers/nirmal-pathak.jpg"
+photo: "/images/speakers/nirmal-pathak-f113fd4f.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/nirmalpathak/"
 sessions: ["securing-ai-owasp-top-10-llm"]

@@ -2,7 +2,7 @@
 name: "Jayashree O"
 role: "Software Engineer II"
 company: "Guidewire Software"
-photo: "/images/speakers/jayashree-o.jpg"
+photo: "/images/speakers/jayashree-o-87ccd73b.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/jayashree-o/"
 sessions: ["zero-trust-for-ai"]

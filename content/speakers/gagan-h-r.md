@@ -2,7 +2,7 @@
 name: "Gagan H R"
 role: "Software Engineer"
 company: "Guidewire Software"
-photo: "/images/speakers/gagan-h-r.jpg"
+photo: "/images/speakers/gagan-h-r-dcd251c9.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/gaganhr"
 sessions: ["zero-trust-for-ai"]

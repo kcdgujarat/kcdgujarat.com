@@ -2,7 +2,7 @@
 name: "Sonali Srivastava"
 role: "Senior Developer Advocate"
 company: "Improving"
-photo: "/images/speakers/sonali-srivastava.jpg"
+photo: "/images/speakers/sonali-srivastava-74dee5c0.jpg"
 socials:
   twitter: "https://x.com/sonali_talks"
   linkedin: "https://www.linkedin.com/in/sonali-srivastava-530782ab/"

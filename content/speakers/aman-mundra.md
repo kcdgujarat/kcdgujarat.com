@@ -2,7 +2,7 @@
 name: "Aman Mundra"
 role: "Founder & CEO"
 company: "Welzin"
-photo: "/images/speakers/aman-mundra.jpg"
+photo: "/images/speakers/aman-mundra-2e2ecad7.jpg"
 socials:
   twitter: "https://x.com/mundra_aman91"
   linkedin: "https://www.linkedin.com/in/mundraaman/"

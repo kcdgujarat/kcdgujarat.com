@@ -2,7 +2,7 @@
 name: "Darshil"
 role: "DevOps Engineer"
 company: "Vel Labs"
-photo: "/images/speakers/darshil.jpg"
+photo: "/images/speakers/darshil-602cf9db.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/darshil89/"
   website: "https://dev.to/darshil89/saving-300month-while-fixing-webrtc-drops-how-istios-consistent-hashing-beat-redis-4j7i"

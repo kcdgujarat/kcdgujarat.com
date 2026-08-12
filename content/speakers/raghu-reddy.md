@@ -2,7 +2,7 @@
 name: "Raghu Reddy"
 role: "Staff Platform Engineer (Security)"
 company: "Calix"
-photo: "/images/speakers/raghu-reddy.jpg"
+photo: "/images/speakers/raghu-reddy-8f06a350.jpg"
 socials:
   twitter: "https://x.com/raghureddycloud"
   linkedin: "https://www.linkedin.com/in/raghureddycloud/"

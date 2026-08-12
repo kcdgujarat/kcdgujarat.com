@@ -2,7 +2,7 @@
 name: "Atulpriya Sharma"
 role: "Principal Developer Advocate | CNCF Ambassador"
 company: "Improving"
-photo: "/images/speakers/atulpriya-sharma.jpg"
+photo: "/images/speakers/atulpriya-sharma-a9297b28.jpg"
 socials:
   twitter: "https://twitter.com/TheTechmaharaj"
   linkedin: "https://www.linkedin.com/in/atulpriyasharma/"

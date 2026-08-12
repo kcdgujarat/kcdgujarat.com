@@ -2,7 +2,7 @@
 name: "Himanshu Sangshetti"
 role: "AI Engineer"
 company: "Mem0"
-photo: "/images/speakers/himanshu-sangshetti.jpg"
+photo: "/images/speakers/himanshu-sangshetti-60137fdc.jpg"
 socials:
   twitter: "https://x.com/himanshutwtxs"
   linkedin: "https://www.linkedin.com/in/himanshu-sangshetti"

@@ -2,7 +2,7 @@
 name: "Surabhi Mishra"
 role: "Software Engineer"
 company: "American Express"
-photo: "/images/speakers/surabhi-mishra.jpg"
+photo: "/images/speakers/surabhi-mishra-d58ced0b.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/surabhi-mishra-2b45051ba/"
 sessions: ["sovereignty-control-plane-patterns"]

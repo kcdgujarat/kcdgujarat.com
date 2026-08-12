@@ -2,7 +2,7 @@
 name: "Vignesh Muthu S"
 role: "Engineering Manager"
 company: "Comcast India Engineering Centre"
-photo: "/images/speakers/vignesh-muthu-s.jpg"
+photo: "/images/speakers/vignesh-muthu-s-30a553c2.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/vigneshmuthu2609/"
 sessions: ["dbaas-on-kubernetes-mistakes"]

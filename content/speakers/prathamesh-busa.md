@@ -2,7 +2,7 @@
 name: "Prathamesh Busa"
 role: "SRE"
 company: "Redhat"
-photo: "/images/speakers/prathamesh-busa.jpg"
+photo: "/images/speakers/prathamesh-busa-ffccc113.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/prathamesh-busa/"
   website: "https://prathameshbusa.blogspot.com/"

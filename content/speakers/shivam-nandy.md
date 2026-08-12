@@ -2,7 +2,7 @@
 name: "Shivam Nandy"
 role: "Head of Product"
 company: "BetterBugs"
-photo: "/images/speakers/shivam-nandy.jpg"
+photo: "/images/speakers/shivam-nandy-c1fb6f54.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/shivam-nandy-hyphen/"
   website: "https://anirudhh.hashnode.dev/"

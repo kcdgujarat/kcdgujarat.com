@@ -2,7 +2,7 @@
 name: "Nispriha Jagan"
 role: "Associate Software Engineer"
 company: "Red Hat"
-photo: "/images/speakers/nispriha-jagan.jpg"
+photo: "/images/speakers/nispriha-jagan-d9c4c365.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/nispriha-jagan-b8ab37295"
 sessions: ["pod-security-end-to-end"]

@@ -2,7 +2,7 @@
 name: "Ishan Jain"
 role: "Software Engineer 2"
 company: "Mastercard"
-photo: "/images/speakers/ishan-jain.jpg"
+photo: "/images/speakers/ishan-jain-06437af2.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/ishan-jain21"
   website: "https://www.bloodraven.in"

@@ -2,7 +2,7 @@
 name: "Zespre Chang"
 role: "Staff Software Engineer"
 company: "SUSE LLC."
-photo: "/images/speakers/zespre-chang.jpg"
+photo: "/images/speakers/zespre-chang-002a5c08.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/starbops/"
   website: "https://blog.zespre.com"

@@ -2,7 +2,7 @@
 name: "Ravi Soni"
 role: "Solution Architect"
 company: "Rishabh Software Pvt Ltd."
-photo: "/images/speakers/ravi-soni.jpg"
+photo: "/images/speakers/ravi-soni-5e920ac4.jpg"
 socials:
   twitter: "https://x.com/rvsoni"
   linkedin: "https://www.linkedin.com/in/rvsoni/"

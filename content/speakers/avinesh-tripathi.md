@@ -2,7 +2,7 @@
 name: "Avinesh Tripathi"
 role: "Software Engineer"
 company: "SentinelOne"
-photo: "/images/speakers/avinesh-tripathi.jpg"
+photo: "/images/speakers/avinesh-tripathi-d7a50f61.jpg"
 socials:
   twitter: "https://x.com/Avinesh__T"
   linkedin: "https://www.linkedin.com/in/avineshtripathi/"

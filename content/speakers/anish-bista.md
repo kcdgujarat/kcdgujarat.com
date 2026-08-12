@@ -2,7 +2,7 @@
 name: "Anish Bista"
 role: "Kubernetes Engineer"
 company: "KubeRox Technologies"
-photo: "/images/speakers/anish-bista.jpg"
+photo: "/images/speakers/anish-bista-a7bb2c87.png"
 socials:
   twitter: "https://x.com/anishbista053"
   linkedin: "https://www.linkedin.com/in/anishbista/"

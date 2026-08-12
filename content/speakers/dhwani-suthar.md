@@ -2,7 +2,7 @@
 name: "Dhwani Suthar"
 role: "Software Engineer"
 company: "Motorola Solutions"
-photo: "/images/speakers/dhwani-suthar.jpg"
+photo: "/images/speakers/dhwani-suthar-f4a035a1.png"
 socials:
   linkedin: "https://www.linkedin.com/in/dhwani-suthar/"
 sessions: ["beyond-dom-parsing-webmcp"]

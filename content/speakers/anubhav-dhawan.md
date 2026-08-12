@@ -2,7 +2,7 @@
 name: "Anubhav Dhawan"
 role: "Software Engineer"
 company: "Google"
-photo: "/images/speakers/anubhav-dhawan.jpg"
+photo: "/images/speakers/anubhav-dhawan-34e7bc2d.png"
 socials:
   linkedin: "https://www.linkedin.com/in/anubhav-dhawan/"
 sessions: ["tracing-ai-agents-prompt-to-postgresql"]

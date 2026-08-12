@@ -348,6 +348,13 @@ def download_photo(speaker: dict) -> str:
     return f"/images/speakers/{target.name}"
 
 
+def existing_photo(slug: str) -> str:
+    """Keep whatever import-speaker-photos.mjs already wrote, hashed name and all."""
+    pattern = re.compile(rf"{re.escape(slug)}(-[0-9a-f]{{8}})?")
+    matches = sorted(p for p in PHOTO_DIR.glob(f"{slug}*") if pattern.fullmatch(p.stem))
+    return f"/images/speakers/{matches[0].name}" if matches else ""
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("workbook", type=pathlib.Path)
@@ -368,8 +375,7 @@ def main() -> None:
     for speaker in speakers.values():
         photo = "" if args.skip_photos else download_photo(speaker)
         if not photo:
-            existing = sorted(PHOTO_DIR.glob(f"{speaker['slug']}.*"))
-            photo = f"/images/speakers/{existing[0].name}" if existing else ""
+            photo = existing_photo(speaker["slug"])
         write_speaker(speaker, photo)
 
     unscheduled = [s["slug"] for s in sessions if not s["start"]]

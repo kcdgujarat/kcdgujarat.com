@@ -2,7 +2,7 @@
 name: "Rajpal Sinh Jadeja"
 role: "Senior Devops Engineer"
 company: "EXL"
-photo: "/images/speakers/rajpal-sinh-jadeja.jpg"
+photo: "/images/speakers/rajpal-sinh-jadeja-9291655e.png"
 sessions: ["four-default-settings-cluster-compromise"]
 ---
 

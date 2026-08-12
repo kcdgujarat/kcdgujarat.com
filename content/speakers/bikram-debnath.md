@@ -2,7 +2,7 @@
 name: "Bikram Debnath"
 role: "Advisory Software Engineer"
 company: "IBM India Software Labs"
-photo: "/images/speakers/bikram-debnath.jpg"
+photo: "/images/speakers/bikram-debnath-27c4f772.png"
 socials:
   linkedin: "https://www.linkedin.com/in/debnathbikram/"
   website: "https://medium.com/@bikram-debnath"

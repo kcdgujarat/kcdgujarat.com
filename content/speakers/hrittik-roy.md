@@ -2,7 +2,7 @@
 name: "Hrittik Roy"
 role: "Platform Advocate"
 company: "vCluster"
-photo: "/images/speakers/hrittik-roy.jpg"
+photo: "/images/speakers/hrittik-roy-1f406224.png"
 socials:
   twitter: "https://twitter.com/hrittikhere"
   linkedin: "https://www.linkedin.com/in/hrittikhere/"
