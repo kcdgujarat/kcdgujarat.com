@@ -1,7 +1,7 @@
 ---
 name: "Ishan Mahadevia"
 role: "Senior Tech Lead - DevOps and Observability"
-company: "DES"
+company: "Independent Consultant"
 photo: "/images/speakers/ishan-mahadevia-6c429006.jpg"
 socials:
   linkedin: "https://www.linkedin.com/in/ishan139/"
