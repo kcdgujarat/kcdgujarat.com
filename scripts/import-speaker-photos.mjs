@@ -7,11 +7,10 @@
  *
  * Photos are copied byte for byte — nothing here crops, scales, pads, or
  * re-encodes. The export mixes orientations (0.56 to 1.40 aspect in the August
- * 2026 one) and the site frames speakers in squares, which the square frames
- * handle in CSS with `object-cover object-top`: the tile fills edge to edge and
- * the top of the frame is pinned so a face is never the thing that gets cut.
- * Squaring the file instead — either by cropping or by padding to a canvas — was
- * tried and rejected; see handoff.md.
+ * 2026 one); the square frames on /speakers and the detail page fill with a
+ * centred `object-cover`, so the tiles look uniform while the file in Git stays
+ * exactly what the speaker sent. Squaring the file itself — by cropping, or by
+ * padding onto a canvas — was tried and rejected; see handoff.md.
  *
  * Each file keeps its own format and carries a digest of its bytes in the name,
  * and the `photo:` line in the speaker markdown is rewritten to the file that

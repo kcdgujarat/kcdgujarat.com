@@ -192,7 +192,7 @@ Pages are statically generated (`generateStaticParams` + `revalidate`). A Payloa
 - Dark mode is supported via `next-themes` and `class` strategy. Default to `system`.
 - Custom sections live in `components/sections/`. Keep them server components unless they need interactivity.
 - Animations: prefer CSS + `framer-motion` only when meaningful. Respect `prefers-reduced-motion`.
-- Images: always `next/image`. Speaker photos ship **exactly as the speaker supplied them** — 512px minimum on the short edge, any aspect ratio, never cropped by us. The square frames on `/speakers` and the detail page use `object-contain`, so a portrait or landscape headshot letterboxes instead of losing a face. Sponsor logos prefer SVG; if PNG, supply 2× and a transparent background.
+- Images: always `next/image`. Speaker photo **files** ship exactly as the speaker supplied them — 512px minimum on the short edge, any aspect ratio, never cropped, padded, or re-encoded by us; the filename carries a content hash so a replacement can't be served from an image cache. Framing is a CSS concern: the square frames on `/speakers` and the detail page use a centred `object-cover`. Don't switch to `object-contain` (letterbox bars look broken) or bias the crop with `object-top` (it beheads photos where the subject sits low). Sponsor logos prefer SVG; if PNG, supply 2× and a transparent background.
 
 ## 7. SEO and Open Graph
 

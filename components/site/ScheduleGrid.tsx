@@ -248,7 +248,7 @@ export function ScheduleGrid({
                       </h4>
                       {row.slot.items.length > 1 && (
                         <span className="text-xs uppercase tracking-wider text-kcd-muted">
-                          {row.slot.items.length} parallel sessions
+                          {slotLabel(row.slot.items)}
                         </span>
                       )}
                     </div>
@@ -329,6 +329,20 @@ function emptyMessage(byTrack: boolean, byHall: boolean): string {
   return 'No sessions on this track yet. Try another track.';
 }
 
+/**
+ * Parallel-slot caption. The 16:30 block onwards is all lightning talks (plus
+ * the occasional reserved lightning placeholder), so those rows say so instead
+ * of the generic "sessions".
+ */
+function slotLabel(items: SlotItem[]): string {
+  const sessions = items.filter(
+    (item): item is Extract<SlotItem, { kind: 'session' }> => item.kind === 'session',
+  );
+  const lightning =
+    sessions.length > 0 && sessions.every((item) => item.session.type === 'Lightning');
+  return `${items.length} parallel ${lightning ? 'lightning talks' : 'sessions'}`;
+}
+
 function AgendaRow({ item, time }: { item: AgendaItem; time: string }) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-dashed border-kcd-border bg-kcd-subtle/50 px-6 py-4">
@@ -368,6 +382,7 @@ function AgendaCard({ item }: { item: AgendaItem }) {
 
 function SessionRow({ session }: { session: Session }) {
   const trackDef = session.track ? TRACK_BY_SCHEMA[session.track] : undefined;
+  const keynote = session.type === 'Keynote';
   return (
     <Link href={`/schedule/${session.slug}`} className="block h-full">
       <Card className="h-full">
@@ -377,14 +392,18 @@ function SessionRow({ session }: { session: Session }) {
             {session.durationMinutes && <span>· {session.durationMinutes} min</span>}
             {session.level && <span>· {session.level}</span>}
           </div>
-          <h5 className="text-base font-semibold text-kcd-ink">{session.title}</h5>
+          <h5 className="text-base font-semibold text-kcd-ink">
+            {keynote && <span className="text-kcd-primary">[Keynote] </span>}
+            {session.title}
+          </h5>
           <div className="mt-auto flex flex-wrap gap-2">
             {session.track && (
               <Badge className={cn('border-transparent', trackDef?.color)}>
                 {trackDef?.label ?? session.track}
               </Badge>
             )}
-            {session.type && <Badge>{session.type}</Badge>}
+            {/* The title already says Keynote; a badge repeating it is noise. */}
+            {session.type && !keynote && <Badge>{session.type}</Badge>}
           </div>
         </CardBody>
       </Card>

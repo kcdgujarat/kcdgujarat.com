@@ -65,7 +65,7 @@ export default async function SpeakerDetailPage({ params }: { params: Promise<{ 
           <div>
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-kcd-border bg-kcd-subtle">
               {s.photoUrl ? (
-                <Image src={s.photoUrl} alt={s.name} fill className="object-cover object-top" sizes="280px" />
+                <Image src={s.photoUrl} alt={s.name} fill className="object-cover" sizes="280px" />
               ) : (
                 <div className="flex h-full items-center justify-center text-5xl font-bold text-kcd-muted">
                   {s.name
