@@ -340,7 +340,7 @@ function slotLabel(items: SlotItem[]): string {
   );
   const lightning =
     sessions.length > 0 && sessions.every((item) => item.session.type === 'Lightning');
-  return `${items.length} parallel ${lightning ? 'lightning talks' : 'sessions'}`;
+  return lightning ? 'parallel lightning talks' : 'parallel sessions';
 }
 
 function AgendaRow({ item, time }: { item: AgendaItem; time: string }) {
