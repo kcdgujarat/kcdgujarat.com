@@ -78,8 +78,8 @@ export default async function SchedulePage() {
     <Container className="py-16">
       <SectionHeader
         eyebrow="Schedule"
-        title="Sessions and tracks"
-        description="Filter by track or hall to find the sessions that match your interests."
+        title="Sessions and themes"
+        description="Filter by theme or hall to find the sessions that match your interests."
       />
       <ScheduleGrid
         sessions={sessions}

@@ -13,7 +13,7 @@ import { buildAgenda, scheduleMinutes, type AgendaItem, type TimelineEntry } fro
 const ALL = 'All';
 
 const TRACK_OPTIONS = [
-  { value: ALL, label: 'All tracks' },
+  { value: ALL, label: 'All themes' },
   ...TRACK_DEFS.map((t) => ({ value: t.schema, label: t.label })),
 ];
 
@@ -222,7 +222,7 @@ export function ScheduleGrid({
       <div className="mb-8 space-y-3">
         <FilterChips
           id="schedule-filter-track"
-          label="Track"
+          label="Theme"
           options={TRACK_OPTIONS}
           active={track}
           onChange={setTrack}
@@ -335,9 +335,9 @@ function FilterChips({
 }
 
 function emptyMessage(byTrack: boolean, byHall: boolean): string {
-  if (byTrack && byHall) return 'No sessions on this track in this hall. Try another combination.';
+  if (byTrack && byHall) return 'No sessions on this theme in this hall. Try another combination.';
   if (byHall) return 'No sessions in this hall yet.';
-  return 'No sessions on this track yet. Try another track.';
+  return 'No sessions on this theme yet. Try another theme.';
 }
 
 /**

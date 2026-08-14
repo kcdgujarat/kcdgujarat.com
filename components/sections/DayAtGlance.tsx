@@ -48,7 +48,7 @@ export function DayAtGlance({
           description={
             cfpOpen
               ? 'Schedule + talks drop after CFP closes. Here is the day shape we are planning.'
-              : 'One full day of talks, lightning sessions, and community — across nine tracks in two halls.'
+              : 'One full day of talks, lightning sessions, and community — nine talk themes across two parallel tracks.'
           }
           align="center"
         />
@@ -83,8 +83,8 @@ export function DayAtGlance({
 
           {/* Tracks */}
           <div className="rounded-3xl border border-kcd-border bg-white p-6 shadow-card md:p-8">
-            <h3 className="font-display text-lg font-semibold text-kcd-ink">Parallel tracks covering talks on the following topics</h3>
-            <p className="mt-2 text-sm text-kcd-ink/70">Pick your path — switch any time.</p>
+            <h3 className="font-display text-lg font-semibold text-kcd-ink">Talk themes</h3>
+            <p className="mt-2 text-sm text-kcd-ink/70">Two parallel tracks — switch any time.</p>
             <ul className="mt-6 space-y-2">
               {TRACKS.map((t) => (
                 <li key={t.id} className="flex items-center gap-3 rounded-2xl border border-kcd-border/70 p-2.5">

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
@@ -78,14 +79,35 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                 <li key={sp.slug}>
                   <Link
                     href={`/speakers/${sp.slug}`}
-                    className="block rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card"
+                    className="flex items-center gap-4 rounded-xl border border-kcd-border bg-white p-4 transition-shadow hover:shadow-card"
                   >
-                    <p className="font-semibold text-kcd-ink">{sp.name}</p>
-                    {(sp.role || sp.company) && (
-                      <p className="mt-1 text-sm text-kcd-muted">
-                        {[sp.role, sp.company].filter(Boolean).join(' · ')}
-                      </p>
-                    )}
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-kcd-subtle">
+                      {sp.photoUrl ? (
+                        <Image
+                          src={sp.photoUrl}
+                          alt={sp.name}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-lg font-semibold text-kcd-muted">
+                          {sp.name
+                            .split(' ')
+                            .map((p) => p[0])
+                            .slice(0, 2)
+                            .join('')}
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-kcd-ink">{sp.name}</p>
+                      {(sp.role || sp.company) && (
+                        <p className="mt-1 text-sm text-kcd-muted">
+                          {[sp.role, sp.company].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </div>
                   </Link>
                 </li>
               ))}
