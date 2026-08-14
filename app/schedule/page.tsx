@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { ScheduleGrid } from '@/components/site/ScheduleGrid';
-import { getSessions, getCfpConfig, getEventConfig } from '@/lib/content';
+import { getSessions, getSpeakers, getCfpConfig, getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate, formatWindowMoment } from '@/lib/utils';
 
@@ -15,8 +15,9 @@ export const metadata = buildMetadata({
 });
 
 export default async function SchedulePage() {
-  const [sessions, cfp, event] = await Promise.all([
+  const [sessions, speakers, cfp, event] = await Promise.all([
     getSessions(),
+    getSpeakers(),
     getCfpConfig(),
     getEventConfig(),
   ]);
@@ -80,7 +81,11 @@ export default async function SchedulePage() {
         title="Sessions and tracks"
         description="Filter by track or hall to find the sessions that match your interests."
       />
-      <ScheduleGrid sessions={sessions} timeline={event.timeline} />
+      <ScheduleGrid
+        sessions={sessions}
+        timeline={event.timeline}
+        speakers={speakers.map((s) => ({ slug: s.slug, name: s.name }))}
+      />
     </Container>
   );
 }

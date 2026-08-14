@@ -154,19 +154,30 @@ function sameDayTime(reference: Date | null, minutes: number): string {
   return formatTime(new Date(istMidnight + minutes * 60_000));
 }
 
+/** Name lookup for session cards — slugs stay on the session, names live here. */
+type SpeakerRef = { slug: string; name: string };
+
 export function ScheduleGrid({
   sessions,
   timeline,
+  speakers = [],
 }: {
   sessions: Session[];
   /** Non-session agenda from `content/pages/event.md`. */
   timeline?: TimelineEntry[];
+  /** Speakers whose names should appear on each session card. */
+  speakers?: SpeakerRef[];
 }) {
   const [track, setTrack] = React.useState(ALL);
   const [hall, setHall] = React.useState(ALL);
   const byTrack = track !== ALL;
   const byHall = hall !== ALL;
   const agenda = React.useMemo(() => buildAgenda(timeline), [timeline]);
+  const speakersBySlug = React.useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const speaker of speakers) map[speaker.slug] = speaker.name;
+    return map;
+  }, [speakers]);
 
   // Halls come from the content, so a third room needs no code change.
   const hallOptions = React.useMemo(() => {
@@ -265,7 +276,7 @@ export function ScheduleGrid({
                           }
                         >
                           {item.kind === 'session' ? (
-                            <SessionRow session={item.session} />
+                            <SessionRow session={item.session} speakersBySlug={speakersBySlug} />
                           ) : (
                             <AgendaCard item={item.item} />
                           )}
@@ -380,9 +391,18 @@ function AgendaCard({ item }: { item: AgendaItem }) {
   );
 }
 
-function SessionRow({ session }: { session: Session }) {
+function SessionRow({
+  session,
+  speakersBySlug,
+}: {
+  session: Session;
+  speakersBySlug: Record<string, string>;
+}) {
   const trackDef = session.track ? TRACK_BY_SCHEMA[session.track] : undefined;
   const keynote = session.type === 'Keynote';
+  const names = (session.speakers ?? [])
+    .map((slug) => speakersBySlug[slug])
+    .filter((name): name is string => Boolean(name));
   return (
     <Link href={`/schedule/${session.slug}`} className="block h-full">
       <Card className="h-full">
@@ -396,6 +416,12 @@ function SessionRow({ session }: { session: Session }) {
             {keynote && <span className="text-kcd-primary">[Keynote] </span>}
             {session.title}
           </h5>
+          {names.length > 0 && (
+            <p className="text-sm text-kcd-ink/80">
+              <span className="sr-only">Speakers: </span>
+              {names.join(', ')}
+            </p>
+          )}
           <div className="mt-auto flex flex-wrap gap-2">
             {session.track && (
               <Badge className={cn('border-transparent', trackDef?.color)}>
