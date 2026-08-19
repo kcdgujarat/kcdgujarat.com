@@ -227,3 +227,62 @@ export function formatWindowMoment(
     timeZone,
   }).format(new Date(ms));
 }
+
+/**
+ * Compact conference date for the hero lockup, KubeCon-style:
+ * `September 19`, `September 19–21`, or `November 30 – December 2`.
+ * Rendered uppercase in the UI, so keep the natural casing here — screen
+ * readers should not spell it out letter by letter.
+ */
+export function formatEventDateRangeShort(
+  start: string | Date | null | undefined,
+  end?: string | Date | null,
+  locale = 'en-IN',
+  timeZone = DEFAULT_TIMEZONE,
+): string {
+  if (!start) return '';
+  const startDate = typeof start === 'string' ? new Date(start) : start;
+  if (Number.isNaN(startDate.getTime())) return '';
+
+  const parts = (d: Date) => {
+    const p = new Intl.DateTimeFormat(locale, {
+      timeZone,
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).formatToParts(d);
+    const get = (type: Intl.DateTimeFormatPartTypes) =>
+      p.find((part) => part.type === type)?.value ?? '';
+    return { year: get('year'), month: get('month'), day: get('day') };
+  };
+
+  const a = parts(startDate);
+  const endDate = end ? (typeof end === 'string' ? new Date(end) : end) : null;
+  if (!endDate || Number.isNaN(endDate.getTime())) return `${a.month} ${a.day}`;
+
+  const b = parts(endDate);
+  if (a.year === b.year && a.month === b.month && a.day === b.day) return `${a.month} ${a.day}`;
+  if (a.year === b.year && a.month === b.month) return `${a.month} ${a.day}–${b.day}`;
+  return `${a.month} ${a.day} – ${b.month} ${b.day}`;
+}
+
+/** `Saturday, 19 September 2026 at 7:30 am` — the non-ticking countdown label. */
+export function formatEventDateTime(
+  input: string | Date | null | undefined,
+  locale = 'en-IN',
+  timeZone = DEFAULT_TIMEZONE,
+): string {
+  if (!input) return '';
+  const d = typeof input === 'string' ? new Date(input) : input;
+  if (Number.isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone,
+  }).format(d);
+}

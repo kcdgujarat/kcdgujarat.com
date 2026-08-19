@@ -31,7 +31,6 @@ export default async function HomePage() {
   const [event, socialLinks] = await Promise.all([getEventConfig(), getSocialLinks()]);
 
   const headline = event.headline;
-  const subheadline = event.subheadline;
   const city = event.city || 'Gujarat, India';
   const eventDate = event.eventDate || null;
   const eventEndDate = event.eventEndDate || null;
@@ -104,8 +103,8 @@ export default async function HomePage() {
       />
       <HeroSection
         headline={headline}
-        subheadline={subheadline}
         eventDate={eventDate}
+        eventEndDate={eventEndDate}
         city={city}
         registrationOpen={registrationOpen}
         cfpOpen={cfpOpen}

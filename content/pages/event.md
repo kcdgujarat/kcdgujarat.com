@@ -1,8 +1,8 @@
 ---
 # ─── Hero copy ───────────────────────────────────────────────────────────────
-# Leave headline/subheadline blank to use the default generated text.
+# Leave headline blank to use the default generated text. The hero prints the
+# event date + city under it — there is no tagline line any more.
 headline: ""
-subheadline: "A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in Ahmedabad, Gujarat. Call for Proposals are now closed."
 
 # ─── Event details ────────────────────────────────────────────────────────────
 # ISO 8601 date-times in IST (UTC+05:30). Used in the hero badge, schedule
@@ -10,7 +10,7 @@ subheadline: "A community-driven, CNCF-backed Kubernetes Community Day for the c
 eventDate: "2026-09-19T07:30:00+05:30"
 eventEndDate: "2026-09-19T18:00:00+05:30"
 
-# City shown in the hero subheadline fallback and the coming-soon page.
+# City shown under the hero date lockup and on the coming-soon page.
 city: "Ahmedabad, Gujarat"
 
 # ─── Venue ────────────────────────────────────────────────────────────────────

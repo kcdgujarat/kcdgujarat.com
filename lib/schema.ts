@@ -222,7 +222,6 @@ export type SocialLinksFrontmatter = z.infer<typeof SocialLinksFrontmatter>;
 
 export const EventConfigFrontmatter = z.object({
   headline: z.string().optional(),
-  subheadline: z.string().optional(),
   eventDate: z.string().optional(),
   eventEndDate: z.string().optional(),
   city: z.string().optional().default('Gujarat, India'),

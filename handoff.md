@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-14 (session speaker photos)_
+_Last updated: 2026-08-19 (hero: full-bleed, date lockup, countdown)_
 
 ## 1. Goal
 
@@ -19,6 +19,15 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 - `lib/site-social.ts` — `SiteSocialLinks` type + `normalizeSiteSocialLinks()` (maps legacy `twitter` → `x`).
 - `lib/content.ts` — `getSocialLinks()` reads `content/pages/social.md`; throws on invalid YAML (no silent `{}`).
 - `proxy.ts` — CSP + coming-soon gating. Do **not** add `middleware.ts` (Next.js 16 conflict).
+
+### Hero (`components/sections/HeroSection.tsx`)
+
+- Fills the viewport (`min-h-[100svh]`, content vertically centred, `pt-28`/`md:pt-32` to clear the sticky header) so the statue reads full height and the next section can't peek in at the fold.
+- **No tagline.** `subheadline` is gone from the hero props, `app/page.tsx`, `EventConfigFrontmatter`, and `content/pages/event.md` — don't re-add one field without the other three. Under the `<h1>` sits the KubeCon-style lockup: `formatEventDateRangeShort(eventDate, eventEndDate)` over `city`, both `uppercase` in CSS so screen readers still get natural casing. The date is wrapped in `<time dateTime>` with the raw ISO value.
+- `formatEventDateRangeShort()` (`lib/utils.ts`) collapses same-day to `September 19`, same-month to `September 19–21`, and spans months as `November 30 – December 2`. All Asia/Kolkata.
+- CTAs are one row (`lg:flex-nowrap`, pills are `shrink-0`): Register / View Schedule / Submit a Talk / Become a Sponsor, each still gated on its flag. The old "Meet the speakers →" text link is gone — `/speakers` is reachable from the nav.
+- `components/sections/Countdown.tsx` — the only client component in the hero. Weeks/days/hours/minutes/seconds circles ticking to `eventDate`. First paint is value-free (`–` placeholders in fixed-size circles) because the server can't know the visitor's clock; real numbers land on mount, so hydration stays stable and nothing shifts. Switches to a "Happening now" chip between `eventDate` and `eventEndDate`, then renders `null`. The digits are `aria-hidden` — a per-second live region is unusable with a screen reader — and a static `sr-only` sentence (`formatEventDateTime()`) carries the date instead.
+- Scroll cue: a plain `<a href="#about">` chevron pinned bottom-centre. No JS — the global `scroll-behavior: smooth` + `scroll-margin-top: 6rem` do the work, and `animate-bounce` is already killed by the global `prefers-reduced-motion` block.
 
 ### Schedule + speakers (imported from Sessionize)
 

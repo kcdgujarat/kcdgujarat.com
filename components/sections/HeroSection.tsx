@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronDown } from 'lucide-react';
 import { Container } from '@/components/site/Container';
-import { formatEventDate } from '@/lib/utils';
+import { Countdown } from '@/components/sections/Countdown';
+import { formatEventDateRangeShort, formatEventDateTime } from '@/lib/utils';
 
 interface HeroSectionProps {
   headline?: string;
-  subheadline?: string;
   eventDate?: string | Date | null;
+  eventEndDate?: string | Date | null;
   city?: string;
   registrationOpen?: boolean;
   cfpOpen?: boolean;
@@ -17,27 +19,32 @@ interface HeroSectionProps {
 
 export function HeroSection({
   headline,
-  subheadline,
   eventDate,
+  eventEndDate,
   city = 'Gujarat, India',
   registrationOpen = false,
   cfpOpen = false,
   cfpClosesLabel,
   showSpeakers = false,
 }: HeroSectionProps) {
-  const subtext =
-    subheadline ||
-    `A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in ${city}. Speaker line-up, schedule, and venue dropping shortly.`;
-  const dateLabel = eventDate ? formatEventDate(eventDate) : '2026';
+  // KubeCon-style lockup: compact date over the host city, both set uppercase.
+  const dateLabel = formatEventDateRangeShort(eventDate, eventEndDate);
+  const startsAt = eventDate ? new Date(eventDate).toISOString() : null;
+  const endsAt = eventEndDate ? new Date(eventEndDate).toISOString() : null;
+  const countdownLabel = eventDate
+    ? `KCD Gujarat 2026 starts on ${formatEventDateTime(eventDate)} IST.`
+    : '';
 
   // Shared CTA style — every hero button is an identical solid pill.
   const ctaPrimary =
-    'inline-flex h-12 items-center justify-center rounded-full border-2 border-transparent bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90';
+    'inline-flex h-12 shrink-0 items-center justify-center rounded-full border-2 border-transparent bg-kcd-primary px-7 text-sm font-bold uppercase tracking-wider !text-white hover:bg-kcd-primary/90';
 
   return (
     <section className="relative isolate -mt-px">
-      {/* Panel A — cream w/ rainbow gradient blur and statue illustration */}
-      <div className="relative overflow-hidden bg-kcd-cream">
+      {/* Panel A — cream w/ rainbow gradient blur and statue illustration.
+          Fills the viewport so the statue reads full-height and nothing from
+          the next section peeks in at the fold. */}
+      <div className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-kcd-cream">
         {/* Rainbow blur */}
         <div
           aria-hidden
@@ -62,7 +69,7 @@ export function HeroSection({
           />
         </div>
 
-        <Container className="relative py-16 max-md:pb-[min(36vh,240px)] md:py-24">
+        <Container className="relative pb-24 pt-28 max-md:pb-[min(38vh,260px)] md:pb-28 md:pt-32">
           {/* Text occupies the left ~55% on desktop; full width on mobile */}
           <div className="max-w-[55%] max-md:max-w-full">
             <h1 className="font-display text-5xl font-bold leading-[0.95] tracking-tight text-kcd-ink sm:text-6xl md:text-7xl">
@@ -78,33 +85,30 @@ export function HeroSection({
                 </>
               )}
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-kcd-ink/80 md:text-lg">
-              {subtext}
-            </p>
+            {dateLabel && (
+              <p className="mt-6 font-display text-3xl font-bold uppercase leading-tight tracking-wide text-kcd-ink sm:text-4xl">
+                <time dateTime={typeof eventDate === 'string' ? eventDate : undefined}>
+                  {dateLabel}
+                </time>
+                <span className="block text-xl text-kcd-orange sm:text-2xl">{city}</span>
+              </p>
+            )}
             {cfpOpen && (
               <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-kcd-ink/15 bg-white/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-kcd-ink/80 backdrop-blur">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-kcd-orange" />
                 CFP Open{cfpClosesLabel ? ` · closes ${cfpClosesLabel}` : ''}
               </p>
             )}
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3 lg:flex-nowrap">
               {registrationOpen && (
                 <Link href="/register" className={ctaPrimary}>
                   Register Now
                 </Link>
               )}
               {showSpeakers && (
-                <>
-                  <Link href="/schedule" className={ctaPrimary}>
-                    View Schedule
-                  </Link>
-                  <Link
-                    href="/speakers"
-                    className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
-                  >
-                    Meet the speakers →
-                  </Link>
-                </>
+                <Link href="/schedule" className={ctaPrimary}>
+                  View Schedule
+                </Link>
               )}
               {cfpOpen && (
                 <Link href="/cfp" className={ctaPrimary}>
@@ -115,8 +119,17 @@ export function HeroSection({
                 Become a Sponsor
               </Link>
             </div>
+            {startsAt && <Countdown className="mt-9" startsAt={startsAt} endsAt={endsAt} srLabel={countdownLabel} />}
           </div>
         </Container>
+
+        <a
+          href="#about"
+          className="absolute bottom-6 left-1/2 z-10 flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border border-kcd-ink/15 bg-white/75 text-kcd-ink shadow-card backdrop-blur hover:bg-white"
+        >
+          <ChevronDown className="h-5 w-5 animate-bounce" aria-hidden />
+          <span className="sr-only">Scroll to about KCD Gujarat 2026</span>
+        </a>
       </div>
     </section>
   );
