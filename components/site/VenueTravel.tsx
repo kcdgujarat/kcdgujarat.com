@@ -51,7 +51,11 @@ export function VenueTravelList({
                 <span aria-hidden>~</span>
                 <span className="sr-only">about </span>
                 {item.distanceKm} km by road
-                {item.driveMinutes ? ` · allow about ${item.driveMinutes} min` : null}
+                {item.driveMinutes
+                  ? ` · allow about ${item.driveMinutes}${
+                      item.driveMinutesMax ? `\u2013${item.driveMinutesMax}` : ''
+                    } min`
+                  : null}
               </p>
               {showNotes && item.note ? (
                 <p className="mt-2 text-sm text-kcd-muted">{item.note}</p>

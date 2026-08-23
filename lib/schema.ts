@@ -236,9 +236,17 @@ export const VenueTravelItem = RenderFlag.extend({
   distanceKm: z.number().positive(),
   /** Typical door-to-door drive, allowing for traffic. */
   driveMinutes: z.number().positive().optional(),
+  /**
+   * Upper end of the drive when a single number would over-promise — set both
+   * and the row prints "allow about 8–10 min". Ignored without `driveMinutes`.
+   */
+  driveMinutesMax: z.number().positive().optional(),
   /** One line of practical advice — which terminal, which side, what to book. */
   note: z.string().optional(),
   order: z.number().optional().default(100),
+}).refine((i) => !i.driveMinutesMax || (i.driveMinutes ? i.driveMinutesMax > i.driveMinutes : false), {
+  message: 'driveMinutesMax needs driveMinutes and must be greater than it',
+  path: ['driveMinutesMax'],
 });
 export type VenueTravelItem = z.infer<typeof VenueTravelItem>;
 

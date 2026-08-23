@@ -72,8 +72,9 @@ venueTravel:
   - from: "Tapovan Circle Metro Station"
     icon: "metro"
     distanceKm: 3
-    driveMinutes: 10
-    note: "The closest metro stop, on the Yellow Line towards Gandhinagar — change at Motera Stadium if you are coming in on the Red Line. Autos and cabs wait outside for the last stretch."
+    driveMinutes: 8
+    driveMinutesMax: 10
+    note: "The closest metro station to the venue, with direct connectivity from Sabarmati and Ranip. Change at Old High Court if coming from Kalupur. App-based autos and cabs are readily available for the short final stretch."
     order: 30
 
 # ─── Site contact (footer, coming-soon page) ──────────────────────────────────

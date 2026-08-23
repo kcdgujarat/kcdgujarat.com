@@ -104,9 +104,11 @@ export default async function VenuePage() {
           <h2 id="getting-here" className="font-display text-2xl font-bold text-kcd-ink">
             Getting here
           </h2>
-          <p className="mt-2 max-w-2xl text-base text-kcd-muted">
-          The venue is on the Ahmedabad–Gandhinagar Road in Bhat, making it a short drive from the airport and easily accessible from both Ahmedabad and Gandhinagar.
-          Distances are by road.
+          {/* Kept short enough to sit on one line at desktop width — it still
+              wraps cleanly on narrow screens. */}
+          <p className="mt-2 text-base text-kcd-muted">
+            On the Ahmedabad–Gandhinagar Road in Bhat — a short drive from the airport, easy to reach
+            from either city. Distances by road.
           </p>
           <VenueTravelList items={travel} className="mt-6 grid gap-4 md:grid-cols-3" />
         </section>
@@ -140,7 +142,7 @@ export default async function VenuePage() {
           <InfoCard
             Icon={UtensilsCrossed}
             title="Food"
-            body="Breakfast, lunch, and high tea are all served on site — see the schedule for timings. Tell us about dietary needs when you register and we will pass them to the kitchen."
+            body="Breakfast, lunch, and high tea are all served on site, and the whole menu is pure vegetarian — see the schedule for timings. Tell us about dietary needs when you register and we will pass them to the kitchen."
           />
           <InfoCard
             Icon={BedDouble}
