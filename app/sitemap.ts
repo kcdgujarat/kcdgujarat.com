@@ -1,20 +1,20 @@
 import type { MetadataRoute } from 'next';
-import { getSessions, getSpeakers, getSponsors, getCfpConfig } from '@/lib/content';
+import { getSessions, getSpeakers, getSponsors, getCfpConfig, getEventConfig } from '@/lib/content';
 import { siteUrl } from '@/lib/utils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [speakers, sessions, sponsors, cfp] = await Promise.all([
+  const [speakers, sessions, sponsors, cfp, event] = await Promise.all([
     getSpeakers(),
     getSessions(),
     getSponsors(),
     getCfpConfig(),
+    getEventConfig(),
   ]);
 
   const now = new Date();
   const staticPaths = [
     '/',
     '/sponsors',
-    '/venue',
     '/cfp',
     '/register',
     '/sponsorship',
@@ -22,6 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/faq',
     '/badge',
   ];
+  // `/venue` 404s while the flag is off — don't advertise it to crawlers.
+  if (event.showVenue) {
+    staticPaths.push('/venue');
+  }
   if (cfp.showSpeakers && cfp.phase === 'closed') {
     staticPaths.push('/speakers', '/schedule');
   }

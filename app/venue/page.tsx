@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { VenueHeroPhoto, VenuePhotoGrid } from '@/components/site/VenuePhotos';
 import { VenueTravelList, orderVenueTravel } from '@/components/site/VenueTravel';
@@ -6,18 +7,36 @@ import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card
 import { getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
-import { Accessibility, BedDouble, Car, ExternalLink, MapPin, UtensilsCrossed } from 'lucide-react';
+import { Accessibility, BedDouble, ExternalLink, MapPin, UtensilsCrossed } from 'lucide-react';
 
 export const revalidate = 3600;
-export const metadata = buildMetadata({
-  title: 'Venue',
-  path: '/venue',
-  description:
-    'Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat — how to reach KCD Gujarat 2026 from the airport, Ranip Bus Stand, and Ahmedabad Junction.',
-});
+
+/**
+ * Generated rather than static so the description can't name the venue while
+ * `showVenue` is off — the route 404s then, but a crawler that already has the
+ * URL should get nothing useful out of the head either.
+ */
+export async function generateMetadata() {
+  const { showVenue } = await getEventConfig();
+  if (!showVenue) {
+    return buildMetadata({
+      title: 'Venue',
+      path: '/venue',
+      description: 'Venue details for KCD Gujarat 2026.',
+    });
+  }
+  return buildMetadata({
+    title: 'Venue',
+    path: '/venue',
+    description:
+      'Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat — how to reach KCD Gujarat 2026 from the airport, Ranip Bus Stand, and Ahmedabad Junction.',
+  });
+}
 
 export default async function VenuePage() {
   const event = await getEventConfig();
+  if (!event.showVenue) notFound();
+
   const name = event.venueName || 'To be announced';
   const address = event.venueAddress;
   const map = event.mapEmbedUrl;
@@ -86,8 +105,8 @@ export default async function VenuePage() {
             Getting here
           </h2>
           <p className="mt-2 max-w-2xl text-base text-kcd-muted">
-            The venue sits on the Ahmedabad–Gandhinagar highway at Bhat, so it is a short run from
-            the airport and reachable from either end of the city. Distances are by road.
+          The venue is on the Ahmedabad–Gandhinagar Road in Bhat, making it a short drive from the airport and easily accessible from both Ahmedabad and Gandhinagar.
+          Distances are by road.
           </p>
           <VenueTravelList items={travel} className="mt-6 grid gap-4 md:grid-cols-3" />
         </section>
@@ -114,15 +133,10 @@ export default async function VenuePage() {
         <h2 id="on-the-day" className="mb-6 font-display text-2xl font-bold text-kcd-ink">
           On the day
         </h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-3">
           {/* Only state what we can point at. The accessibility audit is still
               with the organisers, so that card says so rather than guessing —
               a wrong promise there strands somebody at the gate. */}
-          <InfoCard
-            Icon={Car}
-            title="Parking"
-            body="Multi-level basement parking on site, with room for 180 cars. Cabs and autos can drop you at the main porch."
-          />
           <InfoCard
             Icon={UtensilsCrossed}
             title="Food"
@@ -131,15 +145,15 @@ export default async function VenuePage() {
           <InfoCard
             Icon={BedDouble}
             title="Stay"
-            body="The venue is itself a hotel, so rooms can be booked on site directly with Narayani Heights. Bhat, Chandkheda, and the airport area have options at other price points."
+            body="The venue is also a hotel, so rooms can be booked on site directly with Narayani Heights. There are also hotels in Bhat, Chandkheda, and around the airport at different price points."
           />
           <InfoCard
             Icon={Accessibility}
             title="Accessibility"
             body={
               contactEmail
-                ? `Both halls are on the venue's event floor. If you need step-free routing, reserved seating, or anything else to attend comfortably, email ${contactEmail} and we will arrange it before the day.`
-                : "Both halls are on the venue's event floor. If you need step-free routing, reserved seating, or anything else to attend comfortably, get in touch and we will arrange it before the day."
+                ? `Both halls are on the venue's event floor. If you need step-free access, reserved seating, or anything else to attend comfortably, email ${contactEmail} and we will arrange it before the day.`
+                : "Both halls are on the venue's event floor. If you need step-free access, reserved seating, or anything else to attend comfortably, get in touch and we will arrange it before the day."
             }
           />
         </div>

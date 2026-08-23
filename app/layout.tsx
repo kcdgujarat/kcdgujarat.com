@@ -45,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cfpOpen = cfp.open;
   const showSpeakers = cfp.showSpeakers;
   const showTeam = event.showTeam;
+  const showVenue = event.showVenue;
   const registrationOpen = registration.open;
   const pathname = (await headers()).get('x-pathname') ?? '/';
   return (
@@ -69,6 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           cfpOpen={cfpOpen}
           showSpeakers={showSpeakers}
           showTeam={showTeam}
+          showVenue={showVenue}
         />
         <main id="main" className="relative z-[1]">{children}</main>
         {!comingSoon && (
@@ -78,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             cfpOpen={cfpOpen}
             showSpeakers={showSpeakers}
             showTeam={showTeam}
+            showVenue={showVenue}
           />
         )}
         <Analytics />

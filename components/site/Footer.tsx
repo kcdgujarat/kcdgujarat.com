@@ -10,6 +10,7 @@ interface FooterProps {
   cfpOpen?: boolean;
   showSpeakers?: boolean;
   showTeam?: boolean;
+  showVenue?: boolean;
 }
 
 export function Footer({
@@ -18,6 +19,7 @@ export function Footer({
   cfpOpen = false,
   showSpeakers = false,
   showTeam = false,
+  showVenue = false,
 }: FooterProps) {
   const eventLinks = [
     ...(showSpeakers
@@ -27,7 +29,8 @@ export function Footer({
         ]
       : []),
     { href: '/sponsors', label: 'Sponsors' },
-    { href: '/venue', label: 'Venue' },
+    // Withheld until the venue is announced — /venue 404s while the flag is off.
+    ...(showVenue ? [{ href: '/venue', label: 'Venue' }] : []),
   ];
   const getInvolvedLinks = [
     ...(cfpOpen ? [{ href: '/cfp', label: 'Submit a Talk' }] : []),

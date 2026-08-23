@@ -8,14 +8,21 @@ import { Container } from './Container';
 import { ButtonLink } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type NavItem = { href: string; label: string; speakersOnly?: boolean; cfpOnly?: boolean; teamOnly?: boolean };
+type NavItem = {
+  href: string;
+  label: string;
+  speakersOnly?: boolean;
+  cfpOnly?: boolean;
+  teamOnly?: boolean;
+  venueOnly?: boolean;
+};
 
 const NAV: NavItem[] = [
   { href: '/#about', label: 'About' },
   { href: '/speakers', label: 'Speakers', speakersOnly: true },
   { href: '/schedule', label: 'Schedule', speakersOnly: true },
   { href: '/#cfp', label: 'CFP', cfpOnly: true },
-  { href: '/#venue', label: 'Venue' },
+  { href: '/#venue', label: 'Venue', venueOnly: true },
   { href: '/#team', label: 'Organisers', teamOnly: true },
   { href: '/#sponsors', label: 'Sponsors' },
   { href: '/#partners', label: 'Partners' },
@@ -31,6 +38,7 @@ interface HeaderProps {
   cfpOpen?: boolean;
   showSpeakers?: boolean;
   showTeam?: boolean;
+  showVenue?: boolean;
 }
 
 export function Header({
@@ -39,6 +47,7 @@ export function Header({
   cfpOpen = false,
   showSpeakers = false,
   showTeam = false,
+  showVenue = false,
 }: HeaderProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -51,6 +60,7 @@ export function Header({
     if (item.speakersOnly && !showSpeakers) return false;
     if (item.cfpOnly && !cfpOpen) return false;
     if (item.teamOnly && !showTeam) return false;
+    if (item.venueOnly && !showVenue) return false;
     return true;
   });
 

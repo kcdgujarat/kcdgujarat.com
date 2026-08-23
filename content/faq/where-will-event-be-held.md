@@ -5,4 +5,4 @@ featured: true
 order: 30
 ---
 
-At **Narayani Heights**, on the Ahmedabad–Gandhinagar highway at Bhat, next to Apollo Hospital — about 7 km from Ahmedabad airport. Full address, road distances from the airport, Ranip Bus Stand, and Ahmedabad Junction, plus a map, are on the [venue page](/venue).
+At **Narayani Heights**, on the Ahmedabad–Gandhinagar Road in Bhat, next to Apollo Hospital — about 7 km from Ahmedabad airport. The full address, road distances from the airport, Ranip Bus Stand, and Tapovan Circle metro station, plus a map, are on the [venue page](/venue).

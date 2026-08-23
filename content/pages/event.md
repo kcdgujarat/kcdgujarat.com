@@ -14,8 +14,17 @@ eventEndDate: "2026-09-19T18:00:00+05:30"
 city: "Ahmedabad, Gujarat"
 
 # ─── Venue ────────────────────────────────────────────────────────────────────
+# Reveal switch for the whole venue announcement. Flip to true on announcement
+# day — that is the ONLY edit needed to light up the home #venue section, the
+# header + footer Venue links, /venue, and the sitemap entry.
+# - showVenue: false → nothing on the site names the venue (default).
+# - showVenue: true  → venue section, links, and /venue all go live.
+# When flipping this on, also update content/faq/where-will-event-be-held.md —
+# markdown answers can't read this flag, so that one is a manual edit.
+showVenue: true
+
 venueName: "Narayani Heights"
-venueAddress: "Ahmedabad Airport–Gandhinagar Road, adjacent to Apollo Hospital, Bhat, Gandhinagar, Gujarat 382428"
+venueAddress: "Ahmedabad Airport–Gandhinagar Road, Adjacent to Apollo Hospital, Bhat, Gandhinagar, Gujarat 382428"
 # Paste a Google Maps embed src URL (the value inside the <iframe src="…">).
 # Must stay on www.google.com — proxy.ts only allows that host in frame-src.
 mapEmbedUrl: "https://www.google.com/maps?q=Narayani+Heights,+Airport-Gandhinagar+Road,+Bhat,+Ahmedabad,+Gujarat+382428&output=embed"
@@ -48,23 +57,23 @@ venuePhotos:
 # Road distances, not straight lines. `driveMinutes` allows for normal
 # Ahmedabad traffic, so it is deliberately longer than a free-flow estimate.
 venueTravel:
-  - from: "Ahmedabad Airport (SVPI)"
+  - from: "Ahmedabad Airport (AMD)"
     icon: "plane"
     distanceKm: 7
     driveMinutes: 20
-    note: "The closest airport to the venue — Terminal 2 (international) is nearer than Terminal 1. Autos and cabs queue outside both."
+    note: "Pre-paid taxis, app-based cabs (Uber/Ola), and auto-rickshaws are readily available right outside the arrival terminals."
     order: 10
   - from: "Ranip Bus Stand"
     icon: "bus"
     distanceKm: 11
     driveMinutes: 30
-    note: "GSRTC buses from across Gujarat terminate here. Cross to the Ahmedabad–Gandhinagar highway for a cab."
+    note: "Many GSRTC services from across Gujarat serve this stand. From here, take an auto or cab to the venue."
     order: 20
-  - from: "Ahmedabad Junction (Kalupur)"
-    icon: "train"
-    distanceKm: 15
-    driveMinutes: 35
-    note: "If your train also halts at Sabarmati Junction, get off there instead — it is roughly half the distance."
+  - from: "Tapovan Circle Metro Station"
+    icon: "metro"
+    distanceKm: 3
+    driveMinutes: 10
+    note: "The closest metro stop, on the Yellow Line towards Gandhinagar — change at Motera Stadium if you are coming in on the Red Line. Autos and cabs wait outside for the last stretch."
     order: 30
 
 # ─── Site contact (footer, coming-soon page) ──────────────────────────────────

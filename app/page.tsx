@@ -34,9 +34,15 @@ export default async function HomePage() {
   const city = event.city || 'Gujarat, India';
   const eventDate = event.eventDate || null;
   const eventEndDate = event.eventEndDate || null;
-  const venueName = event.venueName;
-  const venueAddress = event.venueAddress;
-  const mapEmbedUrl = event.mapEmbedUrl;
+  // Every venue field is read through `showVenue`, so the flag alone decides
+  // whether the venue exists as far as this page is concerned — including the
+  // JSON-LD below, which would otherwise hand the name straight to crawlers.
+  const showVenue = event.showVenue;
+  const venueName = showVenue ? event.venueName : undefined;
+  const venueAddress = showVenue ? event.venueAddress : undefined;
+  const mapEmbedUrl = showVenue ? event.mapEmbedUrl : undefined;
+  const venueCoordinates = showVenue ? event.venueCoordinates : undefined;
+  const venueUrl = showVenue ? event.venueUrl : undefined;
 
   const eventLd = {
     '@context': 'https://schema.org',
@@ -51,16 +57,16 @@ export default async function HomePage() {
       address: venueAddress
         ? { '@type': 'PostalAddress', streetAddress: venueAddress, addressCountry: 'IN' }
         : city,
-      ...(event.venueCoordinates
+      ...(venueCoordinates
         ? {
             geo: {
               '@type': 'GeoCoordinates',
-              latitude: event.venueCoordinates[0],
-              longitude: event.venueCoordinates[1],
+              latitude: venueCoordinates[0],
+              longitude: venueCoordinates[1],
             },
           }
         : {}),
-      ...(event.venueUrl ? { sameAs: event.venueUrl } : {}),
+      ...(venueUrl ? { sameAs: venueUrl } : {}),
     },
     organizer: { '@type': 'Organization', name: 'KCD Gujarat', url: siteUrl('/') },
     url: siteUrl('/'),
@@ -142,15 +148,17 @@ export default async function HomePage() {
           sessions={cfp.showSpeakers ? sessions : []}
         />,
         cfpOpen ? <CfpSection key="cfp" homeSection={cfp.homeSection} /> : null,
-        <VenueSection
-          key="venue"
-          venueName={venueName}
-          venueAddress={venueAddress}
-          mapEmbedUrl={mapEmbedUrl}
-          venuePhotos={event.venuePhotos}
-          venueTravel={event.venueTravel}
-          venueDirectionsUrl={event.venueDirectionsUrl}
-        />,
+        showVenue ? (
+          <VenueSection
+            key="venue"
+            venueName={venueName}
+            venueAddress={venueAddress}
+            mapEmbedUrl={mapEmbedUrl}
+            venuePhotos={event.venuePhotos}
+            venueTravel={event.venueTravel}
+            venueDirectionsUrl={event.venueDirectionsUrl}
+          />
+        ) : null,
         showTeam ? <TeamPreview key="team" team={team} /> : null,
         <SponsorStrip key="sponsors" sponsors={sponsors} />,
         partners.length > 0 ? <CommunityPartners key="partners" partners={partners} /> : null,

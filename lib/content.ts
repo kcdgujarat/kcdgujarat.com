@@ -328,6 +328,7 @@ export async function getEventConfig(): Promise<EventConfig> {
   } catch {
     return {
       city: 'Gujarat, India',
+      showVenue: false,
       showTeam: false,
       venuePhotos: [],
       venueTravel: [],

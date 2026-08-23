@@ -276,6 +276,13 @@ export const EventConfigFrontmatter = z.object({
   venuePhotos: z.array(VenuePhoto).optional().default([]),
   venueTravel: z.array(VenueTravelItem).optional().default([]),
   contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
+  /**
+   * Reveal switch for the whole venue announcement. `false` hides the home
+   * `#venue` section, the header + footer Venue links, and 404s `/venue`, so
+   * nothing on the site names the venue before it is announced. Defaults to
+   * `false` — the safer state, per CLAUDE.md §8.8.
+   */
+  showVenue: z.boolean().default(false),
   /** Home `#team` section, header/footer Team links, and `/team` route. */
   showTeam: z.boolean().default(false),
   timeline: z.array(TimelineItem).optional(),
