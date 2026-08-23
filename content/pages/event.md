@@ -14,10 +14,50 @@ eventEndDate: "2026-09-19T18:00:00+05:30"
 city: "Ahmedabad, Gujarat"
 
 # ─── Venue ────────────────────────────────────────────────────────────────────
-venueName: ""
-venueAddress: ""
+venueName: "Narayani Heights"
+venueAddress: "Ahmedabad Airport–Gandhinagar Road, adjacent to Apollo Hospital, Bhat, Gandhinagar, Gujarat 382428"
 # Paste a Google Maps embed src URL (the value inside the <iframe src="…">).
-mapEmbedUrl: ""
+# Must stay on www.google.com — proxy.ts only allows that host in frame-src.
+mapEmbedUrl: "https://www.google.com/maps?q=Narayani+Heights,+Airport-Gandhinagar+Road,+Bhat,+Ahmedabad,+Gujarat+382428&output=embed"
+venueUrl: "https://narayaniheights.com/"
+venueDirectionsUrl: "https://www.google.com/maps/dir/?api=1&destination=23.111919%2C72.629250"
+# [latitude, longitude] — feeds Place.geo in the JSON-LD on /venue.
+venueCoordinates: [23.111919, 72.62925]
+
+# Photos live in public/images/venue/. Filenames carry a content hash, so
+# replacing a photo means a new filename here too (see handoff.md).
+venuePhotos:
+  - src: "/images/venue/narayani-heights-exterior-259c3ccb.jpg"
+    alt: "The Narayani Heights hotel building at dusk, seen from its front driveway"
+    caption: "Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat."
+  - src: "/images/venue/narayani-heights-conference-hall-10d8df25.jpg"
+    alt: "A large banquet hall set up with a raised stage, lectern, and rows of tables"
+    caption: "The banquet hall in conference layout — our main stage for the day."
+  - src: "/images/venue/narayani-heights-grand-ballroom-f2c15ea0.jpg"
+    alt: "The Grand Ballroom, a wide pillarless hall under chandeliers, set with round tables"
+    caption: "The Grand Ballroom, which splits into the second track hall."
+
+# Road distances, not straight lines. `driveMinutes` allows for normal
+# Ahmedabad traffic, so it is deliberately longer than a free-flow estimate.
+venueTravel:
+  - from: "Ahmedabad Airport (SVPI)"
+    icon: "plane"
+    distanceKm: 7
+    driveMinutes: 20
+    note: "The closest airport to the venue — Terminal 2 (international) is nearer than Terminal 1. Autos and cabs queue outside both."
+    order: 10
+  - from: "Ranip Bus Stand"
+    icon: "bus"
+    distanceKm: 11
+    driveMinutes: 30
+    note: "GSRTC buses from across Gujarat terminate here. Cross to the Ahmedabad–Gandhinagar highway for a cab."
+    order: 20
+  - from: "Ahmedabad Junction (Kalupur)"
+    icon: "train"
+    distanceKm: 15
+    driveMinutes: 35
+    note: "If your train also halts at Sabarmati Junction, get off there instead — it is roughly half the distance."
+    order: 30
 
 # ─── Site contact (footer, coming-soon page) ──────────────────────────────────
 contactEmail: "contact@kcdgujarat.com"

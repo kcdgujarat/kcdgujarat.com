@@ -48,7 +48,19 @@ export default async function HomePage() {
     location: {
       '@type': 'Place',
       name: venueName || 'TBD',
-      address: venueAddress || city,
+      address: venueAddress
+        ? { '@type': 'PostalAddress', streetAddress: venueAddress, addressCountry: 'IN' }
+        : city,
+      ...(event.venueCoordinates
+        ? {
+            geo: {
+              '@type': 'GeoCoordinates',
+              latitude: event.venueCoordinates[0],
+              longitude: event.venueCoordinates[1],
+            },
+          }
+        : {}),
+      ...(event.venueUrl ? { sameAs: event.venueUrl } : {}),
     },
     organizer: { '@type': 'Organization', name: 'KCD Gujarat', url: siteUrl('/') },
     url: siteUrl('/'),
@@ -135,6 +147,9 @@ export default async function HomePage() {
           venueName={venueName}
           venueAddress={venueAddress}
           mapEmbedUrl={mapEmbedUrl}
+          venuePhotos={event.venuePhotos}
+          venueTravel={event.venueTravel}
+          venueDirectionsUrl={event.venueDirectionsUrl}
         />,
         showTeam ? <TeamPreview key="team" team={team} /> : null,
         <SponsorStrip key="sponsors" sponsors={sponsors} />,

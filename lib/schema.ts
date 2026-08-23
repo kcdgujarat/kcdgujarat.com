@@ -220,6 +220,37 @@ export const SocialLinksFrontmatter = z
   .transform((data) => normalizeSiteSocialLinks(data));
 export type SocialLinksFrontmatter = z.infer<typeof SocialLinksFrontmatter>;
 
+/** Transport mode for a `venueTravel` row — maps to a lucide icon on `/venue`. */
+export const VenueTravelIcon = z.enum(['plane', 'bus', 'train', 'car', 'metro']);
+export type VenueTravelIcon = z.infer<typeof VenueTravelIcon>;
+
+/**
+ * One "how far is it from…" row on `/venue`. `distanceKm` and `driveMinutes`
+ * are road numbers, not straight lines — quote them as approximate, because
+ * Ahmedabad traffic makes any single figure a lie at some hour of the day.
+ */
+export const VenueTravelItem = RenderFlag.extend({
+  /** Origin as a traveller would name it, e.g. "Ahmedabad Airport (SVPI)". */
+  from: z.string(),
+  icon: VenueTravelIcon.default('car'),
+  distanceKm: z.number().positive(),
+  /** Typical door-to-door drive, allowing for traffic. */
+  driveMinutes: z.number().positive().optional(),
+  /** One line of practical advice — which terminal, which side, what to book. */
+  note: z.string().optional(),
+  order: z.number().optional().default(100),
+});
+export type VenueTravelItem = z.infer<typeof VenueTravelItem>;
+
+/** A venue photo. `alt` is required — a decorative venue shot is still content. */
+export const VenuePhoto = z.object({
+  src: z.string().min(1),
+  alt: z.string().min(1),
+  /** Optional caption printed under the photo in the gallery. */
+  caption: z.string().optional(),
+});
+export type VenuePhoto = z.infer<typeof VenuePhoto>;
+
 export const EventConfigFrontmatter = z.object({
   headline: z.string().optional(),
   eventDate: z.string().optional(),
@@ -228,6 +259,14 @@ export const EventConfigFrontmatter = z.object({
   venueName: z.string().optional(),
   venueAddress: z.string().optional(),
   mapEmbedUrl: z.string().optional(),
+  /** The venue's own site, linked from `/venue` for rooms and enquiries. */
+  venueUrl: optionalUrl,
+  /** Deep link that opens the venue in the visitor's maps app. */
+  venueDirectionsUrl: optionalUrl,
+  /** `[latitude, longitude]` — feeds the JSON-LD `Place.geo`. */
+  venueCoordinates: z.tuple([z.number(), z.number()]).optional(),
+  venuePhotos: z.array(VenuePhoto).optional().default([]),
+  venueTravel: z.array(VenueTravelItem).optional().default([]),
   contactEmail: z.union([z.string().email(), z.literal('')]).optional(),
   /** Home `#team` section, header/footer Team links, and `/team` route. */
   showTeam: z.boolean().default(false),

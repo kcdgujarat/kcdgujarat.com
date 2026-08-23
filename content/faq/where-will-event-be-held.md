@@ -5,4 +5,4 @@ featured: true
 order: 30
 ---
 
-The event will be held in **Ahmedabad, Gujarat**. The exact venue details will be announced soon on our website and social media channels.
+At **Narayani Heights**, on the Ahmedabad–Gandhinagar highway at Bhat, next to Apollo Hospital — about 7 km from Ahmedabad airport. Full address, road distances from the airport, Ranip Bus Stand, and Ahmedabad Junction, plus a map, are on the [venue page](/venue).

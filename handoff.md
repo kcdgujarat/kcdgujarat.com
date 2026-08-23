@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-19 (hero: full-bleed, date lockup, countdown)_
+_Last updated: 2026-08-23 (venue confirmed: Narayani Heights)_
 
 ## 1. Goal
 
@@ -50,6 +50,17 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 - `render: false` hides a sponsor (e.g. `sample-sponsor.md`).
 - Current published: Valkey (gold), SUSE (diversity) — SUSE logo path is `/images/sponsors/suse.svg` (asset may still need adding).
 
+### Venue (`Narayani Heights`, confirmed 2026-08-23)
+
+- **Narayani Heights**, Ahmedabad Airport–Gandhinagar Road, adjacent to Apollo Hospital, Bhat, Gandhinagar, Gujarat **382428**. Coordinates `23.111919, 72.62925`; site `narayaniheights.com`; venue desk `+91 79 6170 1800`.
+- Everything lives in `content/pages/event.md`: `venueName`, `venueAddress`, `mapEmbedUrl`, `venueUrl`, `venueDirectionsUrl`, `venueCoordinates`, `venuePhotos[]`, `venueTravel[]`. Schema in `lib/schema.ts` (`VenuePhoto`, `VenueTravelItem`, `VenueTravelIcon`). **`getEventConfig()`'s catch-branch fallback must list `venuePhotos: []` and `venueTravel: []`** — they are `.default([])`, so a fallback missing them fails typecheck.
+- `mapEmbedUrl` must stay on **`www.google.com`** — `proxy.ts` CSP allows only that host in `frame-src`. The `?q=…&output=embed` form 301s to `/maps/embed?pb=…` on the *same* host, so it passes; a `maps.google.com` URL would be blocked.
+- `venueDirectionsUrl` targets raw coordinates, not a name — Google geocodes "Narayani Heights" to more than one place in Gujarat, and there is no Places `place_id` to pin it with.
+- Distances in `venueTravel` are **road** figures from OSRM, and `driveMinutes` is padded above free-flow for real Ahmedabad traffic. Airport ~7 km (T2 is nearer than T1), Ranip Bus Stand ~11 km, Ahmedabad Junction ~15 km. Sabarmati Junction is ~8 km, which is why the Kalupur row tells long-distance travellers to get off there instead.
+- Photos: `public/images/venue/`, content-hashed like the speaker photos. Sourced from the venue's own press shots on `narayaniheights.com`, resized to a 2400px long edge at q82 (the originals are ~7000px / 20 MB — do **not** commit those). `/venue` credits them as "Photos courtesy of Narayani Heights". Ignore the `2026/05/*.jpg` set on that site: watermarked restaurant shots. Ignore anything named `ChatGPT-Image-*`: AI-generated.
+- `components/site/VenueTravel.tsx` holds the icon map + `orderVenueTravel()`, shared by `/venue` and the homepage `VenueSection` (which passes `showNotes={false}`). `VenueSection` shows the hero photo when there is one and falls back to the map embed only when there isn't.
+- **The "On the day" cards on `/venue` are deliberately hedged.** Nothing about parking capacity, charges, or accessibility is published by the venue or confirmed by the organisers, so the copy says it will be confirmed rather than promising it. Food is the exception — that comes from the `timeline` in `event.md`. See §6.
+
 ### Social links (`content/pages/social.md`)
 
 Edit this file to change official profiles — **not** `event.md`:
@@ -94,13 +105,19 @@ Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcom
 
 The `timeline` in `event.md` now mirrors the 2026-08-12 schedulelist export row for row. Four of those rows are placeholders the export itself hasn't filled (14:00 Hall 1 sponsor tech talk, 15:00 Hall 2 reserved session, 17:00 Hall 2 reserved lightning talk, 17:25 panel/fireside), and 17:10–17:25 is unclaimed. See §6.
 
+`content/speakers/amritansh.md` + `public/images/speakers/amritansh-7ba53882.{jpg → jpeg}` are dirty in the working tree from a session before 2026-08-23 — same content hash, extension only. Unrelated to the venue work; commit it separately.
+
 Missing: `public/images/sponsors/suse.svg` (markdown already points at that path).
 
 After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm build`.
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-08-14)
+## 4. Recent changes (2026-08-23)
+
+58. **Venue confirmed and built out** — `/venue` was a stub: a heading, an empty map slot, and four "will be shared closer to the date" cards. It now carries the real venue. `content/pages/event.md` gained `venueUrl`, `venueDirectionsUrl`, `venueCoordinates`, `venuePhotos[]`, and `venueTravel[]`; `lib/schema.ts` gained `VenuePhoto` / `VenueTravelItem` / `VenueTravelIcon` to match. `/venue` grew a real `<h1>` (it previously had none — `SectionHeader` emits an `<h2>`), a hero photo, a "Getting here" grid, the map, "On the day", a photo gallery, and `Place` JSON-LD with `geo`. The homepage `VenueSection` takes the photo + distances and drops its placeholder cards. The `Event` JSON-LD `location` on `/` upgraded from a bare address string to a `PostalAddress` with `geo`. `content/faq/where-will-event-be-held.md` no longer says the venue will be announced soon.
+
+## 4a. Earlier changes (2026-08-14)
 
 57. **Speaker photos on session detail** — `/schedule/[slug]` speaker cards were name + role only. Each card now has a 96px square photo (`object-cover`, centred) linking through to `/speakers/[slug]`. Initials fill in if a photo is missing. Files stay uncropped; the square is CSS, same as the speakers grid.
 56. **Schedule filter labelled Theme** — `/schedule` chip group was "Track" / "All tracks"; now "Theme" / "All themes", matching the homepage "Talk themes" wording. Page header is "Sessions and themes"; empty-filter copy says theme not track. Internal `track` field names unchanged.
@@ -120,20 +137,20 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 42. **Schedule built from the accepted-sessions export** — 22 sessions + 33 speakers generated by `scripts/import-sessionize.py`; photos by `scripts/import-speaker-photos.mjs`. Placeholder speakers/sessions deleted. `ScheduleGrid` regrouped into parallel time slots.
 41. **Tracks re-cut to the CFP taxonomy** — Old `Platform | DevSecOps | AI/ML | Networking | Beginner` enum replaced by the nine verbatim track names. Copy that enumerated the old five updated in `SchedulePreview`, `DayAtGlance`, `content/pages/cfp.md`, and the `CfpConfigFrontmatter` default.
 
-## 4a. Earlier changes (2026-08-10)
+## 4b. Earlier changes (2026-08-10)
 
 40. **Organiser cleanup reverted** — Restored Neel Shah + Janki Chhatbar (markdown + photos). Grid back to `lg:grid-cols-4` / `previewCount=4`. Prior order values and original OrganiserCard/schema restored.
 
-## 4b. Earlier changes (2026-07-28)
+## 4c. Earlier changes (2026-07-28)
 
 37. **Key Dates header nav + fluid header** — Key Dates → `/#key-dates`. Fluid pill `max-w-[100rem]`. Inline nav only at `xl` (1280px+); iPad Pro / tablets use hamburger + Register so brand/links/CTA never overlap.
 
-## 4b. Earlier changes (2026-07-24)
+## 4d. Earlier changes (2026-07-24)
 
 35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. FAQ markdown under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
 36. **Registration FAQs** — tickets are transferable (`can-i-transfer-my-ticket.md`); GST + PG fees borne by KCD Gujarat (`are-gst-and-pg-fees-included.md`).
 
-## 4b. Earlier changes (2026-07-23)
+## 4e. Earlier changes (2026-07-23)
 
 33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
@@ -155,7 +172,9 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 6. Single next thing to try
 
-**Fill the four TBA / reserved slots** in `content/pages/event.md` `timeline` — the 14:00 Hall 1 "Platinum Sponsor Tech Talk", the 15:00 Hall 2 "Reserved Session", the 17:00 Hall 2 "Reserved Lightning Talk", and the 17:25 "Panel / Fireside — TBA" are placeholders from the export. Once a real speaker is confirmed for any of them, it becomes a `content/sessions/*.md` file and its `timeline` row gets deleted (the session then wins that hall automatically). Also unclaimed: the 17:10–17:25 window between the last lightning talk and the panel. Everything else (schedule, content, photos, tracks, keynotes, typecheck, validate, build) is green.
+**Get the venue logistics confirmed by the organisers and replace the hedged copy on `/venue`.** The address, coordinates, map, photos, and road distances are all real and verified. The four "On the day" cards are not: parking capacity and charges, step-free routing between the porch and both halls, accessible washrooms, and the two hall names as the venue will actually label them on the day are all still unknown — the venue publishes none of it, so the cards currently say "we will confirm" instead of promising something that could strand somebody at the gate. One call to the venue desk (`+91 79 6170 1800`) settles all of it, and CLAUDE.md §8 makes the accessibility line the one that matters most. Everything else on the venue work (schema, content, photos, JSON-LD, typecheck, lint, validate, build) is green.
+
+Still open behind that: the four TBA / reserved `timeline` slots in `content/pages/event.md` — the 14:00 Hall 1 "Platinum Sponsor Tech Talk", 15:00 Hall 2 "Reserved Session", 17:00 Hall 2 "Reserved Lightning Talk", and 17:25 "Panel / Fireside — TBA", plus the unclaimed 17:10–17:25 window. Once a real speaker is confirmed for any of them it becomes a `content/sessions/*.md` file and its `timeline` row gets deleted (the session then wins that hall automatically).
 
 ---
 
