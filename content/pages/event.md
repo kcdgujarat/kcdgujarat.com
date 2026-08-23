@@ -26,16 +26,24 @@ venueCoordinates: [23.111919, 72.62925]
 
 # Photos live in public/images/venue/. Filenames carry a content hash, so
 # replacing a photo means a new filename here too (see handoff.md).
+# `width`/`height` are the file's real pixel size — the click-to-enlarge
+# lightbox uses them so the photo sizes to its own aspect with no dead space.
 venuePhotos:
   - src: "/images/venue/narayani-heights-exterior-259c3ccb.jpg"
     alt: "The Narayani Heights hotel building at dusk, seen from its front driveway"
     caption: "Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat."
+    width: 1600
+    height: 1200
   - src: "/images/venue/narayani-heights-conference-hall-10d8df25.jpg"
     alt: "A large banquet hall set up with a raised stage, lectern, and rows of tables"
     caption: "The banquet hall in conference layout — our main stage for the day."
+    width: 2400
+    height: 1600
   - src: "/images/venue/narayani-heights-grand-ballroom-f2c15ea0.jpg"
     alt: "The Grand Ballroom, a wide pillarless hall under chandeliers, set with round tables"
     caption: "The Grand Ballroom, which splits into the second track hall."
+    width: 2400
+    height: 1610
 
 # Road distances, not straight lines. `driveMinutes` allows for normal
 # Ahmedabad traffic, so it is deliberately longer than a free-flow estimate.

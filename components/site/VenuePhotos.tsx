@@ -55,18 +55,29 @@ function Lightbox({
 
   return (
     <Dialog open onClose={onClose} labelledBy={titleId} className={PANEL}>
-      {/* object-contain, not cover: at this size the whole frame is the point,
-          and letterboxing against the panel reads as intentional here — unlike
-          the cropped tiles on the page itself. */}
-      <div className="relative h-[50vh] w-full sm:h-[60vh]">
+      {/* With intrinsic dimensions the photo sizes to its own aspect ratio and
+          the panel shrinks to fit it — no letterbox bars at any viewport. The
+          `fill` branch is the fallback for a photo whose size wasn't recorded. */}
+      {photo.width && photo.height ? (
         <Image
           src={photo.src}
           alt={photo.alt}
-          fill
+          width={photo.width}
+          height={photo.height}
           sizes="(min-width: 1024px) 1024px, 100vw"
-          className="object-contain"
+          className="mx-auto h-auto max-h-[65vh] w-auto max-w-full rounded-lg"
         />
-      </div>
+      ) : (
+        <div className="relative h-[50vh] w-full sm:h-[60vh]">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            sizes="(min-width: 1024px) 1024px, 100vw"
+            className="object-contain"
+          />
+        </div>
+      )}
 
       <p id={titleId} className="mt-4 text-sm text-kcd-ink">
         {photo.caption || photo.alt}

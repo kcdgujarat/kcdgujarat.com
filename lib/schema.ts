@@ -248,6 +248,14 @@ export const VenuePhoto = z.object({
   alt: z.string().min(1),
   /** Optional caption printed under the photo in the gallery. */
   caption: z.string().optional(),
+  /**
+   * Intrinsic pixel size. Supply **both** and the lightbox sizes the photo to
+   * its own aspect ratio, so there is no dead space around it; omit them and it
+   * falls back to a fixed-height `object-contain` box, which is correct but
+   * letterboxes. The on-page tiles crop with `object-cover` either way.
+   */
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
 });
 export type VenuePhoto = z.infer<typeof VenuePhoto>;
 
