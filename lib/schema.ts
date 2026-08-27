@@ -263,10 +263,11 @@ export const VenuePhoto = z.object({
   /** Optional caption printed under the photo in the gallery. */
   caption: z.string().optional(),
   /**
-   * Intrinsic pixel size. Supply **both** and the lightbox sizes the photo to
-   * its own aspect ratio, so there is no dead space around it; omit them and it
-   * falls back to a fixed-height `object-contain` box, which is correct but
-   * letterboxes. The on-page tiles crop with `object-cover` either way.
+   * Intrinsic pixel size. Supply **both** and the lightbox *and* the hero frame
+   * take the photo's own aspect ratio, so `object-contain` neither crops nor
+   * letterboxes; omit them and both fall back to a fixed-height box, which is
+   * correct but letterboxes. The gallery tiles crop with `object-cover` either
+   * way, so the two-up grid stays even.
    */
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),

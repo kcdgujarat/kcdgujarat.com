@@ -64,7 +64,8 @@ export function Header({
     return true;
   });
 
-  // Primary CTA: register only, routed to the internal /register page.
+  // Primary CTA: register only. `/register` is not a page — next.config redirects it
+  // to the ticketing partner (url in content/pages/registration.md).
   const showCta = registrationOpen;
   const primaryHref = '/register';
   const primaryLabel = 'Register Now';

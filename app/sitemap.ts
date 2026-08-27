@@ -12,11 +12,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const now = new Date();
+  // `/register` is a next.config redirect to the ticketing partner, not a page — keep it out.
   const staticPaths = [
     '/',
     '/sponsors',
     '/cfp',
-    '/register',
     '/sponsorship',
     '/code-of-conduct',
     '/faq',

@@ -21,15 +21,14 @@ const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
-const WEEK = 7 * DAY;
 
-const UNITS = ['Weeks', 'Days', 'Hours', 'Minutes', 'Seconds'] as const;
+/** Days is the coarsest unit — weeks were dropped, so days keeps counting past 7. */
+const UNITS = ['Days', 'Hours', 'Minutes', 'Seconds'] as const;
 
 function splitRemaining(ms: number): number[] {
   const left = Math.max(0, ms);
   return [
-    Math.floor(left / WEEK),
-    Math.floor((left % WEEK) / DAY),
+    Math.floor(left / DAY),
     Math.floor((left % DAY) / HOUR),
     Math.floor((left % HOUR) / MINUTE),
     Math.floor((left % MINUTE) / SECOND),
@@ -39,7 +38,7 @@ function splitRemaining(ms: number): number[] {
 type Phase = 'before' | 'during' | 'after';
 
 /**
- * Weeks / days / hours / minutes / seconds until the event starts.
+ * Days / hours / minutes / seconds until the event starts.
  *
  * The first paint is deliberately value-free: the server has no idea what the
  * visitor's clock says, so it renders sized placeholders and the real numbers

@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-28 (homepage leads with keynote speakers)_
+_Last updated: 2026-08-28 (venue hero uncropped; countdown drops weeks)_
 
 ## 1. Goal
 
@@ -15,7 +15,7 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 - `app/layout.tsx` — fonts + Header/Footer. Loads `getEventConfig()` (contact email), `getSocialLinks()` (footer icons), CFP + registration config for nav CTAs. No database.
 - `components/site/Header.tsx` — sticky liquid-glass pill nav. Team link → `/#team`; Key Dates → `/#key-dates`. Nav/CTA gated on `comingSoon`, `cfpOpen`, `showSpeakers`, registration phase.
 - `components/site/Footer.tsx` — dark navy 4-column grid. Social icons via `<SocialLinks variant="footer" />` under logo **and** in copyright bar.
-- `components/site/SocialLinks.tsx` — shared X / LinkedIn / Instagram / GitHub / YouTube icon row. Used in footer, coming-soon, `/cfp` and `/register` “opens soon” cards.
+- `components/site/SocialLinks.tsx` — shared X / LinkedIn / Instagram / GitHub / YouTube icon row. Used in footer, coming-soon, and the `/cfp` “opens soon” card.
 - `lib/site-social.ts` — `SiteSocialLinks` type + `normalizeSiteSocialLinks()` (maps legacy `twitter` → `x`).
 - `lib/content.ts` — `getSocialLinks()` reads `content/pages/social.md`; throws on invalid YAML (no silent `{}`).
 - `proxy.ts` — CSP + coming-soon gating. Do **not** add `middleware.ts` (Next.js 16 conflict).
@@ -83,19 +83,20 @@ linkedin: "https://www.linkedin.com/company/kcd-gujarat"
 instagram: "https://www.instagram.com/kcdgujarat"
 ```
 
-Rendered in: footer, coming-soon page, `/cfp` + `/register` when phase is `upcoming`. Leave a field blank to hide that icon.
+Rendered in: footer, coming-soon page, and `/cfp` when phase is `upcoming`. Leave a field blank to hide that icon.
 
 ### Content flags (`content/pages/`)
 
 - `event.md` — headline, dates, city, venue, timeline, `contactEmail` (no social links here).
 - No `key-dates.md` — the Key Dates section, component, loader, and schema were removed entirely (see §4).
 - `cfp.md` — `startDate` / `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h, Asia/Kolkata) → auto `open` + `phase`; `showSpeakers`, `url`; `homeSection` for homepage `/#cfp` cards.
-- `registration.md` — `startDate` / optional `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h) → auto `open` + `phase`; `url`.
+- `registration.md` — `startDate` / optional `endDate` + optional `startTime` / `endTime` (`HH:mm`, 24h) → auto `open` + `phase`; `url`. `url` is also the `/register` redirect target read by `next.config.mjs` at build time — change the ticketing link here, nowhere else. The body copy + `eyebrow`/`title`/`description` are now unused (the page is gone) but stay in the schema.
 - `sponsorship.md` — tiers, `contactEmail`, prospectus via `static/prospectus.pdf`.
 
 ### Routing / gating
 
 - `/speakers`, `/schedule` (+ slug pages) → **404** when `showSpeakers: false` or phase is `upcoming`/`open`.
+- `/register` → **307 redirect** to the ticketing URL (`content/pages/registration.md` → `url`), declared in `next.config.mjs` `redirects()`. Not a page — no `app/register/`, no sitemap entry. Header/Hero/CTA still link `/register` (they hop through the redirect), and the Header CTA still only shows when the registration phase is `open`. The redirect is **skipped when `NEXT_PUBLIC_COMING_SOON=true`** so `proxy.ts` keeps gating the path (next.config redirects run before middleware).
 - `/admin` → gone (Payload removed).
 - Coming-soon mode (`NEXT_PUBLIC_COMING_SOON=true`) → only `/` served; footer hidden; social icons on `<ComingSoon />`.
 
@@ -129,6 +130,9 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 4. Recent changes (2026-08-28)
 
+69. **Venue hero photo is uncropped** — `VenueHeroPhoto` in `components/site/VenuePhotos.tsx` dropped the fixed `h-64 / sm:h-80 / lg:h-[26rem]` frame + `object-cover`. When the photo declares `width`/`height` the frame gets `style={{ aspectRatio: 'W / H' }}` and the image `object-contain`, so the box *is* the photo's shape — whole building, no crop, no letterbox bars. Photos without dimensions keep the fixed-height frame (contain, so they letterbox instead of cropping). The exterior shot is 1600×1200 (4:3, verified against the file), so the hero is now ~3/4 as tall as it is wide — noticeably taller than the old band on both `/venue` and the home `#venue` section, which share this component. `VenuePhotoGrid` still crops with `object-cover` so the two-up tiles stay even. `VenuePhoto` doc comment in `lib/schema.ts` updated to match.
+68. **Countdown dropped the weeks unit** — `components/sections/Countdown.tsx` counts `Days / Hours / Minutes / Seconds` only; days is now the coarsest unit and keeps counting past 7. Styling is unchanged: the circular `bg-white/70` badges with borders alternating `kcd-primary/60` / `kcd-orange/60` by index. A four-card white/terracotta redesign was built and then reverted on the organisers' call (2026-08-28) — don't reintroduce it without asking. Value-free first paint (`–` placeholders, real numbers on mount) and the "Happening now" pill are untouched.
+67. **`/register` is a redirect, not a page** — deleted `app/register/page.tsx` and dropped `/register` from `app/sitemap.ts`. `next.config.mjs` now has `redirects()` sending `/register` → the ticketing URL, read from `content/pages/registration.md` frontmatter with `gray-matter` (already a dep) so the URL stays a content edit per CLAUDE.md §12 — the config throws at build if `url` is missing or not absolute http(s). `permanent: false` (307), since the ticketing partner can change between editions. The redirect is skipped under coming-soon so `proxy.ts` still 404s the path. Verified in `.next/routes-manifest.json`. Note `pnpm typecheck` fails on a stale `.next/types/validator.ts` referencing the deleted page until a build regenerates it — `rm -rf .next` or `pnpm build` first.
 66. **Platinum sponsor keynote is a session, not a timeline row** — the 10:10 `⭐ Platinum Sponsor Keynote` placeholder is gone from `content/pages/event.md`'s `timeline`; the slot is now Sagar Utekar's 10-minute `state-of-cloud-native-in-india` keynote in `content/sessions`, which is where anything with a speaker belongs (§2). `/schedule` prints it as a `[Keynote]`-prefixed Hall 1 card at 10:10 am, and the homepage glance now collapses 09:30–10:20 into one "Keynotes — Hall 1" block instead of listing a sponsor row (the old row was `glance: false`, so the card's shape is unchanged). No code touched.
 65. **Homepage speakers section is the keynote row and nothing else** — `SpeakersPreview` used to print the first eight speakers in a flat grid. It now heads the section "Keynote speakers" and renders only the `keynote: true` speakers, in the same `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4` grid the rest of the site uses, so the keynotes sit on one row. Everyone else is reached through the "See all N speakers →" link — the intermediate "More speakers (30)" `<details>` fold-out and the per-card talk title were both built and then cut on the organisers' call (2026-08-28), so don't reintroduce either without asking. If nobody is marked a keynote it falls back to the first eight, so the section can't empty out. Grid is `<ul>`/`<li>` (§8.1). `SpeakerCard` paints the keynote badge (`bg-kcd-navy`, white text — `kcd-primary` behind white is 3.6:1 and fails AA at that size) plus a primary ring, so the badge text carries the state and not the tint alone. `/speakers` sorts keynotes to the front and `/speakers/[slug]` gets a "Keynote speaker" pill; both inherit the badge from the same flag. New `SpeakerFrontmatter.keynote` in `lib/schema.ts`, set in the three speakers' markdown **and** derived in `scripts/import-sessionize.py` so a re-import keeps it.
 

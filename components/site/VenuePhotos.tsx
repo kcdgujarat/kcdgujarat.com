@@ -181,15 +181,27 @@ export function VenueHeroPhoto({ photos }: { photos: VenuePhoto[] }) {
     <>
       <figure className="overflow-hidden rounded-2xl border border-kcd-border shadow-card">
         <PhotoTrigger photo={hero} onOpen={() => setIndex(0)} className="group relative block">
-          {/* `fill` + a sized parent, same as SpeakerCard: the photos ship at
-              their own aspect ratios and the frame crops them with object-cover. */}
-          <span className="relative block h-64 w-full bg-kcd-subtle sm:h-80 lg:h-[26rem]">
+          {/* `fill` + a sized parent. With intrinsic dimensions the frame takes the
+              photo's own aspect ratio, so `object-contain` shows the whole building
+              with neither a crop nor letterbox bars — the box *is* the photo's shape.
+              Without them there is no ratio to match, so the frame keeps a fixed
+              height and contain letterboxes rather than cropping. */}
+          <span
+            className={`relative block w-full bg-kcd-subtle ${
+              hero.width && hero.height ? '' : 'h-64 sm:h-80 lg:h-[26rem]'
+            }`}
+            style={
+              hero.width && hero.height
+                ? { aspectRatio: `${hero.width} / ${hero.height}` }
+                : undefined
+            }
+          >
             <Image
               src={hero.src}
               alt={hero.alt}
               fill
               sizes="(min-width: 1152px) 1088px, 100vw"
-              className="object-cover"
+              className="object-contain"
               priority
             />
           </span>
