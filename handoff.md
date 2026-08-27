@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-23 (venue confirmed: Narayani Heights)_
+_Last updated: 2026-08-28 (homepage leads with keynote speakers)_
 
 ## 1. Goal
 
@@ -31,15 +31,16 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 
 ### Schedule + speakers (imported from Sessionize)
 
-- `content/sessions/*.md` — 22 accepted sessions; `content/speakers/*.md` — 33 speakers. All generated from the Sessionize export, **not** hand-written. The old fictional placeholders are gone.
+- `content/sessions/*.md` — 23 sessions; `content/speakers/*.md` — 34 speakers. 22 sessions / 33 speakers are generated from the Sessionize export, **not** hand-written; `state-of-cloud-native-in-india` + `sagar-utekar` were added by hand (the platinum sponsor keynote, added 2026-08-28) and the importer does not know about them — a re-import would delete both. The old fictional placeholders are gone.
 - Regenerate with `python3 scripts/import-sessionize.py "<accepted sessions>.xlsx"` (add `--skip-photos` to keep existing images). It **overwrites** every file in `content/sessions` + `content/speakers`, so hand-edits are lost — re-run, then re-apply. Session slugs are pinned per Sessionize id in `SESSION_SLUGS`; name fixups live in `NAME_OVERRIDES`; keynotes in `SESSION_TYPE_OVERRIDES` (Sessionize has no keynote format, so the promotion is recorded in the script, not the markdown, or the next import would drop it).
 - Photos: `node scripts/import-speaker-photos.mjs "<speakers photo export>.zip"` (a folder works too) copies each file **byte for byte** to `public/images/speakers/<slug>-<hash8>.<ext>` — no resize, no re-encode, no crop, no padding (~21.5 MB for 33). The square framing is CSS (`object-cover`), never baked into the file. The 8-char digest of the contents is the cache-buster; the script also rewrites the `photo:` line in each speaker markdown to the file it wrote, so the extension and hash can never drift out of sync. Re-running with the same export is a no-op. Unmatched filenames are a hard error; aliases in `SLUG_ALIASES`. `dhwani-suthar` (400×400) and `rudraksh-karpe` (460×460) are below the 512 minimum — ask for bigger files.
-- Day shape (19 Sept, Asia/Kolkata), matching the schedulelist export: registration 07:30, opening 09:15, keynotes 09:30–10:10, sponsor keynote 10:10, break 10:15, sessions 10:45–12:40, lunch 13:00, sessions 14:00–15:55, high tea 16:00, lightning talks 16:30–17:10, panel 17:25, closing 17:45, ends 18:00. Hall 1 + Hall 2 run in parallel from 10:45. The two 09:30/09:50 Hall 1 talks are the keynotes.
+- Day shape (19 Sept, Asia/Kolkata), matching the schedulelist export: registration 07:30, opening 09:15, keynotes 09:30–10:20 (three, all Hall 1), break 10:20, sessions 10:45–12:40, lunch 13:00, sessions 14:00–15:55, high tea 16:00, lightning talks 16:30–17:10, panel 17:25, closing 17:45, ends 18:00. Hall 1 + Hall 2 run in parallel from 10:45. The 09:30 / 09:50 / 10:10 Hall 1 talks are the keynotes — the 10:10 one is the platinum sponsor keynote, which used to be a `timeline` placeholder and is now a real session, so it must stay in `content/sessions`, not in `event.md`.
 - **Sessions and non-session items come from two different places, by design.** `content/sessions/*.md` owns anything with a speaker; `content/pages/event.md` `timeline` owns everything else (registration, breaks, sponsor slots, ceremonies, reserved placeholders) with `time`, `endTime`, `label`, `icon`, optional `room`, and `glance`. Nothing is inferred from gaps any more, so the site can't advertise a break the printed schedule doesn't have. `lib/schedule.ts` `buildScheduleOverview()` collapses back-to-back sessions into blocks for the homepage card and interleaves the `glance: true` timeline rows; `buildAgenda()` splits the same timeline into venue-wide `rows` and room-specific `roomItems` for `/schedule`. A row with a `room` renders as a hall card in that slot; one without spans the width. `eventDate` is doors-open (07:30) and `eventEndDate` the close (18:00) — those feed the JSON-LD `Event`, while the visible "Event Ends" row is a `timeline` entry. A block whose sessions are *all* `type: Keynote` is labelled "Keynotes", so don't add a hand-written keynote row — that's what the 09:30 block already is.
 - `DayAtGlance` gets `sessions` from the homepage but only when `showSpeakers` is true, so the card can't leak the schedule pre-announcement (it falls back to `PLANNED_TIMELINE`).
 - Tracks: `lib/tracks.ts` is the single source of truth, and `label === schema` — both are the verbatim CFP track names. The `SessionFrontmatter.track` enum in `lib/schema.ts` must stay in lockstep. Nine tracks: Platform Engineering, Application Development + Delivery, Operations + Performance, Observability, Security, Connectivity, AI Inference + Agentic, Cloud Native Experience, Emerging + Advanced.
 - `ScheduleGrid` groups day → parallel time slot (two cards side by side when halls overlap) and colours the theme badge from `TRACKS[].color`. Two filter groups — **Theme** and **Hall** — render as `aria-pressed` chip toggles (not ARIA tabs) via the shared `FilterChips`, each a `role="group"` labelled by its visible caption. Hall names are collected from the sessions and room agenda items, so a third room needs no code change, and the whole group is hidden when there's only one hall. The two filters compose. **One hall holds one item per slot** — a room agenda item is dropped when a session already occupies that hall at that time, so a stale placeholder can never sit next to the talk that replaced it. Row building is pure and lives in a `useMemo`; never mutate the grouped slots (see §5). Session cards take a `speakers` prop (`{ slug, name }[]`) from `/schedule` and print the names under the title (comma-separated, `sr-only` "Speakers:" prefix). The card stays a single link to the session so speaker names are not nested `<a>`s — `/schedule/[slug]` has the clickable speaker list with square photos.
 - `/schedule` shows the venue-wide agenda rows from `buildAgenda().rows`, in the same 12-hour style as the slots. They're positioned against **all** sessions, never the filtered subset, and only render between two visible slots — so a filter can't leave a dangling Lunch at either end. A **theme** filter hides the hall placeholders (they have no theme); a **hall** filter keeps them but narrows them to that hall, so Hall 2 still shows its Women in Tech Gathering and reserved slots.
+- **Keynote speakers are flagged on the speaker, not inferred at render.** `SpeakerFrontmatter.keynote` (`lib/schema.ts`, defaults `false`) drives every highlight: the homepage lead grid, the badge + primary ring on `SpeakerCard`, keynotes-first ordering on `/speakers`, and the "Keynote speaker" pill on `/speakers/[slug]`. The importer sets it from the speaker's own sessions (a session whose resolved type is `Keynote`, i.e. via `SESSION_TYPE_OVERRIDES`), so a re-import can't drop it — currently `atulpriya-sharma`, `hrittik-roy`, `surabhi-mishra`. Hand-set it only for a keynote with no session markdown yet.
 - `level` accepts `All levels` (Sessionize "Any") plus Beginner/Intermediate/Advanced.
 - **There is no workshop track.** `SessionFrontmatter.type` is `Talk | Lightning | Panel | Keynote`, and the importer raises on a workshop-format row (`UNSUPPORTED_FORMATS`) instead of silently filing it as a talk. Session formats advertised on `/cfp` are Lightning (10 min) / Session (25 min) / Panel (25 min). If workshops are ever reinstated, the enum, the importer, the `/cfp` formats + home cards, and the `WhatToExpect` grid all have to move together.
 
@@ -118,13 +119,20 @@ The `timeline` in `event.md` now mirrors the 2026-08-12 schedulelist export row 
 
 `content/speakers/amritansh.md` + `public/images/speakers/amritansh-7ba53882.{jpg → jpeg}` are dirty in the working tree from a session before 2026-08-23 — same content hash, extension only. Unrelated to the venue work; commit it separately.
 
+`content/speakers/sagar-utekar.md`, `content/sessions/state-of-cloud-native-in-india.md`, and `public/images/speakers/sagar-utekar.jpg` are **untracked** — the platinum sponsor keynote, added by hand on 2026-08-28. One thing left to fix: the session **abstract is still the sovereignty talk's copy** (pasted from `sovereignty-control-plane-patterns.md`, while the title is about the state of cloud native in India). The break was moved 10:15 → 10:20 in `event.md` to clear the new 10:10–10:20 slot.
+
 Missing: `public/images/sponsors/suse.svg` (markdown already points at that path).
 
 After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm build`.
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-08-23)
+## 4. Recent changes (2026-08-28)
+
+66. **Platinum sponsor keynote is a session, not a timeline row** — the 10:10 `⭐ Platinum Sponsor Keynote` placeholder is gone from `content/pages/event.md`'s `timeline`; the slot is now Sagar Utekar's 10-minute `state-of-cloud-native-in-india` keynote in `content/sessions`, which is where anything with a speaker belongs (§2). `/schedule` prints it as a `[Keynote]`-prefixed Hall 1 card at 10:10 am, and the homepage glance now collapses 09:30–10:20 into one "Keynotes — Hall 1" block instead of listing a sponsor row (the old row was `glance: false`, so the card's shape is unchanged). No code touched.
+65. **Homepage speakers section is the keynote row and nothing else** — `SpeakersPreview` used to print the first eight speakers in a flat grid. It now heads the section "Keynote speakers" and renders only the `keynote: true` speakers, in the same `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4` grid the rest of the site uses, so the keynotes sit on one row. Everyone else is reached through the "See all N speakers →" link — the intermediate "More speakers (30)" `<details>` fold-out and the per-card talk title were both built and then cut on the organisers' call (2026-08-28), so don't reintroduce either without asking. If nobody is marked a keynote it falls back to the first eight, so the section can't empty out. Grid is `<ul>`/`<li>` (§8.1). `SpeakerCard` paints the keynote badge (`bg-kcd-navy`, white text — `kcd-primary` behind white is 3.6:1 and fails AA at that size) plus a primary ring, so the badge text carries the state and not the tint alone. `/speakers` sorts keynotes to the front and `/speakers/[slug]` gets a "Keynote speaker" pill; both inherit the badge from the same flag. New `SpeakerFrontmatter.keynote` in `lib/schema.ts`, set in the three speakers' markdown **and** derived in `scripts/import-sessionize.py` so a re-import keeps it.
+
+## 4a. Earlier changes (2026-08-23)
 
 64. **Metro row rewritten; travel rows can print a minute range** — `VenueTravelItem` gained `driveMinutesMax` (optional, refined to require `driveMinutes` and be greater than it) and `VenueTravelList` prints "allow about 8–10 min" when it is set. The Tapovan Circle row now says 8–10 min and its note is the organisers' copy: direct connectivity from Sabarmati and Ranip, change at **Old High Court** if coming from Kalupur (was "change at Motera Stadium … Red Line"). The homepage `VenueSection` picks the range up for free — it hides notes, not minutes.
 63. **Food is pure vegetarian, said out loud** — `/venue`'s "On the day" Food card and `content/faq/will-food-be-provided.md` now both state the on-site menu is pure vegetarian. Attendees ask before booking; leaving it implicit made people email.
@@ -134,7 +142,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 59. **Venue photos open in a lightbox** — every venue photo frame moved out of `app/venue/page.tsx` and the homepage `VenueSection` into the new client component `components/site/VenuePhotos.tsx`, and clicking one now opens it enlarged in the existing `Dialog` with caption, Left/Right paging, and an "N of 3" counter. Triggers are anchors to the image file so the photos stay reachable without JS. `VenuePhoto` gained optional `width`/`height`, filled in for all three photos in `event.md`, which is what stops the lightbox letterboxing on narrow viewports.
 58. **Venue confirmed and built out** — `/venue` was a stub: a heading, an empty map slot, and four "will be shared closer to the date" cards. It now carries the real venue. `content/pages/event.md` gained `venueUrl`, `venueDirectionsUrl`, `venueCoordinates`, `venuePhotos[]`, and `venueTravel[]`; `lib/schema.ts` gained `VenuePhoto` / `VenueTravelItem` / `VenueTravelIcon` to match. `/venue` grew a real `<h1>` (it previously had none — `SectionHeader` emits an `<h2>`), a hero photo, a "Getting here" grid, the map, "On the day", a photo gallery, and `Place` JSON-LD with `geo`. The homepage `VenueSection` takes the photo + distances and drops its placeholder cards. The `Event` JSON-LD `location` on `/` upgraded from a bare address string to a `PostalAddress` with `geo`. `content/faq/where-will-event-be-held.md` no longer says the venue will be announced soon.
 
-## 4a. Earlier changes (2026-08-14)
+## 4b. Earlier changes (2026-08-14)
 
 57. **Speaker photos on session detail** — `/schedule/[slug]` speaker cards were name + role only. Each card now has a 96px square photo (`object-cover`, centred) linking through to `/speakers/[slug]`. Initials fill in if a photo is missing. Files stay uncropped; the square is CSS, same as the speakers grid.
 56. **Schedule filter labelled Theme** — `/schedule` chip group was "Track" / "All tracks"; now "Theme" / "All themes", matching the homepage "Talk themes" wording. Page header is "Sessions and themes"; empty-filter copy says theme not track. Internal `track` field names unchanged.
@@ -154,20 +162,20 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 42. **Schedule built from the accepted-sessions export** — 22 sessions + 33 speakers generated by `scripts/import-sessionize.py`; photos by `scripts/import-speaker-photos.mjs`. Placeholder speakers/sessions deleted. `ScheduleGrid` regrouped into parallel time slots.
 41. **Tracks re-cut to the CFP taxonomy** — Old `Platform | DevSecOps | AI/ML | Networking | Beginner` enum replaced by the nine verbatim track names. Copy that enumerated the old five updated in `SchedulePreview`, `DayAtGlance`, `content/pages/cfp.md`, and the `CfpConfigFrontmatter` default.
 
-## 4b. Earlier changes (2026-08-10)
+## 4c. Earlier changes (2026-08-10)
 
 40. **Organiser cleanup reverted** — Restored Neel Shah + Janki Chhatbar (markdown + photos). Grid back to `lg:grid-cols-4` / `previewCount=4`. Prior order values and original OrganiserCard/schema restored.
 
-## 4c. Earlier changes (2026-07-28)
+## 4d. Earlier changes (2026-07-28)
 
 37. **Key Dates header nav + fluid header** — Key Dates → `/#key-dates`. Fluid pill `max-w-[100rem]`. Inline nav only at `xl` (1280px+); iPad Pro / tablets use hamburger + Register so brand/links/CTA never overlap.
 
-## 4d. Earlier changes (2026-07-24)
+## 4e. Earlier changes (2026-07-24)
 
 35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. FAQ markdown under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
 36. **Registration FAQs** — tickets are transferable (`can-i-transfer-my-ticket.md`); GST + PG fees borne by KCD Gujarat (`are-gst-and-pg-fees-included.md`).
 
-## 4e. Earlier changes (2026-07-23)
+## 4f. Earlier changes (2026-07-23)
 
 33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.

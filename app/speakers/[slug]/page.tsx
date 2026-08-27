@@ -79,6 +79,11 @@ export default async function SpeakerDetailPage({ params }: { params: Promise<{ 
             <SocialLinks socials={s.socials || {}} />
           </div>
           <div>
+            {s.keynote && (
+              <p className="mb-3 inline-flex rounded-full bg-kcd-navy px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+                Keynote speaker
+              </p>
+            )}
             <h1 className="font-display text-4xl font-bold text-kcd-ink">{s.name}</h1>
             {(s.role || s.company) && (
               <p className="mt-2 text-lg text-kcd-muted">

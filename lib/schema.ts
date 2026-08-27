@@ -34,6 +34,12 @@ export const SpeakerFrontmatter = RenderFlag.extend({
     .default({}),
   sessions: z.array(z.string()).optional().default([]),
   featured: z.boolean().optional().default(false),
+  /**
+   * Marks a keynote speaker. Set by the Sessionize importer from the speaker's
+   * own sessions, so it stays true after a re-import; hand-set it only for a
+   * keynote that has no session markdown yet.
+   */
+  keynote: z.boolean().optional().default(false),
   order: z.number().optional().default(100),
 });
 export type SpeakerFrontmatter = z.infer<typeof SpeakerFrontmatter>;

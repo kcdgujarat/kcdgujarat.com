@@ -18,6 +18,9 @@ export default async function SpeakersPage() {
   const [speakers, cfp] = await Promise.all([getSpeakers(), getCfpConfig()]);
   if (!cfp.showSpeakers) notFound();
 
+  // Keynotes lead the grid; everyone else keeps the loader's order.
+  const ordered = [...speakers.filter((s) => s.keynote), ...speakers.filter((s) => !s.keynote)];
+
   const startLabel = formatWindowMoment(cfp.startDate, cfp.startTime, 'en-IN', cfp.timezone);
   const endLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
 
@@ -78,11 +81,13 @@ export default async function SpeakersPage() {
       {speakers.length === 0 ? (
         <p className="text-kcd-muted">Speaker line-up will be announced soon. Check back shortly.</p>
       ) : (
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-          {speakers.map((s) => (
-            <SpeakerCard key={s.slug} speaker={s} />
+        <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+          {ordered.map((s) => (
+            <li key={s.slug}>
+              <SpeakerCard speaker={s} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </Container>
   );

@@ -8,6 +8,7 @@ socials:
   linkedin: "https://www.linkedin.com/in/atulpriyasharma/"
   website: "https://socialmaharaj.com"
 sessions: ["cloud-native-cooperative-amul-ai-trust"]
+keynote: true
 ---
 
 Known across the cloud-native community as Maharaj, I make complex technology accessible - from KubeCon stages to community meetups to client boardrooms. What started as a manual QA engineering career over a decade ago has evolved into leading developer relations at scale as a Principal Developer Advocate.

@@ -256,6 +256,7 @@ def build_speakers(rows: list[dict[str, str]]) -> dict[str, dict]:
             "website": field(row.get("Blog", "")),
             "photo": field(row.get("Profile Picture", "")),
             "sessions": [],
+            "keynote": False,
         }
     return speakers
 
@@ -271,17 +272,23 @@ def build_sessions(rows: list[dict[str, str]], speakers: dict[str, dict]) -> lis
         if missing:
             raise SystemExit(f"Session {session_id} references unknown speaker ids: {missing}")
         slugs = [speakers[i]["slug"] for i in ids]
+        session_kind = SESSION_TYPE_OVERRIDES.get(
+            session_id, session_type(row["Session Format"], duration)
+        )
         for speaker_slug, speaker_id in zip(slugs, ids):
             speakers[speaker_id]["sessions"].append(slug)
+            # Keynote status is a property of the session, but the site
+            # highlights the person — derive it here so a re-import can't drop
+            # the flag the markdown carries.
+            if session_kind == "Keynote":
+                speakers[speaker_id]["keynote"] = True
         sessions.append(
             {
                 "slug": slug,
                 "title": clean(row["Title"]),
                 "speakers": slugs,
                 "track": clean(row["Track"]),
-                "type": SESSION_TYPE_OVERRIDES.get(
-                    session_id, session_type(row["Session Format"], duration)
-                ),
+                "type": session_kind,
                 "duration": duration,
                 "start": excel_datetime(row["Scheduled At"]),
                 "room": field(row.get("Room", "")),
@@ -330,6 +337,8 @@ def write_speaker(speaker: dict, photo: str) -> None:
         fields += [(f"  {key}", quote(url)) for key, url in socials]
     if speaker["sessions"]:
         fields.append(("sessions", "[" + ", ".join(quote(s) for s in speaker["sessions"]) + "]"))
+    if speaker["keynote"]:
+        fields.append(("keynote", "true"))
     (SPEAKER_DIR / f"{speaker['slug']}.md").write_text(
         frontmatter(fields, speaker["bio"]), encoding="utf8"
     )
