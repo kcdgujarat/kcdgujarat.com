@@ -41,7 +41,7 @@ export function SpeakersPreview({ speakers }: { speakers: Speaker[] }) {
               href="/speakers"
               className="text-sm font-semibold text-kcd-primary underline-offset-4 hover:underline"
             >
-              See all {speakers.length} speakers →
+              See all speakers →
             </Link>
           </div>
         )}
