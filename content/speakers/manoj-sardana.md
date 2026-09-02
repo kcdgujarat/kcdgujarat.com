@@ -2,7 +2,7 @@
 name: "Manoj Sardana"
 role: "Director Of Information System and Operations"
 company: "HCLSoftware"
-photo: "/images/speakers/placeholder.svg"
+photo: "/images/speakers/manoj-sardana.jpeg"
 socials:
   linkedin: "https://www.linkedin.com/in/manojksardana/"
 sessions: ["kem-cho-otel-collectors"]
