@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Inter, Noto_Sans_Gujarati } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
+import { PromoBanner } from '@/components/site/PromoBanner';
 import { getCfpConfig, getRegistrationConfig, getEventConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import './globals.css';
@@ -63,6 +64,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
+        {!comingSoon && registrationOpen && registration.url && (
+          <PromoBanner registrationUrl={registration.url} />
+        )}
         <Header
           pathname={pathname}
           registrationOpen={registrationOpen}
