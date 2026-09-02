@@ -73,7 +73,7 @@ export function Header({
   // Inline nav needs ~1280px+ (xl). iPad Pro portrait is 1024px — hamburger
   // there so brand / links / CTA never overlap.
   return (
-    <header className="sticky top-0 z-40">
+    <header className="sticky z-40" style={{ top: 'var(--promo-banner-height, 0px)' }}>
       <div className="mx-auto w-full max-w-[100rem] px-3 py-3 sm:px-5 lg:px-8">
         <div
           className={cn(
