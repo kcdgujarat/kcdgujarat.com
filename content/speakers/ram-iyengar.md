@@ -2,7 +2,7 @@
 name: "Ram Iyengar"
 role: "Open Source Evangelist"
 company: "Linux Foundation"
-photo: "/images/speakers/ram-iyengar-5a56d42b.jpg"
+photo: "/images/speakers/ram-iyengar-afbbb90e.jpg"
 socials:
   twitter: "https://twitter.com/ramiyengar"
   linkedin: "https://linkedin.com/in/ram-iyengar"

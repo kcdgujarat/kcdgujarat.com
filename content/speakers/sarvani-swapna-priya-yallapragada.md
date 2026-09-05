@@ -2,7 +2,7 @@
 name: "Sarvani Swapna Priya Yallapragada"
 role: "Developer Advocate"
 company: "Improving"
-photo: "/images/speakers/sarvani-swapna-priya-yallapragada-e67a11e5.jpg"
+photo: "/images/speakers/sarvani-swapna-priya-yallapragada-11c2e371.jpg"
 socials:
   twitter: "https://x.com/sarvani142"
   linkedin: "https://linkedin.com/in/ysspriya"

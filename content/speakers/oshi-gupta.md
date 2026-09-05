@@ -2,7 +2,7 @@
 name: "Oshi Gupta"
 role: "Site Reliability Engineer"
 company: "Improving Pune"
-photo: "/images/speakers/oshi-gupta-5db98a25.jpg"
+photo: "/images/speakers/oshi-gupta-421d087b.jpg"
 socials:
   twitter: "https://twitter.com/oshi1136"
   linkedin: "https://www.linkedin.com/in/oshi-gupta-512716178/"
