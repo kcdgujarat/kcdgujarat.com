@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-08-28 (venue hero uncropped; countdown drops weeks)_
+_Last updated: 2026-09-05 (partner grids fold behind Show more)_
 
 ## 1. Goal
 
@@ -128,7 +128,12 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-08-28)
+## 4. Recent changes (2026-09-05)
+
+71. **Three community partners hidden via `render: false`** — `content/partners/gdg-gandhinagar.md`, `gdg-cloud-gandhinagar.md`, and `open-source-weekend.md` carry `render: false`, so they stay in Git but drop out of `#partners`. No code was written for this: `RenderFlag` (`lib/schema.ts`) is already on `PartnerFrontmatter` and `getPartners` already filters on `isPublished` (`lib/content.ts`). A partner-only `visible:` flag was considered and rejected (organisers' call, 2026-09-05) — it would have given partner files two fields meaning the same thing. To hide or restore a partner, flip `render` in its markdown; nothing else moves.
+70. **Partner grids fold behind a "Show more" button** — the Cloud Native Community Partners group (13 entries) and Other Community Partners group (21) were printing every card, so `#partners` ran very long. The card markup moved out of `components/sections/CommunityPartners.tsx` into its own `components/sections/CommunityPartnerCard.tsx` (unchanged rendering) so both a server and a client parent can import it, and the new client component `components/sections/PartnerGrid.tsx` shows the first `previewCount` (default 8, two rows at `lg`) with a `Show more` / `Show less` toggle underneath (no count in the label — organisers do not want partner counts on the page, 2026-09-05). It is a copy of the `OrganisersGrid` pattern — same `Button variant="outline" size="lg"`, same `aria-expanded`, same `<ul>`/`<li>` grid (§8.1) — so the two folds behave identically. `CommunityPartners` stays a server component and still renders media/venue groups inline (2 and 0 entries, nothing to fold), now as `<ul>`/`<li>` too. Like `OrganisersGrid`, the fold is JS-gated: without JS only the first 8 render.
+
+## 4a. Earlier changes (2026-08-28)
 
 69. **Venue hero photo is uncropped** — `VenueHeroPhoto` in `components/site/VenuePhotos.tsx` dropped the fixed `h-64 / sm:h-80 / lg:h-[26rem]` frame + `object-cover`. When the photo declares `width`/`height` the frame gets `style={{ aspectRatio: 'W / H' }}` and the image `object-contain`, so the box *is* the photo's shape — whole building, no crop, no letterbox bars. Photos without dimensions keep the fixed-height frame (contain, so they letterbox instead of cropping). The exterior shot is 1600×1200 (4:3, verified against the file), so the hero is now ~3/4 as tall as it is wide — noticeably taller than the old band on both `/venue` and the home `#venue` section, which share this component. `VenuePhotoGrid` still crops with `object-cover` so the two-up tiles stay even. `VenuePhoto` doc comment in `lib/schema.ts` updated to match.
 68. **Countdown dropped the weeks unit** — `components/sections/Countdown.tsx` counts `Days / Hours / Minutes / Seconds` only; days is now the coarsest unit and keeps counting past 7. Styling is unchanged: the circular `bg-white/70` badges with borders alternating `kcd-primary/60` / `kcd-orange/60` by index. A four-card white/terracotta redesign was built and then reverted on the organisers' call (2026-08-28) — don't reintroduce it without asking. Value-free first paint (`–` placeholders, real numbers on mount) and the "Happening now" pill are untouched.
@@ -136,7 +141,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 66. **Platinum sponsor keynote is a session, not a timeline row** — the 10:10 `⭐ Platinum Sponsor Keynote` placeholder is gone from `content/pages/event.md`'s `timeline`; the slot is now Sagar Utekar's 10-minute `state-of-cloud-native-in-india` keynote in `content/sessions`, which is where anything with a speaker belongs (§2). `/schedule` prints it as a `[Keynote]`-prefixed Hall 1 card at 10:10 am, and the homepage glance now collapses 09:30–10:20 into one "Keynotes — Hall 1" block instead of listing a sponsor row (the old row was `glance: false`, so the card's shape is unchanged). No code touched.
 65. **Homepage speakers section is the keynote row and nothing else** — `SpeakersPreview` used to print the first eight speakers in a flat grid. It now heads the section "Keynote speakers" and renders only the `keynote: true` speakers, in the same `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4` grid the rest of the site uses, so the keynotes sit on one row. Everyone else is reached through the "See all speakers →" link (no count in the label — organisers do not want the roster size on the homepage, 2026-08-31) — the intermediate "More speakers (30)" `<details>` fold-out and the per-card talk title were both built and then cut on the organisers' call (2026-08-28), so don't reintroduce either without asking. If nobody is marked a keynote it falls back to the first eight, so the section can't empty out. Grid is `<ul>`/`<li>` (§8.1). `SpeakerCard` paints the keynote badge (`bg-kcd-navy`, white text — `kcd-primary` behind white is 3.6:1 and fails AA at that size) plus a primary ring, so the badge text carries the state and not the tint alone. `/speakers` sorts keynotes to the front and `/speakers/[slug]` gets a "Keynote speaker" pill; both inherit the badge from the same flag. New `SpeakerFrontmatter.keynote` in `lib/schema.ts`, set in the three speakers' markdown **and** derived in `scripts/import-sessionize.py` so a re-import keeps it.
 
-## 4a. Earlier changes (2026-08-23)
+## 4b. Earlier changes (2026-08-23)
 
 64. **Metro row rewritten; travel rows can print a minute range** — `VenueTravelItem` gained `driveMinutesMax` (optional, refined to require `driveMinutes` and be greater than it) and `VenueTravelList` prints "allow about 8–10 min" when it is set. The Tapovan Circle row now says 8–10 min and its note is the organisers' copy: direct connectivity from Sabarmati and Ranip, change at **Old High Court** if coming from Kalupur (was "change at Motera Stadium … Red Line"). The homepage `VenueSection` picks the range up for free — it hides notes, not minutes.
 63. **Food is pure vegetarian, said out loud** — `/venue`'s "On the day" Food card and `content/faq/will-food-be-provided.md` now both state the on-site menu is pure vegetarian. Attendees ask before booking; leaving it implicit made people email.
@@ -146,7 +151,7 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 59. **Venue photos open in a lightbox** — every venue photo frame moved out of `app/venue/page.tsx` and the homepage `VenueSection` into the new client component `components/site/VenuePhotos.tsx`, and clicking one now opens it enlarged in the existing `Dialog` with caption, Left/Right paging, and an "N of 3" counter. Triggers are anchors to the image file so the photos stay reachable without JS. `VenuePhoto` gained optional `width`/`height`, filled in for all three photos in `event.md`, which is what stops the lightbox letterboxing on narrow viewports.
 58. **Venue confirmed and built out** — `/venue` was a stub: a heading, an empty map slot, and four "will be shared closer to the date" cards. It now carries the real venue. `content/pages/event.md` gained `venueUrl`, `venueDirectionsUrl`, `venueCoordinates`, `venuePhotos[]`, and `venueTravel[]`; `lib/schema.ts` gained `VenuePhoto` / `VenueTravelItem` / `VenueTravelIcon` to match. `/venue` grew a real `<h1>` (it previously had none — `SectionHeader` emits an `<h2>`), a hero photo, a "Getting here" grid, the map, "On the day", a photo gallery, and `Place` JSON-LD with `geo`. The homepage `VenueSection` takes the photo + distances and drops its placeholder cards. The `Event` JSON-LD `location` on `/` upgraded from a bare address string to a `PostalAddress` with `geo`. `content/faq/where-will-event-be-held.md` no longer says the venue will be announced soon.
 
-## 4b. Earlier changes (2026-08-14)
+## 4c. Earlier changes (2026-08-14)
 
 57. **Speaker photos on session detail** — `/schedule/[slug]` speaker cards were name + role only. Each card now has a 96px square photo (`object-cover`, centred) linking through to `/speakers/[slug]`. Initials fill in if a photo is missing. Files stay uncropped; the square is CSS, same as the speakers grid.
 56. **Schedule filter labelled Theme** — `/schedule` chip group was "Track" / "All tracks"; now "Theme" / "All themes", matching the homepage "Talk themes" wording. Page header is "Sessions and themes"; empty-filter copy says theme not track. Internal `track` field names unchanged.
@@ -166,20 +171,20 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 42. **Schedule built from the accepted-sessions export** — 22 sessions + 33 speakers generated by `scripts/import-sessionize.py`; photos by `scripts/import-speaker-photos.mjs`. Placeholder speakers/sessions deleted. `ScheduleGrid` regrouped into parallel time slots.
 41. **Tracks re-cut to the CFP taxonomy** — Old `Platform | DevSecOps | AI/ML | Networking | Beginner` enum replaced by the nine verbatim track names. Copy that enumerated the old five updated in `SchedulePreview`, `DayAtGlance`, `content/pages/cfp.md`, and the `CfpConfigFrontmatter` default.
 
-## 4c. Earlier changes (2026-08-10)
+## 4d. Earlier changes (2026-08-10)
 
 40. **Organiser cleanup reverted** — Restored Neel Shah + Janki Chhatbar (markdown + photos). Grid back to `lg:grid-cols-4` / `previewCount=4`. Prior order values and original OrganiserCard/schema restored.
 
-## 4d. Earlier changes (2026-07-28)
+## 4e. Earlier changes (2026-07-28)
 
 37. **Key Dates header nav + fluid header** — Key Dates → `/#key-dates`. Fluid pill `max-w-[100rem]`. Inline nav only at `xl` (1280px+); iPad Pro / tablets use hamburger + Register so brand/links/CTA never overlap.
 
-## 4e. Earlier changes (2026-07-24)
+## 4f. Earlier changes (2026-07-24)
 
 35. **FAQ page rebuilt with sections** — `FaqFrontmatter` gained `section` (string, default `General`) + `featured` (bool). `getFaqSections()` in `lib/content.ts` groups FAQs by section; section order follows the lowest `order` in each group. `/faq` (`app/faq/page.tsx`) now renders one `<h2>` card per section under a page `<h1>`. Homepage `/#faq` shows only `featured: true` FAQs (falls back to all if none) — see `homeFaqs` in `app/page.tsx`. FAQ markdown under `content/faq/` (General/Registration/CFP/Sponsors/Community/Event/Contact); General 4 are `featured`. Old `what-is-kcd.md` + `who-should-attend.md` samples removed.
 36. **Registration FAQs** — tickets are transferable (`can-i-transfer-my-ticket.md`); GST + PG fees borne by KCD Gujarat (`are-gst-and-pg-fees-included.md`).
 
-## 4f. Earlier changes (2026-07-23)
+## 4g. Earlier changes (2026-07-23)
 
 33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
