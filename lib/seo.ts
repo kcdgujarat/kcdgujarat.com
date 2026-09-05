@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { EVENT_NAME } from './brand';
 import { siteUrl } from './utils';
 
-const DEFAULT_DESCRIPTION = `${EVENT_NAME} — a CNCF-backed, community-driven conference for the cloud-native community in Gujarat, India.`;
+const SITE_NAME = 'KCD Gujarat 2026';
+const DEFAULT_DESCRIPTION =
+  'Kubernetes Community Day Gujarat 2026 — a CNCF-backed, community-driven conference for the cloud-native community in Gujarat, India.';
 
 export function buildMetadata(opts: {
   title?: string;
@@ -10,14 +11,12 @@ export function buildMetadata(opts: {
   path?: string;
   image?: string;
 }): Metadata {
-  const title = opts.title ? `${opts.title} — ${EVENT_NAME}` : EVENT_NAME;
+  const title = opts.title ? `${opts.title} — ${SITE_NAME}` : `${SITE_NAME} — Kubernetes Community Day, Gujarat`;
   const description = opts.description || DEFAULT_DESCRIPTION;
   const url = siteUrl(opts.path || '/');
   const ogParams = new URLSearchParams({
-    title: opts.title || EVENT_NAME,
-    subtitle: opts.description
-      ? opts.description.slice(0, 80)
-      : 'A CNCF-backed community conference in Gujarat, India',
+    title: opts.title || 'KCD Gujarat 2026',
+    subtitle: opts.description ? opts.description.slice(0, 80) : 'Kubernetes Community Day, Gujarat',
   });
   const image = opts.image || siteUrl(`/api/og?${ogParams.toString()}`);
   return {
@@ -27,7 +26,7 @@ export function buildMetadata(opts: {
     alternates: { canonical: url },
     openGraph: {
       type: 'website',
-      siteName: EVENT_NAME,
+      siteName: SITE_NAME,
       title,
       description,
       url,

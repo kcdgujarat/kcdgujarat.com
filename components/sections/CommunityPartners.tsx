@@ -3,7 +3,6 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { CommunityPartnerCard } from '@/components/sections/CommunityPartnerCard';
 import { PartnerGrid } from '@/components/sections/PartnerGrid';
 import type { Partner } from '@/lib/content';
-import { EVENT_NAME } from '@/lib/brand';
 
 interface Props {
   partners: Partner[];
@@ -17,7 +16,7 @@ const GROUPS: { type: PartnerType; eyebrow: string; title: string; description?:
     eyebrow: 'Cloud Native Community Partners',
     title: 'Powered by the cloud-native community',
     description:
-      `CNCF community groups across India rallying the cloud-native ecosystem behind ${EVENT_NAME}.`,
+      'CNCF community groups across India rallying the cloud-native ecosystem behind KCD Gujarat 2026.',
   },
   {
     type: 'community',
@@ -36,7 +35,7 @@ const GROUPS: { type: PartnerType; eyebrow: string; title: string; description?:
     type: 'venue',
     eyebrow: 'Venue Partner',
     title: 'Where we gather',
-    description: `Hosting ${EVENT_NAME}.`,
+    description: 'Hosting KCD Gujarat 2026.',
   },
 ];
 

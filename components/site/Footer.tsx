@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Container } from './Container';
 import { SocialLinks } from './SocialLinks';
 import type { SiteSocialLinks } from '@/lib/site-social';
-import { EVENT_NAME } from '@/lib/brand';
 
 interface FooterProps {
   socials?: SiteSocialLinks;
@@ -46,15 +45,15 @@ export function Footer({
           <div className="flex items-center gap-3 font-display text-lg font-semibold">
             <Image
               src="/images/KCDGujaratLogoSmall500x500.png"
-              alt={EVENT_NAME}
+              alt="KCD Gujarat 2026"
               width={48}
               height={48}
               className="h-12 w-12 shrink-0 object-contain"
             />
-            {EVENT_NAME}
+            KCD Gujarat 2026
           </div>
           <p className="mt-3 text-sm text-white/70">
-            A community-driven, CNCF-backed conference for the cloud-native community in Gujarat, India.
+            A community-driven Kubernetes Community Day for the cloud-native community in Gujarat, India.
           </p>
           <SocialLinks links={socials} variant="footer" className="mt-5 justify-start" />
           {cfpOpen && (
@@ -76,7 +75,7 @@ export function Footer({
       </Container>
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-sm text-white/60 md:flex-row">
-          <p>© {new Date().getFullYear()} {EVENT_NAME}. KCD is a CNCF program.</p>
+          <p>© {new Date().getFullYear()} KCD Gujarat. KCD is a CNCF program.</p>
           <SocialLinks links={socials} variant="footer" />
         </Container>
       </div>

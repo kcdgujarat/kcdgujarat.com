@@ -5,17 +5,16 @@ import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card
 import { ButtonLink } from '@/components/ui/button';
 import { buildMetadata } from '@/lib/seo';
 import { getSponsorshipConfig, getEventConfig } from '@/lib/content';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Sponsorship',
   path: '/sponsorship',
-  description: `Sponsor ${EVENT_NAME} — why sponsor, who you reach, tiers, benefits, and how to get in touch.`,
+  description: 'Sponsor KCD Gujarat 2026 — why sponsor, who you reach, tiers, benefits, and how to get in touch.',
 });
 
 const DEFAULT_INTRO =
-  `${EVENT_NAME} brings the cloud native community of Gujarat and western India together for a community-driven, CNCF-backed day of talks and connection. Sponsoring puts your brand in front of a highly engaged, technical audience — and directly fuels the growth of open source and cloud native across the region.`;
+  'KCD Gujarat 2026 brings the cloud native community of Gujarat and western India together for a community-driven, CNCF-backed day of talks and connection. Sponsoring puts your brand in front of a highly engaged, technical audience — and directly fuels the growth of open source and cloud native across the region.';
 
 const FALLBACK_TIERS = [
   { name: 'Platinum', slug: 'platinum', price: 'priority placement', group: 'package', perks: ['Stage presence', 'Premium booth', 'Logo on stage backdrop'] },
@@ -81,7 +80,7 @@ export default async function SponsorshipPage() {
 
   return (
     <Container className="py-16">
-      <SectionHeader eyebrow="Sponsorship" title={`Partner with ${EVENT_NAME}`} description={intro} />
+      <SectionHeader eyebrow="Sponsorship" title="Partner with KCD Gujarat 2026" description={intro} />
 
       {/* Why sponsor */}
       {reasons.length > 0 && (

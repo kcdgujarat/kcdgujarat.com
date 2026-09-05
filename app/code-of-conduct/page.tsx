@@ -1,12 +1,11 @@
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { buildMetadata } from '@/lib/seo';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const metadata = buildMetadata({
   title: 'Code of Conduct',
   path: '/code-of-conduct',
-  description: `Our community standards for ${EVENT_NAME}.`,
+  description: 'Our community standards for KCD Gujarat 2026.',
 });
 
 export default function CodeOfConductPage() {
@@ -15,7 +14,7 @@ export default function CodeOfConductPage() {
       <SectionHeader eyebrow="Community" title="Code of Conduct" />
       <div className="prose prose-sm max-w-none text-kcd-ink">
         <p>
-          {EVENT_NAME} follows the{' '}
+          KCD Gujarat 2026 follows the{' '}
           <a href="https://github.com/cncf/foundation/blob/main/code-of-conduct.md" target="_blank" rel="noreferrer">
             CNCF Community Code of Conduct
           </a>
@@ -35,7 +34,7 @@ export default function CodeOfConductPage() {
         <h3>Consequences</h3>
         <p>
           Violations may result in a warning, removal from sessions or the venue, and being banned from future
-          editions of this event.
+          editions of KCD Gujarat.
         </p>
       </div>
     </Container>

@@ -5,7 +5,7 @@ featured: true
 order: 40
 ---
 
-Kubernetes Community Day (KCD) Gujarat 2026 is designed for:
+KCD Gujarat is designed for:
 
 - DevOps Engineers
 - Platform Engineers

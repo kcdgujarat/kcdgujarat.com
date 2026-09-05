@@ -6,7 +6,6 @@ import { ButtonLink } from '@/components/ui/button';
 import { getCfpConfig, getSocialLinks } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatWindowMoment } from '@/lib/utils';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 
@@ -20,7 +19,7 @@ export async function generateMetadata() {
       title: 'Call for Proposals — Opens Soon',
       path: '/cfp',
       description: startLabel
-        ? `The ${EVENT_NAME} CFP opens ${startLabel} and closes ${endLabel}.`
+        ? `The KCD Gujarat 2026 CFP opens ${startLabel} and closes ${endLabel}.`
         : cfp.description,
     });
   }
@@ -30,7 +29,7 @@ export async function generateMetadata() {
       title: 'Call for Proposals — Closed',
       path: '/cfp',
       description: endLabel
-        ? `Submissions for ${EVENT_NAME} closed ${endLabel}.`
+        ? `Submissions for KCD Gujarat 2026 closed ${endLabel}.`
         : cfp.description,
     });
   }

@@ -6,13 +6,12 @@ import { SpeakerCard } from '@/components/site/SpeakerCard';
 import { getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate, formatWindowMoment } from '@/lib/utils';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Speakers',
   path: '/speakers',
-  description: `Meet the speakers taking the stage at ${EVENT_NAME}.`,
+  description: 'Meet the speakers taking the stage at KCD Gujarat 2026.',
 });
 
 export default async function SpeakersPage() {
@@ -34,7 +33,7 @@ export default async function SpeakersPage() {
           description="The Call for Proposals is currently open. We will announce the speaker line-up once it closes and the selection is locked."
         />
         <div className="rounded-3xl border border-dashed border-kcd-border bg-white p-8 text-center shadow-card md:p-10">
-          <p className="font-display text-xl font-semibold text-kcd-ink">Want to speak at {EVENT_NAME}?</p>
+          <p className="font-display text-xl font-semibold text-kcd-ink">Want to speak at KCD Gujarat 2026?</p>
           <p className="mx-auto mt-2 max-w-2xl text-sm text-kcd-ink/70">
             Submit your talk proposal{endLabel ? ` before ${endLabel}.` : ' while the CFP is open.'}
           </p>

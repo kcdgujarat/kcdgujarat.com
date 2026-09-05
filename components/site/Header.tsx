@@ -7,7 +7,6 @@ import { Menu, X } from 'lucide-react';
 import { Container } from './Container';
 import { ButtonLink } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { EVENT_NAME } from '@/lib/brand';
 
 type NavItem = {
   href: string;
@@ -84,14 +83,12 @@ export function Header({
         >
           <Link
             href="/"
-            className="relative z-10 flex shrink-0 items-center gap-2 font-display text-base font-semibold text-kcd-ink"
+            className="relative z-10 flex shrink-0 items-center gap-2 whitespace-nowrap font-display text-base font-semibold text-kcd-ink sm:text-lg"
           >
             <span className="relative inline-block h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white ring-2 ring-white/40" aria-hidden>
               <Image src="/images/KCDGujaratLogoSmall500x500.png" alt="" fill sizes="36px" className="object-contain p-0.5" />
             </span>
-            <span className="hidden max-w-[13.5rem] text-sm leading-[1.15] sm:inline-block">
-              {EVENT_NAME}
-            </span>
+            <span className="hidden sm:inline">KCD Gujarat 2026</span>
           </Link>
 
           {!comingSoon && (

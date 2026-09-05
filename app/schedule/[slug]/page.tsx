@@ -7,7 +7,6 @@ import { getSessions, getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { TRACK_BY_SCHEMA } from '@/lib/tracks';
 import { cn, formatTime } from '@/lib/utils';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!s) return buildMetadata({ title: 'Session not found' });
   return buildMetadata({
     title: s.title,
-    description: s.abstract?.slice(0, 160) || `${s.title} — ${EVENT_NAME} session.`,
+    description: s.abstract?.slice(0, 160) || `${s.title} — KCD Gujarat 2026 session.`,
     path: `/schedule/${s.slug}`,
   });
 }

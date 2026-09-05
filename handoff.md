@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-09-05 (event name unified to one spelling, guarded by a check)_
+_Last updated: 2026-09-05 (8 replacement speaker photos re-imported + hashed)_
 
 ## 1. Goal
 
@@ -130,53 +130,6 @@ Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `
 
 ## 4. Recent changes (2026-09-05)
 
-78. **The event has one name now: "Kubernetes Community Day (KCD) Gujarat 2026"** — it was being written five
-    ways at once (`KCD Gujarat 2026`, `KCD Gujarat`, `Kubernetes Community Day, Gujarat`, `Kubernetes Community
-    Day Gujarat 2026`, `Kubernetes Community Days (KCD) Gujarat`), including two variants inside `lib/seo.ts`
-    alone, so the `<title>`, the OG card and the H1 disagreed on the same page. Every user-visible string —
-    copy, metadata, JSON-LD, OG cards, `alt` text, `sr-only` labels, FAQ questions — now reads the canonical
-    form, sourced from `EVENT_NAME` in the new **`lib/brand.ts`** (dependency-free, so the edge-runtime
-    `/api/og` route can import it). 28 files.
-
-    **`scripts/check-brand.mjs` is the guard** — wired into `pnpm content:validate`, so it gates every PR, and
-    available on its own as `pnpm brand:check`. It scans `app/ components/ lib/ content/ messages/` for
-    name-shaped strings and fails on anything that is not the canonical spelling. Two things it does *not*
-    flag, deliberately: other Kubernetes Community Days in speaker bios and abstracts (`KCD Bengaluru`,
-    `KCD Pune`, `KCDs`) and the plural `Kubernetes Community Days` naming the CNCF programme — both are
-    correct as written, and rewriting them would be a factual error. Handles, hashtags, asset filenames and
-    the domain (`@KCDGujarat`, `KCDGujaratLogo2000x2000.png`, `kcdgujarat.com`) are identifiers, not prose,
-    and are allowlisted. Two subtleties cost a pass each: the match regex needs bounding on **both** ends or
-    it swallows the words after a correct name and reports it as a variant of itself, and the allowlist is
-    tested against a 40-char forward window rather than the whole line — a line-wide test lets
-    `contact@kcdgujarat.com` mask a real variant sitting beside it. Verified by planting a variant and
-    watching it fail.
-
-    **Two places needed layout work, because the name went from 16 to 43 characters.** The header wordmark was
-    `whitespace-nowrap` at `text-lg`, which at 43 characters is ~395px against a ~430px budget at `xl` — it
-    would have shoved the nav out of the pill. It now wraps to two tight lines (`text-sm leading-[1.15]`,
-    `max-w-[13.5rem]`) that stack to ~34px, matching the 36px logo, so the pill keeps its height and the
-    global `scroll-margin-top` offset still lines up. The hero `<h1>` runs to three lines and the `2026` pill
-    drops to its own line on mobile — checked and fine.
-
-    **Copy that referred to the event by a near-miss descriptor was rewritten rather than renamed**, to avoid
-    saying the name twice in one breath: the OG card footer and the coming-soon eyebrow both read "CNCF
-    Kubernetes Community Day" (now "A CNCF-backed community conference"), and the footer/coming-soon blurbs
-    said "a community-driven Kubernetes Community Day for the cloud-native community in …" (now "conference").
-    One semantic fix: `/code-of-conduct` said "banned from future editions of KCD Gujarat", meaning the series
-    — substituting the 2026 name would have contradicted itself, so it reads "future editions of this event".
-
-    Verified against a running production build: canonical name in the `<title>` of all 10 routes, in the
-    rendered `/`, `/faq`, `/code-of-conduct` HTML, and in the footer copyright; **zero horizontal overflow at
-    320 / 390 / 430px on `/`, `/faq`, `/speakers`, `/sponsorship`, `/code-of-conduct`** (measured through CDP
-    device emulation — note that a plain `chrome --headless --window-size` screenshot clips the page at these
-    widths and *looks* like an overflow bug on every route, including untouched ones; don't trust it, measure
-    `scrollWidth`). `brand:check`, `content:validate`, `typecheck`, `lint`, `build` all green.
-
-    **Open:** `/cfp` (73 chars), `/badge` (70) and `/code-of-conduct` (61) now exceed the ~60-character mark
-    Google truncates titles at, so the brand tail is what gets cut in search results. That is the accepted
-    cost of the single-spelling rule — shortening the name to fit is exactly what this change removed. If it
-    matters, shorten the *page* half (`Call for Proposals — Closed` → `CFP — Closed`), never the brand half.
-
 77. **Eight replacement speaker photos re-imported so the filenames carry a content hash again** — new photos for `dhwani-suthar`, `ishan-jain`, `oshi-gupta`, `ram-iyengar`, `sarvani-swapna-priya-yallapragada`, `shivam-nandy`, `sonali-srivastava`, and `vignesh-muthu-s` had been dropped straight into `public/images/speakers/` under **bare slug names** (`dhwani-suthar.jpg`) with the `photo:` lines hand-edited to match, which drops the `sha256(bytes).slice(0,8)` cache-buster §6 requires — exactly the failure in §5 ("Replacing an image under the same filename"). Here it would have bitten harder than usual, because six of the eight *also changed aspect* (`dhwani-suthar` 400×400 → 1024×949, and it swapped `.png` → `.jpg`, so the markdown would have pointed at a dead `.png` had the extension not been hand-fixed too). Re-imported by copying the eight into a staging dir and running `scripts/import-speaker-photos.mjs` over it — that is the supported path and it rewrites the `photo:` lines itself, so extension and hash can't drift. `vignesh-muthu.jpg` had to be staged as `vignesh-muthu-s.jpg` first: `slugify` maps the bare stem to `vignesh-muthu`, which matches no markdown and is a hard error; its stale bare copy was **not** caught by `removeStale` (that regex is anchored to the slug) and was deleted by hand. Files are byte-identical to what the speakers sent — nothing re-encoded. Verified against a running production build: all 8 new hashed URLs in the served `/speakers` HTML **and** on each `/speakers/[slug]`, zero references to the old hashes, all 8 served 200 `image/webp` through `/_next/image`, every `photo:` in `content/speakers` resolves to a file on disk. `content:validate`, `typecheck`, `lint`, `build` all green.
 
     **Heads-up on `vignesh-muthu-s-73402ae2.jpg`: 6800×8192, 25 MB** — by far the largest file in `public/` (the next is ~3.7 MB) and it alone is ~80% of this change's 32 MB. It optimizes fine locally (~200 ms cold) and §6 says ship the file as supplied, so it was left alone, but it is worth asking the speaker for a sane-sized original before this lands in Git history for good.
@@ -255,16 +208,6 @@ Headless Chrome cannot screenshot the app itself (`--screenshot` against `localh
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
 
 ## 5. Failed attempts
-
-- **Whole-line allowlisting in `scripts/check-brand.mjs`** — checking whether *any* allowed pattern appears on
-  the line containing a suspected variant. It silences real variants: `content/faq/still-have-a-question.md`
-  carries both the event name and `contact@kcdgujarat.com`, and the domain allowlist entry would have excused
-  anything else on that line. Test a bounded forward window from the match instead.
-- **`chrome --headless --window-size=390,860 --screenshot` as a mobile check** — every route comes back
-  clipped at the right edge (header pill, headings, the hero's `2026` badge), which reads as a responsive
-  bug. It is not: the layout viewport does not follow `--window-size`, so pages render wide and get cropped.
-  Control pages that were never touched clip identically. Drive CDP `Emulation.setDeviceMetricsOverride` and
-  compare `documentElement.scrollWidth` to `clientWidth`.
 
 - **Postgres / Payload** — removed entirely; was optional fallback, caused empty settings.
 - **Social icons in `event.md`** — moved to dedicated `social.md`.

@@ -8,7 +8,6 @@ import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
 import { Globe } from 'lucide-react';
 import { Github, Linkedin, Twitter } from '@/components/ui/social-icons';
-import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!s) return buildMetadata({ title: 'Speaker not found' });
   return buildMetadata({
     title: s.name,
-    description: `${s.name}${s.role ? `, ${s.role}` : ''}${s.company ? ` at ${s.company}` : ''} — speaker at ${EVENT_NAME}.`,
+    description: `${s.name}${s.role ? `, ${s.role}` : ''}${s.company ? ` at ${s.company}` : ''} — speaker at KCD Gujarat 2026.`,
     path: `/speakers/${s.slug}`,
     image: s.photoUrl,
   });

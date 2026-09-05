@@ -2,7 +2,6 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { OrganisersGrid } from '@/components/sections/OrganisersGrid';
 import type { TeamMember } from '@/lib/content';
-import { EVENT_NAME } from '@/lib/brand';
 
 interface Props {
   team: TeamMember[];
@@ -22,7 +21,7 @@ export function TeamPreview({ team }: Props) {
         <SectionHeader
           eyebrow="Organisers"
           title="Meet the organisers"
-          description={`The passionate people behind ${EVENT_NAME}, working together to bring you an exceptional cloud-native experience.`}
+          description="The passionate people behind KCD Gujarat 2026, working together to bring you an exceptional cloud-native experience."
           align="center"
         />
 

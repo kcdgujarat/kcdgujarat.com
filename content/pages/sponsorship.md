@@ -9,7 +9,7 @@ prospectus: "prospectus.pdf"
 
 # Lead-in pitch shown under the page title.
 intro: >-
-  Kubernetes Community Day (KCD) Gujarat 2026 brings the cloud native community of Gujarat and western
+  KCD Gujarat 2026 brings the cloud native community of Gujarat and western
   India together for a community-driven, CNCF-backed day of talks and
   connection. Sponsoring puts your brand in front of a highly engaged,
   technical audience — and directly fuels the growth of open source and cloud
@@ -114,7 +114,7 @@ tiers:
     price: "US$ 800 (~₹75K*)"
     group: "additional"
     perks:
-      - "Recognition as the 'Diversity Sponsor' of Kubernetes Community Day (KCD) Gujarat 2026"
+      - "Recognition as the 'Diversity Sponsor' of KCD Gujarat"
       - "Branding across diversity-focused communications and initiatives"
       - "Dedicated social media mention highlighting your support for inclusivity"
       - "Logo placement on the event website"
