@@ -77,7 +77,7 @@ export function HeroSection({
                 headline
               ) : (
                 <>
-                  Kubernetes Community Days{' '}
+                  Kubernetes Community Day{' '}
                   <span className="text-kcd-orange">Gujarat</span>{' '}
                   <span className="ml-1 inline-flex items-center rounded-full border-2 border-kcd-ink px-4 py-1 align-middle text-2xl font-bold sm:text-3xl">
                     2026
