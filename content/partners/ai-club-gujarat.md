@@ -2,5 +2,5 @@
 name: "AI Club Gujarat"
 url: "https://aiclubgujarat.com/"
 logo: "/images/ai-club-gujarat.jpeg"
-order: 31
+order: 21
 ---

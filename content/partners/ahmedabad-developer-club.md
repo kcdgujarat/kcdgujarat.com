@@ -2,5 +2,5 @@
 name: "Ahmedabad Developer Club"
 url: "https://ahmedabaddeveloperclub.in/"
 logo: "/images/ahmedabad-developer-club.jpg"
-order: 33
+order: 20
 ---
