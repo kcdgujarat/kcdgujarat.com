@@ -36,7 +36,10 @@ export function OrganiserCard({ member }: { member: TeamMember }) {
         </div>
         <div className="p-5">
           <h4 className="font-display text-base font-semibold text-kcd-ink">{member.name}</h4>
-          {roleLine && <p className="mt-1 text-sm text-kcd-ink/75">{roleLine}</p>}
+          {/* Reserve two lines so a one-line role (e.g. "Developer Advocate · StackGen")
+              doesn't leave a band of empty card below it — grid rows stretch every card
+              to the tallest in the row. */}
+          <p className="mt-1 min-h-10 text-sm text-kcd-ink/75">{roleLine}</p>
         </div>
       </button>
 
