@@ -4,4 +4,4 @@ section: "Contact"
 order: 610
 ---
 
-You can reach the KCD Gujarat organizing team through email at [contact@kcdgujarat.com](mailto:contact@kcdgujarat.com).
+You can reach the Kubernetes Community Day (KCD) Gujarat 2026 organizing team through email at [contact@kcdgujarat.com](mailto:contact@kcdgujarat.com).

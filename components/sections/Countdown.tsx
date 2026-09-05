@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { EVENT_NAME } from '@/lib/brand';
 
 interface CountdownProps {
   /** ISO instant the event starts (doors open). */
@@ -9,7 +10,7 @@ interface CountdownProps {
   endsAt?: string | null;
   /**
    * Non-ticking sentence announced in place of the digits, e.g.
-   * "KCD Gujarat 2026 starts on Saturday, 19 September 2026 at 7:30 am IST."
+   * "Kubernetes Community Day (KCD) Gujarat 2026 starts on Saturday, 19 September 2026 at 7:30 am IST."
    * The visual timer is aria-hidden — a per-second live region is unusable
    * with a screen reader.
    */
@@ -75,7 +76,7 @@ export function Countdown({ startsAt, endsAt, srLabel, className }: CountdownPro
 
   return (
     <div className={className}>
-      <p className="sr-only">{live ? 'KCD Gujarat 2026 is happening now.' : srLabel}</p>
+      <p className="sr-only">{live ? `${EVENT_NAME} is happening now.` : srLabel}</p>
       {live ? (
         <p
           aria-hidden

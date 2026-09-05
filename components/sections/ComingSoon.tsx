@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Container } from '@/components/site/Container';
 import { SocialLinks } from '@/components/site/SocialLinks';
 import type { SiteSocialLinks } from '@/lib/site-social';
+import { EVENT_NAME } from '@/lib/brand';
 
 interface ComingSoonProps {
   city?: string;
@@ -20,7 +21,7 @@ export function ComingSoon({ city = 'Gujarat, India', contactEmail, socialLinks 
         <div className="relative h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72">
           <Image
             src="/images/KCDGujaratLogo2000x2000.png"
-            alt="KCD Gujarat 2026 logo"
+            alt={`${EVENT_NAME} logo`}
             fill
             priority
             sizes="(max-width: 640px) 12rem, (max-width: 768px) 16rem, 18rem"
@@ -30,17 +31,17 @@ export function ComingSoon({ city = 'Gujarat, India', contactEmail, socialLinks 
 
         <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-kcd-border bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wider text-kcd-primary">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-kcd-accent" />
-          CNCF Kubernetes Community Day
+          A CNCF-backed community conference
         </p>
 
         <h1 className="mt-5 font-display text-4xl font-bold leading-tight text-kcd-ink sm:text-5xl md:text-6xl">
-          KCD Gujarat 2026
+          {EVENT_NAME}
         </h1>
         <p className="mt-3 font-display text-2xl font-semibold text-kcd-primary sm:text-3xl">
           Coming soon.
         </p>
         <p className="mt-5 max-w-xl text-base text-kcd-muted sm:text-lg">
-          A community-driven, CNCF-backed Kubernetes Community Day for the cloud-native community in {city}.
+          A community-driven, CNCF-backed conference for the cloud-native community in {city}.
           Speaker line-up, schedule, and venue dropping shortly.
         </p>
 

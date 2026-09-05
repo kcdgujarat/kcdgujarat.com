@@ -5,6 +5,7 @@ import { ButtonLink } from '@/components/ui/button';
 import { getSponsors, type Sponsor } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
+import { EVENT_NAME } from '@/lib/brand';
 
 const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'community', 'diversity', 'media'];
 
@@ -12,7 +13,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Sponsors',
   path: '/sponsors',
-  description: 'Organizations powering KCD Gujarat 2026.',
+  description: `Organizations powering ${EVENT_NAME}.`,
 });
 
 export default async function SponsorsPage() {
@@ -36,7 +37,7 @@ export default async function SponsorsPage() {
         <SectionHeader
           eyebrow="Sponsors"
           title="Powered by our community"
-          description="A heartfelt thank you to the organizations that make KCD Gujarat possible."
+          description={`A heartfelt thank you to the organizations that make ${EVENT_NAME} possible.`}
           align="center"
         />
         {sponsors.length === 0 ? (

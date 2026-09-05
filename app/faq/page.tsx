@@ -2,12 +2,13 @@ import { Container } from '@/components/site/Container';
 import { AccordionItem } from '@/components/ui/accordion';
 import { getFaqSections } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
+import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'FAQ',
   path: '/faq',
-  description: 'Frequently asked questions about KCD Gujarat 2026.',
+  description: `Frequently asked questions about ${EVENT_NAME}.`,
 });
 
 export default async function FaqPage() {

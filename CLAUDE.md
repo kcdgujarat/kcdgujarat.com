@@ -194,10 +194,30 @@ Pages are statically generated (`generateStaticParams` + `revalidate`). A Payloa
 - Animations: prefer CSS + `framer-motion` only when meaningful. Respect `prefers-reduced-motion`.
 - Images: always `next/image`. Speaker photo **files** ship exactly as the speaker supplied them — 512px minimum on the short edge, any aspect ratio, never cropped, padded, or re-encoded by us; the filename carries a content hash so a replacement can't be served from an image cache. Framing is a CSS concern: the square frames on `/speakers` and the detail page use a centred `object-cover`. Don't switch to `object-contain` (letterbox bars look broken) or bias the crop with `object-top` (it beheads photos where the subject sits low). Sponsor logos prefer SVG; if PNG, supply 2× and a transparent background.
 
+### 6.1 The event's name
+
+The event is called **Kubernetes Community Day (KCD) Gujarat 2026**, spelled exactly that way in every
+user-visible string: page copy, metadata, JSON-LD, OG cards, `alt` text, and screen-reader-only labels.
+Singular "Day", `(KCD)` in parentheses, and the year — no abbreviations, no "KCD Gujarat", no plural "Days".
+
+- The single source is `EVENT_NAME` in `lib/brand.ts`. Import it; never retype the name. The module is
+  dependency-free so the edge-runtime OG route can use it.
+- `pnpm brand:check` (also run by `pnpm content:validate`, so it gates every PR) fails on any variant.
+- Three things are **not** variants and are deliberately allowed: other Kubernetes Community Days in speaker
+  bios and abstracts (`KCD Bengaluru`, `KCD Pune`, `KCDs`); the plural `Kubernetes Community Days` naming the
+  CNCF programme rather than this event; and the handles, hashtags, asset filenames and domain
+  (`@KCDGujarat`, `#KCDGujarat`, `KCDGujaratLogo2000x2000.png`, `kcdgujarat.com`) — these are identifiers
+  registered elsewhere, not prose.
+- Where the name will not fit, shrink or wrap it — never abbreviate it. The header wordmark wraps to two
+  tight lines sized to match the 36px logo so the nav pill keeps its height.
+
 ## 7. SEO and Open Graph
 
 - Every route exports `generateMetadata` returning `title`, `description`, `openGraph`, `twitter`, and a canonical URL. Centralize via `lib/seo.ts`.
-- Title pattern: `${pageTitle} — KCD Gujarat 2026`. Home is `KCD Gujarat 2026 — Kubernetes Community Day, Gujarat`.
+- Title pattern: `${pageTitle} — ${EVENT_NAME}`. Home is `${EVENT_NAME}` alone. `EVENT_NAME` is the one
+  spelling of the event's name (see §6.1) — never retype it, and never shorten it to fit a title. Three
+  routes (`/cfp`, `/badge`, `/code-of-conduct`) run past the ~60-character mark Google truncates at; the
+  brand tail is what gets cut, which is the accepted cost of the single-spelling rule.
 - Per‑page OG images are generated at the edge via `app/api/og/route.tsx` using `next/og`. Speakers, sessions, and sponsors get individualized OG cards (name + photo/logo + event lockup).
 - Ship `app/sitemap.ts` and `app/robots.ts`. Sitemap must include every speaker, session, sponsor, and blog post.
 - Add `JSON‑LD` `Event` schema on `/`, `Person` on speaker detail, `Organization` for sponsors.
@@ -334,6 +354,7 @@ Hard rules:
 - Never introduce a new top‑level dependency without justifying it in the PR description; prefer the existing stack.
 - Never disable accessibility lint rules to "fix" a build.
 - Never hard‑code event dates, registration URLs, or contact emails in components — read them from Payload `Settings` or env.
+- Never write the event's name as a literal. Import `EVENT_NAME` from `lib/brand.ts`. See §6.1.
 - Never copy assets, logos, or text from kcd.cncgkochi.in. It's a structural reference only.
 - When in doubt, ask in the PR description rather than guessing about branding, sponsor tiers, or speaker bios.
 
@@ -348,4 +369,4 @@ Hard rules:
 
 ---
 
-_Last updated: 2026‑05‑10. Update this file in the same PR as any change that contradicts it._
+_Last updated: 2026‑09‑05. Update this file in the same PR as any change that contradicts it._

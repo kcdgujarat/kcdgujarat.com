@@ -8,6 +8,7 @@ import { getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
 import { Accessibility, BedDouble, ExternalLink, MapPin, UtensilsCrossed } from 'lucide-react';
+import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 
@@ -22,14 +23,14 @@ export async function generateMetadata() {
     return buildMetadata({
       title: 'Venue',
       path: '/venue',
-      description: 'Venue details for KCD Gujarat 2026.',
+      description: `Venue details for ${EVENT_NAME}.`,
     });
   }
   return buildMetadata({
     title: 'Venue',
     path: '/venue',
     description:
-      'Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat — how to reach KCD Gujarat 2026 from the airport, Ranip Bus Stand, and Ahmedabad Junction.',
+      `Narayani Heights, on the Ahmedabad–Gandhinagar highway at Bhat — how to reach ${EVENT_NAME} from the airport, Ranip Bus Stand, and Ahmedabad Junction.`,
   });
 }
 

@@ -3,6 +3,7 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Card, CardBody, CardDescription, CardTitle } from '@/components/ui/card';
 import { Code2, Zap, Users, Sparkles, Megaphone } from 'lucide-react';
+import { EVENT_NAME } from '@/lib/brand';
 const ITEMS = [
   {
     icon: Code2,
@@ -64,7 +65,7 @@ export function WhatToExpect({ cfpClosesLabel, cfpOpen = true }: Props) {
               <div>
                 <h3 className="font-display text-lg font-semibold text-kcd-ink">Call for Proposals</h3>
                 <p className="text-sm text-kcd-ink/70">
-                  Submit your talk proposals for KCD Gujarat 2026.
+                  Submit your talk proposals for {EVENT_NAME}.
                   {cfpClosesLabel ? ` Closes ${cfpClosesLabel}.` : ''}
                 </p>
               </div>

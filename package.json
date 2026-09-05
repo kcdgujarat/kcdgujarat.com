@@ -8,7 +8,8 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "node scripts/ensure-content-revision.mjs && tsc --noEmit",
-    "content:validate": "tsx scripts/validate-content.ts"
+    "content:validate": "tsx scripts/validate-content.ts && node scripts/check-brand.mjs",
+    "brand:check": "node scripts/check-brand.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

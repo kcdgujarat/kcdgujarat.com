@@ -6,12 +6,13 @@ import { ScheduleGrid } from '@/components/site/ScheduleGrid';
 import { getSessions, getSpeakers, getCfpConfig, getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate, formatWindowMoment } from '@/lib/utils';
+import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Schedule',
   path: '/schedule',
-  description: 'Multi-track agenda for KCD Gujarat 2026 — keynotes, talks, and lightning sessions.',
+  description: `Multi-track agenda for ${EVENT_NAME} — keynotes, talks, and lightning sessions.`,
 });
 
 export default async function SchedulePage() {

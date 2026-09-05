@@ -1,5 +1,5 @@
 ---
-# Official KCD Gujarat social profiles.
+# Official Kubernetes Community Day (KCD) Gujarat 2026 social profiles.
 # Rendered in: site footer, coming-soon page, CFP/registration "opens soon" states.
 # Leave a field blank (or remove it) to hide that icon.
 x: "https://x.com/kcdgujarat"

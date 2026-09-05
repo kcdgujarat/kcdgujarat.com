@@ -5,6 +5,7 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, X } from 'lucide-react';
+import { EVENT_NAME } from '@/lib/brand';
 
 // ─── Canvas dimensions ────────────────────────────────────────────────────────
 // Using full resolution of the provided images for the best download quality
@@ -137,7 +138,7 @@ export function BadgeGenerator() {
       <SectionHeader
         eyebrow="Badge"
         title="I'm Attending!"
-        description="Generate your personalised social media badge for KCD Gujarat 2026 and share it with the community."
+        description={`Generate your personalised social media badge for ${EVENT_NAME} and share it with the community.`}
       />
 
       {/* ── Badges + controls ──────────────────────────────────────────────── */}
@@ -152,7 +153,7 @@ export function BadgeGenerator() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/EventBadgeNoImage.png"
-              alt="KCD Gujarat 2026 I'm Attending badge"
+              alt={`${EVENT_NAME} I'm Attending badge`}
               width={PLAIN_SIZE}
               height={PLAIN_SIZE}
               className="w-full h-auto block"

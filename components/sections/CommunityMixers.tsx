@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { cn } from '@/lib/utils';
+import { EVENT_NAME } from '@/lib/brand';
 
 const MIXERS = [
   {
@@ -52,7 +53,7 @@ export function CommunityMixers() {
         <SectionHeader
           eyebrow="Community Events"
           title="Community Mixers"
-          description="Exclusive gatherings running alongside KCD Gujarat 2026 — connecting community leaders, certified professionals, and women in cloud native."
+          description={`Exclusive gatherings running alongside ${EVENT_NAME} — connecting community leaders, certified professionals, and women in cloud native.`}
           align="center"
         />
         <div className="grid gap-6 lg:grid-cols-3">
@@ -93,7 +94,7 @@ export function CommunityMixers() {
           ))}
         </div>
         <p className="mt-8 text-center text-sm text-kcd-ink/65">
-          🎟️ Mixers are exclusively for KCD Gujarat 2026 registered attendees. ✉️ Community Leaders Mixer is invite only.
+          🎟️ Mixers are exclusively for {EVENT_NAME} registered attendees. ✉️ Community Leaders Mixer is invite only.
         </p>
       </Container>
     </section>

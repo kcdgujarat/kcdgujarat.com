@@ -37,7 +37,7 @@ homeSection:
 
 # Session Topics
 
-For KCD Gujarat, we broadly align with the KubeCon + CloudNativeCon ecosystem tracks while also encouraging submissions that reflect the realities of engineering and open source adoption across India and the wider community.
+For Kubernetes Community Day (KCD) Gujarat 2026, we broadly align with the KubeCon + CloudNativeCon ecosystem tracks while also encouraging submissions that reflect the realities of engineering and open source adoption across India and the wider community.
 
 Suggested topic areas include:
 

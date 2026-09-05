@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
+import { EVENT_NAME } from '@/lib/brand';
 
 export function AboutSection() {
   return (
@@ -9,9 +10,9 @@ export function AboutSection() {
         <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
           <div>
             <SectionHeader
-              eyebrow="About KCD Gujarat 2026"
+              eyebrow={`About ${EVENT_NAME}`}
               title="The cloud-native community day event, finally in Gujarat."
-              description="Kubernetes Community Days (KCD) Gujarat 2026 is a CNCF-backed, community-organized conference bringing together developers, operators, and cloud-native enthusiasts from across India and beyond."
+              description={`${EVENT_NAME} is a CNCF-backed, community-organized conference bringing together developers, operators, and cloud-native enthusiasts from across India and beyond.`}
             />
             <p className="max-w-xl text-base leading-relaxed text-kcd-ink/80 md:text-lg">
               Set in Ahmedabad, Gujarat, this single-day conference offers a unique opportunity to learn from industry experts, discover what teams are shipping in production, and connect with the growing cloud-native community in western India.

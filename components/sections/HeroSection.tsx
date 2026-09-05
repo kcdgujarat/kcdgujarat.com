@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { Container } from '@/components/site/Container';
 import { Countdown } from '@/components/sections/Countdown';
 import { formatEventDateRangeShort, formatEventDateTime } from '@/lib/utils';
+import { EVENT_NAME } from '@/lib/brand';
 
 interface HeroSectionProps {
   headline?: string;
@@ -32,7 +33,7 @@ export function HeroSection({
   const startsAt = eventDate ? new Date(eventDate).toISOString() : null;
   const endsAt = eventEndDate ? new Date(eventEndDate).toISOString() : null;
   const countdownLabel = eventDate
-    ? `KCD Gujarat 2026 starts on ${formatEventDateTime(eventDate)} IST.`
+    ? `${EVENT_NAME} starts on ${formatEventDateTime(eventDate)} IST.`
     : '';
 
   // Shared CTA style — every hero button is an identical solid pill.
@@ -77,7 +78,7 @@ export function HeroSection({
                 headline
               ) : (
                 <>
-                  Kubernetes Community Days{' '}
+                  Kubernetes Community Day (KCD){' '}
                   <span className="text-kcd-orange">Gujarat</span>{' '}
                   <span className="ml-1 inline-flex items-center rounded-full border-2 border-kcd-ink px-4 py-1 align-middle text-2xl font-bold sm:text-3xl">
                     2026
@@ -128,7 +129,7 @@ export function HeroSection({
           className="absolute bottom-6 left-1/2 z-10 flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full border border-kcd-ink/15 bg-white/75 text-kcd-ink shadow-card backdrop-blur hover:bg-white"
         >
           <ChevronDown className="h-5 w-5 animate-bounce" aria-hidden />
-          <span className="sr-only">Scroll to about KCD Gujarat 2026</span>
+          <span className="sr-only">Scroll to about {EVENT_NAME}</span>
         </a>
       </div>
     </section>

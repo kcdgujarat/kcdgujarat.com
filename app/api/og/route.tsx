@@ -1,12 +1,14 @@
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
+import { EVENT_NAME } from '@/lib/brand';
 
 export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const title = searchParams.get('title') || 'KCD Gujarat 2026';
-  const subtitle = searchParams.get('subtitle') || 'Kubernetes Community Day, Gujarat';
+  const title = searchParams.get('title') || EVENT_NAME;
+  const subtitle =
+    searchParams.get('subtitle') || 'A CNCF-backed community conference in Gujarat, India';
 
   return new ImageResponse(
     (
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
               background: '#1a73e8',
             }}
           />
-          <span style={{ fontSize: 24, fontWeight: 600 }}>KCD Gujarat 2026</span>
+          <span style={{ fontSize: 24, fontWeight: 600 }}>{EVENT_NAME}</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <span style={{ fontSize: 64, fontWeight: 800, lineHeight: 1.1 }}>{title}</span>
@@ -42,7 +44,7 @@ export async function GET(req: NextRequest) {
         <div style={{ display: 'flex', gap: 12, fontSize: 20, color: '#64748b' }}>
           <span>kcdgujarat.com</span>
           <span>·</span>
-          <span>CNCF Kubernetes Community Day</span>
+          <span>A CNCF-backed community conference</span>
         </div>
       </div>
     ),

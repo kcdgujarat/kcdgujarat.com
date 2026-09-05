@@ -23,6 +23,7 @@ import {
   getSocialLinks,
 } from '@/lib/content';
 import { siteUrl, formatEventDate, formatWindowMoment } from '@/lib/utils';
+import { EVENT_NAME } from '@/lib/brand';
 
 export const revalidate = 3600;
 
@@ -47,9 +48,8 @@ export default async function HomePage() {
   const eventLd = {
     '@context': 'https://schema.org',
     '@type': 'Event',
-    name: 'KCD Gujarat 2026',
-    description:
-      'Kubernetes Community Day Gujarat 2026 — a CNCF-backed, community-driven conference for the cloud-native community.',
+    name: EVENT_NAME,
+    description: `${EVENT_NAME} — a CNCF-backed, community-driven conference for the cloud-native community.`,
     eventStatus: 'https://schema.org/EventScheduled',
     location: {
       '@type': 'Place',
@@ -68,7 +68,7 @@ export default async function HomePage() {
         : {}),
       ...(venueUrl ? { sameAs: venueUrl } : {}),
     },
-    organizer: { '@type': 'Organization', name: 'KCD Gujarat', url: siteUrl('/') },
+    organizer: { '@type': 'Organization', name: EVENT_NAME, url: siteUrl('/') },
     url: siteUrl('/'),
   };
 

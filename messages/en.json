@@ -1,7 +1,7 @@
 {
   "site": {
-    "name": "KCD Gujarat 2026",
-    "tagline": "Kubernetes Community Day, Gujarat"
+    "name": "Kubernetes Community Day (KCD) Gujarat 2026",
+    "tagline": "A CNCF-backed community conference in Gujarat, India"
   },
   "nav": {
     "home": "Home",
