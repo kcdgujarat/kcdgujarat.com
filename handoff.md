@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-09-05 (partner fold; organiser fold removed; card band fixed)_
+_Last updated: 2026-09-05 (partner fold + renumber; card band fixed)_
 
 ## 1. Goal
 
@@ -129,6 +129,10 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
 ## 4. Recent changes (2026-09-05)
+
+76. **Docker Pune added, sitting next to Docker Ahmedabad** — `content/partners/docker-pune.md` + `public/images/docker-pune.svg` (415×119 wordmark, SVG per CLAUDE.md §5.1; `CommunityPartnerCard` passes `unoptimized` for `.svg`). It takes `order: 30`, immediately after Docker Ahmedabad (29), so the two Docker groups land at visible positions 10 and 11 — side by side on row 3 of the `lg:grid-cols-4` grid. Every community partner at 30 and above shifted up one (now 31–40); the AWS row (positions 5–8) is untouched. The LinkedIn URL came from the organisers — `meetup.com` bot-walls automated checks (a `curl` of any group path returns 200 with a "Bending Spoons" placeholder title), so **don't try to verify meetup links from here**; ask instead. Both Docker cards are behind `PartnerGrid`'s 8-item fold. Verified against a running build: entry renders, `/images/docker-pune.svg` serves 200 `image/svg+xml`.
+
+75. **Community partner `order:` values renumbered 20–39, AWS user groups grouped onto one row** — the block had a three-way tie at `order: 29` (AI Club Gujarat / AWS User Group Surat / Grafana and Friends Ahmedabad, which `getPartners` was silently breaking by name) plus a hole at 30, so adding a partner meant guessing a free number. Now strictly sequential in its existing 20+ range. The four AWS user groups (Ahmedabad, Vadodara, Surat, Bhopal — Gujarat first, then Bhopal) sit at **visible positions 5–8**, which is exactly row 2 of the `lg:grid-cols-4` grid, so they read as one block; it is also the last row before `PartnerGrid`'s 8-item fold, so they show without clicking Show more. **This only holds at `lg`** — at `sm:grid-cols-2` they split 2+2 and at base one per row. The three `render: false` partners were moved to the **end** (37–39) rather than keeping their old mid-list slots: parked there, flipping one back to `render: true` appends it instead of shifting the AWS block off its row. Anything inserted before position 5 breaks the alignment — renumber if you add one. `cloud-native` (1–13) and `media` (10, 20) were already gap-free and were left alone. Content-only; verified against a running build.
 
 74. **Organiser cards: white band under one-line roles is gone** — `OrganiserCard`'s role `<p>` gained `min-h-10` (2 lines of `text-sm`: `--spacing: .25rem` × 10 = 2.5rem, and `text-sm`'s line-height resolves to 1.25rem). Cause: grid rows stretch every card to the tallest in the row, and **Neel Shah** (`Developer Advocate · StackGen`) and **Monika Rajput** (`Data & AI Engineer · AHEAD`) are the only two organisers whose role fits on one line at the 4-column breakpoint — their cards carried a line's worth of empty white card body, and the slack also pushed their photo area taller so their names sat lower than their row-mates'. Reserving two lines equalises every card's natural height, so stretch adds nothing. Verified by rebuilding the exact card markup against the **compiled** `app.css` pulled from the running server and screenshotting it headless: before/after grids in one page, all eight photo edges and name baselines flush in the after. Note this re-breaks if a role ever wraps to three lines; `line-clamp-2` was deliberately **not** added, because silently truncating someone's job title is worse than the band.
 
