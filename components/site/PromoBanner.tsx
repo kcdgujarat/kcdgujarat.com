@@ -7,7 +7,7 @@ interface PromoBannerProps {
   registrationUrl: string;
 }
 
-const PROMO_CODE = 'KRISHNA28';
+const PROMO_CODE = 'FLAT25';
 
 export function PromoBanner({ registrationUrl }: PromoBannerProps) {
   const [copied, setCopied] = React.useState(false);
@@ -55,7 +55,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
       role="region"
       aria-label="Promotional offer"
       style={{
-        background: 'linear-gradient(to right, #1a237e, #1565C0, #4A148C, #F9A825)',
+        background: 'linear-gradient(to right, #4285F4, #3b71d4, #E05F36)',
         position: 'sticky',
         top: 0,
         zIndex: 60,
@@ -92,8 +92,8 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
           fontWeight: 500,
         }}
       >
-        <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>🦚</span>
-        <span style={{ opacity: 0.95 }}>Save 28% on conference tickets — use code</span>
+        <Ticket aria-hidden="true" style={{ width: '1rem', height: '1rem', opacity: 0.9, flexShrink: 0 }} />
+        <span style={{ opacity: 0.95 }}>Save 25% on conference tickets — use code</span>
 
         <button
           type="button"
@@ -137,7 +137,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
             padding: '0.25rem 1rem',
             fontSize: '0.875rem',
             fontWeight: 600,
-            color: '#4A148C',
+            color: '#1a56db',
             textDecoration: 'none',
             boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
             transition: 'opacity 0.15s',
