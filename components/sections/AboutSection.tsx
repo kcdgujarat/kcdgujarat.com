@@ -37,7 +37,10 @@ export function AboutSection() {
               </span>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-kcd-ink/75">
-              Kubernetes Community Days are community-organized events that are part of the CNCF ecosystem. As a CNCF event, we receive guidance, resources, and recognition — while staying community-first, grassroots, and rooted in the region we serve.
+              Kubernetes Community Days are community-organized events that are part of the CNCF ecosystem. As a{' '}
+              <strong className="font-semibold italic text-kcd-ink">CNCF-supported</strong> event, we receive
+              guidance, resources, and recognition — while staying community-first, grassroots, and rooted in
+              the region we serve.
             </p>
           </div>
         </div>
