@@ -1,13 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Ticket, Copy, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 
 interface PromoBannerProps {
   registrationUrl: string;
 }
 
-const PROMO_CODE = 'FLAT25';
+const PROMO_CODE = 'GANESHA35';
 
 export function PromoBanner({ registrationUrl }: PromoBannerProps) {
   const [copied, setCopied] = React.useState(false);
@@ -55,7 +55,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
       role="region"
       aria-label="Promotional offer"
       style={{
-        background: 'linear-gradient(to right, #4285F4, #3b71d4, #E05F36)',
+        background: 'linear-gradient(to right, #B5310A, #E87C1E, #B5310A)',
         position: 'sticky',
         top: 0,
         zIndex: 60,
@@ -63,18 +63,6 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
         overflow: 'hidden',
       }}
     >
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%)',
-          backgroundSize: '200% 100%',
-          animation: 'promoBannerShimmer 3s linear infinite',
-        }}
-      />
-
       <div
         style={{
           position: 'relative',
@@ -92,8 +80,8 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
           fontWeight: 500,
         }}
       >
-        <Ticket aria-hidden="true" style={{ width: '1rem', height: '1rem', opacity: 0.9, flexShrink: 0 }} />
-        <span style={{ opacity: 0.95 }}>Save 25% on conference tickets — use code</span>
+        <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>ॐ</span>
+        <span style={{ opacity: 0.95 }}>Ganesh Chaturthi special — Save 35% on conference tickets — use code</span>
 
         <button
           type="button"
@@ -137,7 +125,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
             padding: '0.25rem 1rem',
             fontSize: '0.875rem',
             fontWeight: 600,
-            color: '#1a56db',
+            color: '#7C2900',
             textDecoration: 'none',
             boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
             transition: 'opacity 0.15s',
@@ -149,7 +137,6 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
           Get Tickets →
         </a>
       </div>
-
     </div>
   );
 }
