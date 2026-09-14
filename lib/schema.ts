@@ -192,6 +192,50 @@ export const CfpConfigFrontmatter = z
 export type CfpConfigFrontmatter = z.infer<typeof CfpConfigFrontmatter>;
 
 /**
+ * Promotional / discount banner shown above the header.
+ *
+ * The window is mandatory: a dated offer must say when it stops. Retiring a
+ * promo is a content edit (or simply letting `endDate` pass), never a revert
+ * PR against a component — see #39.
+ */
+export const PromoConfigFrontmatter = z
+  .object({
+    /** Master switch. Set false to hide the banner regardless of the window. */
+    enabled: z.boolean().default(true),
+    /** First day the banner shows (YYYY-MM-DD). */
+    startDate: z.string(),
+    /** Optional start time on `startDate` (HH:mm, 24h). Defaults to 00:00. */
+    startTime: TimeOfDay.optional(),
+    /** Last day the banner shows (YYYY-MM-DD). Required — offers expire. */
+    endDate: z.string(),
+    /** Optional end time on `endDate` (HH:mm, 24h). Defaults to 23:59 inclusive. */
+    endTime: TimeOfDay.optional(),
+    /** IANA timezone for the window. Defaults to Asia/Kolkata. */
+    timezone: z.string().optional().default('Asia/Kolkata'),
+    /** Discount code rendered in the copy chip. Omit for an announcement with no code. */
+    code: z.string().optional(),
+    /** The sentence before the code chip. */
+    message: z.string(),
+    /** Optional decorative glyph before the message (rendered aria-hidden). */
+    icon: z.string().optional(),
+    /** Label on the CTA pill. */
+    ctaLabel: z.string().optional().default('Get Tickets'),
+  })
+  .transform((data) => {
+    const window = {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      timeZone: data.timezone,
+    };
+    return {
+      ...data,
+      active: data.enabled && isDateTimeRangeActive(data.startDate, data.endDate, window),
+      phase: getDateTimeWindowPhase(data.startDate, data.endDate, window),
+    };
+  });
+export type PromoConfigFrontmatter = z.infer<typeof PromoConfigFrontmatter>;
+
+/**
  * A non-session item on the conference day — registration, breaks, sponsor
  * slots, ceremonies. Sessions come from `content/sessions`; everything the
  * agenda needs that no session describes is listed here.

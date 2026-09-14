@@ -14,6 +14,7 @@ import {
   EventConfigFrontmatter,
   MixersConfigFrontmatter,
   SocialLinksFrontmatter,
+  PromoConfigFrontmatter,
 } from '../lib/schema';
 
 const ROOT = path.join(process.cwd(), 'content');
@@ -34,6 +35,7 @@ const targets: { dir: string; schema?: any; name: string; fileSchema?: Record<st
       'event.md': EventConfigFrontmatter,
       'mixers.md': MixersConfigFrontmatter,
       'social.md': SocialLinksFrontmatter,
+      'promo.md': PromoConfigFrontmatter,
     },
   },
   { dir: 'team', schema: TeamFrontmatter, name: 'team member' },

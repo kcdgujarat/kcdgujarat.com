@@ -18,6 +18,7 @@ import {
   RegistrationConfigFrontmatter,
   EventConfigFrontmatter,
   MixersConfigFrontmatter,
+  PromoConfigFrontmatter,
   SocialLinksFrontmatter,
   SponsorshipConfigFrontmatter,
   isPublished,
@@ -270,6 +271,30 @@ export async function getCfpConfig(): Promise<CfpConfig> {
     body,
     bodyHtml: body ? await renderMarkdown(body) : '',
   };
+}
+
+export type PromoConfig = PromoConfigFrontmatter;
+
+/**
+ * Promo banner config. A missing `content/pages/promo.md` simply means no
+ * banner — that is the safe default, so it must not throw.
+ */
+export async function getPromoConfig(): Promise<PromoConfig | null> {
+  ensureDevContentFresh();
+  let raw: string;
+  try {
+    raw = await fs.readFile(path.join(ROOT, 'pages', 'promo.md'), 'utf8');
+  } catch {
+    return null;
+  }
+
+  const { data } = matter(raw);
+  const result = PromoConfigFrontmatter.safeParse(data);
+  if (!result.success) {
+    const details = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    throw new Error(`Invalid content/pages/promo.md — ${details}`);
+  }
+  return result.data;
 }
 
 export type SponsorshipConfig = SponsorshipConfigFrontmatter & {

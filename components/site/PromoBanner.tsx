@@ -5,11 +5,20 @@ import { Copy, Check } from 'lucide-react';
 
 interface PromoBannerProps {
   registrationUrl: string;
+  /** Copy comes from `content/pages/promo.md` — never hardcode it here. */
+  message: string;
+  code?: string;
+  icon?: string;
+  ctaLabel?: string;
 }
 
-const PROMO_CODE = 'GANESHA35';
-
-export function PromoBanner({ registrationUrl }: PromoBannerProps) {
+export function PromoBanner({
+  registrationUrl,
+  message,
+  code,
+  icon,
+  ctaLabel = 'Get Tickets',
+}: PromoBannerProps) {
   const [copied, setCopied] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -25,7 +34,8 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
   }, []);
 
   function handleCopy() {
-    const write = navigator.clipboard?.writeText(PROMO_CODE);
+    if (!code) return;
+    const write = navigator.clipboard?.writeText(code);
     if (write) {
       write.then(flash).catch(fallbackCopy);
     } else {
@@ -35,7 +45,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
 
   function fallbackCopy() {
     const el = document.createElement('textarea');
-    el.value = PROMO_CODE;
+    el.value = code ?? '';
     el.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
     document.body.appendChild(el);
     el.select();
@@ -80,13 +90,15 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
           fontWeight: 500,
         }}
       >
-        <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>ॐ</span>
-        <span style={{ opacity: 0.95 }}>Ganesh Chaturthi special — Save 35% on conference tickets — use code</span>
+        {icon && (
+          <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>{icon}</span>
+        )}
+        <span style={{ opacity: 0.95 }}>{message}</span>
 
-        <button
+        {code && <button
           type="button"
           onClick={handleCopy}
-          aria-label={copied ? 'Code copied!' : `Copy discount code ${PROMO_CODE}`}
+              aria-label={copied ? 'Code copied!' : `Copy discount code ${code}`}
           title={copied ? 'Copied!' : 'Click to copy'}
           style={{
             display: 'inline-flex',
@@ -106,12 +118,12 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
             userSelect: 'none',
           }}
         >
-          {copied ? 'COPIED!' : PROMO_CODE}
+          {copied ? 'COPIED!' : code}
           {copied
             ? <Check style={{ width: '0.8rem', height: '0.8rem' }} />
             : <Copy style={{ width: '0.8rem', height: '0.8rem', opacity: 0.75 }} />
           }
-        </button>
+        </button>}
 
         <a
           href={registrationUrl}
@@ -134,7 +146,7 @@ export function PromoBanner({ registrationUrl }: PromoBannerProps) {
           onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '0.88')}
           onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '1')}
         >
-          Get Tickets →
+          {ctaLabel} →
         </a>
       </div>
     </div>

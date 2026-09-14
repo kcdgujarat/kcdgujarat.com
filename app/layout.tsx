@@ -5,7 +5,13 @@ import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
 import { PromoBanner } from '@/components/site/PromoBanner';
-import { getCfpConfig, getRegistrationConfig, getEventConfig, getSocialLinks } from '@/lib/content';
+import {
+  getCfpConfig,
+  getRegistrationConfig,
+  getEventConfig,
+  getSocialLinks,
+  getPromoConfig,
+} from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import './globals.css';
 
@@ -36,11 +42,12 @@ const notoSansGujarati = Noto_Sans_Gujarati({
 export const metadata: Metadata = buildMetadata({});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [event, cfp, registration, socialLinks] = await Promise.all([
+  const [event, cfp, registration, socialLinks, promo] = await Promise.all([
     getEventConfig(),
     getCfpConfig(),
     getRegistrationConfig(),
     getSocialLinks(),
+    getPromoConfig(),
   ]);
   const comingSoon = process.env.NEXT_PUBLIC_COMING_SOON === 'true';
   const cfpOpen = cfp.open;
@@ -64,8 +71,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to main content
         </a>
-        {!comingSoon && registrationOpen && registration.url && (
-          <PromoBanner registrationUrl={registration.url} />
+        {!comingSoon && registrationOpen && registration.url && promo?.active && (
+          <PromoBanner
+            registrationUrl={registration.url}
+            message={promo.message}
+            code={promo.code}
+            icon={promo.icon}
+            ctaLabel={promo.ctaLabel}
+          />
         )}
         <Header
           pathname={pathname}
