@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { Plus_Jakarta_Sans, Inter, Noto_Sans_Gujarati } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
@@ -48,7 +47,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const showTeam = event.showTeam;
   const showVenue = event.showVenue;
   const registrationOpen = registration.open;
-  const pathname = (await headers()).get('x-pathname') ?? '/';
   return (
     <html
       lang="en"
@@ -68,7 +66,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <PromoBanner registrationUrl={registration.url} />
         )}
         <Header
-          pathname={pathname}
           registrationOpen={registrationOpen}
           comingSoon={comingSoon}
           cfpOpen={cfpOpen}

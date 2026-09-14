@@ -31,8 +31,6 @@ const NAV: NavItem[] = [
 ];
 
 interface HeaderProps {
-  /** Current path from the server (via proxy `x-pathname` header). */
-  pathname?: string;
   registrationOpen?: boolean;
   comingSoon?: boolean;
   cfpOpen?: boolean;
