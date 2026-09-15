@@ -10,6 +10,7 @@ interface FooterProps {
   cfpOpen?: boolean;
   showSpeakers?: boolean;
   showTeam?: boolean;
+  showVolunteers?: boolean;
   showVenue?: boolean;
 }
 
@@ -19,6 +20,7 @@ export function Footer({
   cfpOpen = false,
   showSpeakers = false,
   showTeam = false,
+  showVolunteers = false,
   showVenue = false,
 }: FooterProps) {
   const eventLinks = [
@@ -36,6 +38,7 @@ export function Footer({
     ...(cfpOpen ? [{ href: '/cfp', label: 'Submit a Talk' }] : []),
     { href: '/sponsorship', label: 'Become a Sponsor' },
     ...(showTeam ? [{ href: '/#team', label: 'Organisers' }] : []),
+    ...(showVolunteers ? [{ href: '/#volunteers', label: 'Volunteers' }] : []),
   ];
   return (
     <footer className="relative isolate mt-24 overflow-hidden border-t border-white/10 bg-kcd-navy text-white">

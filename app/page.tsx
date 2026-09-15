@@ -6,6 +6,7 @@ import { DayAtGlance } from '@/components/sections/DayAtGlance';
 import { CfpSection } from '@/components/sections/CfpSection';
 import { VenueSection } from '@/components/sections/VenueSection';
 import { TeamPreview } from '@/components/sections/TeamPreview';
+import { VolunteersSection } from '@/components/sections/VolunteersSection';
 import { SponsorStrip } from '@/components/sections/SponsorStrip';
 import { CommunityPartners } from '@/components/sections/CommunityPartners';
 import { CommunityMixers } from '@/components/sections/CommunityMixers';
@@ -106,6 +107,7 @@ export default async function HomePage() {
   const cfpOpen = cfp.open;
   const cfpClosesLabel = formatWindowMoment(cfp.endDate, cfp.endTime, 'en-IN', cfp.timezone);
   const registrationOpen = registration.open;
+  const volunteers = team.filter((m) => m.group === 'volunteer');
 
   const eventDateLabel = eventDate ? formatEventDate(eventDate) : 'Conference Day, 2026';
 
@@ -166,6 +168,7 @@ export default async function HomePage() {
         showTeam ? <TeamPreview key="team" team={team} /> : null,
         <SponsorStrip key="sponsors" sponsors={sponsors} />,
         partners.length > 0 ? <CommunityPartners key="partners" partners={partners} /> : null,
+        volunteers.length > 0 ? <VolunteersSection key="volunteers" volunteers={volunteers} /> : null,
         homeFaqs.length > 0 ? (
           <FaqSection key="faq" faqs={homeFaqs} hasMore={faqs.length > homeFaqs.length} />
         ) : null,

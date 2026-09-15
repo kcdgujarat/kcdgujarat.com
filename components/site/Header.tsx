@@ -14,6 +14,7 @@ type NavItem = {
   speakersOnly?: boolean;
   cfpOnly?: boolean;
   teamOnly?: boolean;
+  volunteersOnly?: boolean;
   venueOnly?: boolean;
 };
 
@@ -26,6 +27,7 @@ const NAV: NavItem[] = [
   { href: '/#team', label: 'Organisers', teamOnly: true },
   { href: '/#sponsors', label: 'Sponsors' },
   { href: '/#partners', label: 'Partners' },
+  { href: '/#volunteers', label: 'Volunteers', volunteersOnly: true },
   { href: '/#faq', label: 'FAQ' },
   { href: '/badge', label: '🎟️ Badge' },
 ];
@@ -38,6 +40,7 @@ interface HeaderProps {
   cfpOpen?: boolean;
   showSpeakers?: boolean;
   showTeam?: boolean;
+  showVolunteers?: boolean;
   showVenue?: boolean;
 }
 
@@ -47,6 +50,7 @@ export function Header({
   cfpOpen = false,
   showSpeakers = false,
   showTeam = false,
+  showVolunteers = false,
   showVenue = false,
 }: HeaderProps) {
   const [open, setOpen] = React.useState(false);
@@ -60,6 +64,7 @@ export function Header({
     if (item.speakersOnly && !showSpeakers) return false;
     if (item.cfpOnly && !cfpOpen) return false;
     if (item.teamOnly && !showTeam) return false;
+    if (item.volunteersOnly && !showVolunteers) return false;
     if (item.venueOnly && !showVenue) return false;
     return true;
   });
