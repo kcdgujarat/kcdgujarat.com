@@ -126,12 +126,6 @@ timeline:
     endTime: "14:00"
     label: "Lunch + Solutions Showcase"
     icon: "🍽️"
-  - time: "15:00"
-    endTime: "15:25"
-    label: "Reserved Session"
-    icon: "📌"
-    room: "Hall 2"
-    glance: false
   - time: "16:00"
     endTime: "16:25"
     label: "High Tea + Solutions Showcase"

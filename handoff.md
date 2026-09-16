@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-09-13 (bronze sponsor tier added; OpenObserve is the first bronze sponsor)_
+_Last updated: 2026-09-16 (Energy Partner tier added; Stroom is the first energy partner)_
 
 ## 1. Goal
 
@@ -59,10 +59,10 @@ Ship the public marketing/event site for **KCD Gujarat 2026** — a CNCF-backed,
 
 ### Sponsors (logo wall)
 
-- Markdown under `content/sponsors/*.md`. Tier enum: `platinum | gold | silver | bronze | community | diversity | media`.
+- Markdown under `content/sponsors/*.md`. Tier enum: `platinum | gold | silver | bronze | energy | community | diversity | media`.
 - Rendered by `SponsorTier` (centered flex wrap, fixed card size `h-28 w-44` → `md:h-36 md:w-56`) on homepage `SponsorStrip` and `/sponsors`. Logo height still scales by tier.
 - `render: false` hides a sponsor (e.g. `sample-sponsor.md`).
-- Current published: Valkey (gold), Coredge.io (gold), CNCF + KodeKloud (silver), OpenObserve (bronze), SUSE (diversity) — SUSE logo path is `/images/sponsors/suse.svg` (asset may still need adding).
+- Current published: Valkey (gold), Coredge.io (gold), CNCF + KodeKloud (silver), OpenObserve (bronze), Stroom (energy), SUSE (diversity) — SUSE logo path is `/images/sponsors/suse.svg` (asset may still need adding).
 
 ### Venue (`Narayani Heights`, confirmed 2026-08-23 — **not yet announced**)
 
@@ -148,7 +148,9 @@ After pull: `pnpm install && pnpm typecheck && pnpm content:validate && pnpm bui
 
 Dev: use `pnpm dev` (runs content watcher + Next). Restart after killing stale `next` processes.
 
-## 4. Recent changes (2026-09-13)
+## 4. Recent changes (2026-09-16)
+
+82. **Energy Partner tier added; Stroom is the first energy partner.** Same five-file move as the bronze tier below (#81), slotted between `bronze` and `community` everywhere: the `SponsorFrontmatter.tier` enum in `lib/schema.ts`, `TIER_LABEL` (`'Energy Partner'`) + `TIER_LOGO` (`h-14 md:h-16`, matching gold — it is a named category partner, not an entry tier, so it should not read as smaller than bronze) in `components/site/SponsorTier.tsx`, and the `TIERS` arrays in `components/sections/SponsorStrip.tsx` + `app/sponsors/page.tsx`. `content/pages/sponsorship.md`'s tier-list comment was also stale (it never listed `bronze`) and now lists all eight. Deliberately **not** added to `/sponsorship` — `energy` is a logo-wall category, not a purchasable package, so it has no `FALLBACK_TIERS` entry. Content: `content/sponsors/stroom.md` → `https://stroom.in` (verified live: Shopify protein store, `og:site_name` "Stroom"). The supplied `stroom.png` landed at `public/images/` as a 7360×6960 PNG that was mostly white padding; it was trimmed (`magick -fuzz 2% -trim`) to a 2.95:1 wordmark and downscaled to 600×203 / 42 KB at `public/images/sponsors/stroom.png`, and the stray copy at `public/images/stroom.png` was deleted. Background stays opaque white rather than keyed to alpha — the wordmark's "protein fuel" pill has *white text on navy*, so a global `-transparent white` would punch holes in it, and `CARD` in `SponsorTier` is hardcoded `bg-white` so there is nothing to blend against. Verified on a production build + headless screenshot: the section renders between Bronze and Diversity on both `/` and `/sponsors`. `content:validate`, `typecheck`, `lint`, `build` green.
 
 81. **Bronze sponsor tier added.** `content/sponsors/openobserve.md` already declared `tier: "bronze"`, but `bronze` was not in the enum, so `content:validate` and `typecheck` would have failed. Added it in four places, always between `silver` and `community`: the `SponsorFrontmatter.tier` enum in `lib/schema.ts`, `TIER_LABEL` + `TIER_LOGO` in `components/site/SponsorTier.tsx` (logo height `h-11 md:h-13` — one notch under silver's `h-12 md:h-14`; `h-13` is valid because Tailwind v4 generates spacing dynamically), and the `TIERS` arrays in `components/sections/SponsorStrip.tsx` and `app/sponsors/page.tsx`. Adding a tier to the enum without adding it to both `Record<Sponsor['tier'], …>` maps is a typecheck break, so all four move together. `/sponsorship` also gained a Bronze entry in `FALLBACK_TIERS` — the real copy (US$ 1200, table space, 3 tickets) was already in `content/pages/sponsorship.md`, so the fallback only matters when that markdown is missing. Also fixed the missing trailing newline on `openobserve.md`. `content:validate`, `typecheck`, `lint` green.
 

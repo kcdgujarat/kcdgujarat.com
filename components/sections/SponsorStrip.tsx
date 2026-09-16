@@ -5,7 +5,7 @@ import { SectionHeader } from '@/components/site/SectionHeader';
 import { SponsorTier } from '@/components/site/SponsorTier';
 import { ButtonLink } from '@/components/ui/button';
 
-const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'bronze', 'community', 'diversity', 'media'];
+const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'bronze', 'energy', 'community', 'diversity', 'media'];
 
 export function SponsorStrip({ sponsors }: { sponsors: Sponsor[] }) {
   const byTier = (t: Sponsor['tier']) => sponsors.filter((s) => s.tier === t);

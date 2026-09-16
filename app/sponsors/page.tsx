@@ -6,7 +6,7 @@ import { getSponsors, type Sponsor } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { siteUrl } from '@/lib/utils';
 
-const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'bronze', 'community', 'diversity', 'media'];
+const TIERS: Sponsor['tier'][] = ['platinum', 'gold', 'silver', 'bronze', 'energy', 'community', 'diversity', 'media'];
 
 export const revalidate = 3600;
 export const metadata = buildMetadata({
