@@ -135,6 +135,10 @@ timeline:
     label: "Closing: Vote of Thanks, Group Photo, Swag"
     icon: "🎉"
   - time: "17:30"
+    endTime: "18:00"
+    label: "Surprise Jamming Session"
+    icon: "🎸"
+  - time: "18:00"
     label: "Event Ends"
     icon: "👋"
 ---
