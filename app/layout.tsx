@@ -5,7 +5,13 @@ import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
 import { PromoBanner } from '@/components/site/PromoBanner';
-import { getCfpConfig, getRegistrationConfig, getEventConfig, getSocialLinks } from '@/lib/content';
+import {
+  getCfpConfig,
+  getRegistrationConfig,
+  getEventConfig,
+  getSocialLinks,
+  getTeam,
+} from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import './globals.css';
 
@@ -48,6 +54,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const showTeam = event.showTeam;
   const showVenue = event.showVenue;
   const registrationOpen = registration.open;
+  const team = showTeam ? await getTeam() : [];
+  const showVolunteers = team.some((m) => m.group === 'volunteer');
   const pathname = (await headers()).get('x-pathname') ?? '/';
   return (
     <html
@@ -74,6 +82,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           cfpOpen={cfpOpen}
           showSpeakers={showSpeakers}
           showTeam={showTeam}
+          showVolunteers={showVolunteers}
           showVenue={showVenue}
         />
         <main id="main" className="relative z-[1]">{children}</main>
@@ -84,6 +93,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             cfpOpen={cfpOpen}
             showSpeakers={showSpeakers}
             showTeam={showTeam}
+            showVolunteers={showVolunteers}
             showVenue={showVenue}
           />
         )}

@@ -7,13 +7,8 @@ interface Props {
   team: TeamMember[];
 }
 
-const GROUP_ORDER: TeamMember['group'][] = ['organizer', 'core', 'volunteer'];
-
 export function TeamPreview({ team }: Props) {
-  const groups = GROUP_ORDER.map((key) => ({
-    key,
-    members: team.filter((m) => m.group === key),
-  })).filter((g) => g.members.length > 0);
+  const organisers = team.filter((m) => m.group === 'organizer' || m.group === 'core');
 
   return (
     <section id="team" className="py-20">
@@ -25,17 +20,13 @@ export function TeamPreview({ team }: Props) {
           align="center"
         />
 
-        {groups.length === 0 && (
+        {organisers.length === 0 && (
           <p className="text-center text-sm text-kcd-ink/65">
             Organiser listing dropping soon. Add markdown files under <code>content/team/</code>.
           </p>
         )}
 
-        <div className="space-y-12">
-          {groups.map((g) => (
-            <OrganisersGrid key={g.key} members={g.members} />
-          ))}
-        </div>
+        {organisers.length > 0 && <OrganisersGrid members={organisers} />}
       </Container>
     </section>
   );
