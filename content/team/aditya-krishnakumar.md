@@ -1,7 +1,7 @@
 ---
 name: "Aditya Krishnakumar"
 role: "Senior Site Reliability Engineer"
-company: "SentinelOne"
+company: "Confidential"
 group: "organizer"
 credentials: "Kubestronaut, CNCG Ahmedabad contributor"
 photo: "/images/organisers/aditya-krishnakumar.jpeg"
