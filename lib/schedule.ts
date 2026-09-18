@@ -60,6 +60,20 @@ export function scheduleMinutes(date: Date): number {
   return istMinutes(date);
 }
 
+/**
+ * Keynote-shaped session types. A sponsored keynote sits in the same plenary
+ * block as a community keynote, so the grid and the block labels treat both the
+ * same way; only the badge/prefix text differs.
+ */
+export function isKeynoteType(type: Session['type']): boolean {
+  return type === 'Keynote' || type === 'Sponsored Keynote';
+}
+
+/** Lightning-shaped session types — a sponsored lightning talk sits in the same block. */
+export function isLightningType(type: Session['type']): boolean {
+  return type === 'Lightning' || type === 'Sponsored Lightning';
+}
+
 type Block = {
   startMinutes: number;
   endMinutes: number;
@@ -77,8 +91,8 @@ function toBlocks(sessions: Session[]): Block[] {
         startMinutes,
         endMinutes: startMinutes + (s.durationMinutes ?? 0),
         room: s.room,
-        isLightning: s.type === 'Lightning',
-        isKeynote: s.type === 'Keynote',
+        isLightning: isLightningType(s.type),
+        isKeynote: isKeynoteType(s.type),
       };
     })
     .sort((a, b) => a.startMinutes - b.startMinutes);

@@ -61,7 +61,18 @@ export const SessionFrontmatter = RenderFlag.extend({
       'Emerging + Advanced',
     ])
     .optional(),
-  type: z.enum(['Talk', 'Lightning', 'Panel', 'Keynote']).optional().default('Talk'),
+  type: z
+    .enum([
+      'Talk',
+      'Lightning',
+      'Panel',
+      'Keynote',
+      'Sponsored Keynote',
+      'Sponsored Talk',
+      'Sponsored Lightning',
+    ])
+    .optional()
+    .default('Talk'),
   durationMinutes: z.number().optional().default(30),
   start: z.string().optional(),
   room: z.string().optional(),

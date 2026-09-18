@@ -7,7 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardBody } from '@/components/ui/card';
 import { cn, formatEventDate, formatTime } from '@/lib/utils';
 import { TRACKS as TRACK_DEFS, TRACK_BY_SCHEMA } from '@/lib/tracks';
-import { buildAgenda, scheduleMinutes, type AgendaItem, type TimelineEntry } from '@/lib/schedule';
+import {
+  buildAgenda,
+  isKeynoteType,
+  isLightningType,
+  scheduleMinutes,
+  type AgendaItem,
+  type TimelineEntry,
+} from '@/lib/schedule';
 
 /** Sentinel for "no filter", shared by both filter groups. */
 const ALL = 'All';
@@ -350,7 +357,7 @@ function slotLabel(items: SlotItem[]): string {
     (item): item is Extract<SlotItem, { kind: 'session' }> => item.kind === 'session',
   );
   const lightning =
-    sessions.length > 0 && sessions.every((item) => item.session.type === 'Lightning');
+    sessions.length > 0 && sessions.every((item) => isLightningType(item.session.type));
   return lightning ? 'parallel lightning talks' : 'parallel sessions';
 }
 
@@ -399,7 +406,7 @@ function SessionRow({
   speakersBySlug: Record<string, string>;
 }) {
   const trackDef = session.track ? TRACK_BY_SCHEMA[session.track] : undefined;
-  const keynote = session.type === 'Keynote';
+  const keynote = isKeynoteType(session.type);
   const names = (session.speakers ?? [])
     .map((slug) => speakersBySlug[slug])
     .filter((name): name is string => Boolean(name));
@@ -413,7 +420,7 @@ function SessionRow({
             {session.level && <span>· {session.level}</span>}
           </div>
           <h5 className="text-base font-semibold text-kcd-ink">
-            {keynote && <span className="text-kcd-primary">[Keynote] </span>}
+            {keynote && <span className="text-kcd-primary">[{session.type}] </span>}
             {session.title}
           </h5>
           {names.length > 0 && (
@@ -428,7 +435,7 @@ function SessionRow({
                 {trackDef?.label ?? session.track}
               </Badge>
             )}
-            {/* The title already says Keynote; a badge repeating it is noise. */}
+            {/* The title already carries the keynote label; a badge repeating it is noise. */}
             {session.type && !keynote && <Badge>{session.type}</Badge>}
           </div>
         </CardBody>

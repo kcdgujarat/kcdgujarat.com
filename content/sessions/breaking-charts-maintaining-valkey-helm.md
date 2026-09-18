@@ -2,7 +2,7 @@
 title: "Breaking Charts: What I Learned Maintaining valkey-helm"
 speakers: ["ishan-jain"]
 track: "Cloud Native Experience"
-type: "Talk"
+type: "Sponsored Talk"
 durationMinutes: 25
 start: "2026-09-19T11:45:00+05:30"
 room: "Hall 1"

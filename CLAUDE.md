@@ -141,7 +141,7 @@ Short bio in Markdown. Supports **bold**, links, lists.
 title: "Scaling Stateful Workloads on Kubernetes"
 speakers: ["jane-doe"]
 track: "Platform Engineering" # must match a `schema` value in lib/tracks.ts
-type: "Talk"                  # Talk | Lightning | Panel | Keynote (no workshop track)
+type: "Talk"                  # Talk | Lightning | Panel | Keynote | Sponsored Keynote | Sponsored Talk | Sponsored Lightning (no workshop track)
 durationMinutes: 30
 start: "2026-09-12T10:30:00+05:30"
 room: "Hall A"

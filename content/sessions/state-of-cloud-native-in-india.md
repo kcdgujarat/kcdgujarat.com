@@ -2,7 +2,7 @@
 title: "The State of Cloud Native in India: The Good, The Bad, and The Unspoken"
 speakers: ["sagar-utekar"]
 track: "Cloud Native Experience"
-type: "Keynote"
+type: "Sponsored Keynote"
 durationMinutes: 10
 start: "2026-09-19T10:10:00+05:30"
 room: "Hall 1"

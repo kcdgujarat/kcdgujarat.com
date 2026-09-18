@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST.** Every Claude Code session begins here. Update this file at end of every meaningful change so the next session boots with current context. CLAUDE.md is canonical for conventions; this file is canonical for *active work*.
 
-_Last updated: 2026-09-16 (surprise jamming session added at 17:30; day now visibly ends 18:00, matching `eventEndDate`)_
+_Last updated: 2026-09-19 (session `type` enum gained `Sponsored Keynote`, `Sponsored Talk`, `Sponsored Lightning`)_
 
 ## 1. Goal
 
@@ -260,6 +260,7 @@ Headless Chrome cannot screenshot the app itself (`--screenshot` against `localh
 
 33. **Sponsor logo-wall tiers** — schema + `SponsorTier` + homepage/sponsors page lists now include `community` and `diversity` (plus existing platinum/gold/silver/media). Centered flex layout for sparse tiers. Fixes typecheck break from `/sponsors` listing `diversity` before the enum existed.
 34. **Uniform sponsor cards** — all logo-wall boxes share one fixed width/height; tier prominence is logo height only.
+35. **Sponsored session types** — `type` enum in `lib/schema.ts` now also accepts `Sponsored Keynote` and `Sponsored Talk`. `lib/schedule.ts` exports `isKeynoteType()` so a sponsored keynote still groups into the "Keynotes" block and gets the coloured title prefix in `ScheduleGrid`; the prefix prints the literal type, so sponsored ones read `[Sponsored Keynote]`. `Sponsored Lightning` pairs with `isLightningType()`, which keeps the "Lightning Talks" block label and the "parallel lightning talks" slot caption correct. `Sponsored Talk` and `Sponsored Lightning` render as plain type badges. Triggered by `content/sessions/state-of-cloud-native-in-india.md`, whose `type` had been switched ahead of the enum and was failing `content:validate`.
 
 ## 5. Failed attempts
 

@@ -2,7 +2,7 @@
 title: "What If Agents Could Read Documents Like You Do?"
 speakers: ["shivang-shandilya", "shivam-sharma"]
 track: "AI Inference + Agentic"
-type: "Talk"
+type: "Sponsored Talk"
 durationMinutes: 25
 start: "2026-09-19T14:00:00+05:30"
 room: "Hall 1"

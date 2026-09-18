@@ -2,7 +2,7 @@
 title: "One Cluster to Rule Them All: Running VMs, Containers, and Serverless with KubeVirt"
 speakers: ["nilesh-vaghela"]
 track: "Platform Engineering"
-type: "Talk"
+type: "Sponsored Talk"
 durationMinutes: 25
 start: "2026-09-19T14:30:00+05:30"
 room: "Hall 2"

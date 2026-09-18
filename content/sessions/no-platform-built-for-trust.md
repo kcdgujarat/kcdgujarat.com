@@ -2,7 +2,7 @@
 title: "We Keep Building Control Planes for Machines. Nobody's Built One for Trust"
 speakers: ["rishabh-aggarwal"]
 track: "Security"
-type: "Talk"
+type: "Sponsored Talk"
 durationMinutes: 25
 start: "2026-09-19T15:00:00+05:30"
 room: "Hall 2"

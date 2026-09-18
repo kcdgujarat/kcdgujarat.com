@@ -2,7 +2,7 @@
 title: "[Virtual Session] Kubernetes Was Not Built for This"
 speakers: ["mumshad-mannambeth"]
 track: "AI Inference + Agentic"
-type: "Lightning"
+type: "Sponsored Lightning"
 durationMinutes: 10
 start: "2026-09-19T17:00:00+05:30"
 room: "Hall 2"
