@@ -3,5 +3,5 @@ name: "Vedant Domadiya"
 role: "Volunteer"
 group: "volunteer"
 photo: "/images/volunteers/vedant-domadiya.jpeg"
-order: 240
+order: 350
 ---
