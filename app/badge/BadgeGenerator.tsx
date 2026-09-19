@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Button } from '@/components/ui/button';
@@ -149,12 +150,13 @@ export function BadgeGenerator() {
             Without photo
           </p>
           <div className="overflow-hidden rounded-2xl border border-kcd-border shadow-card w-full max-w-[420px]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/images/EventBadgeNoImage.png"
               alt="KCD Gujarat 2026 I'm Attending badge"
               width={PLAIN_SIZE}
               height={PLAIN_SIZE}
+              sizes="(max-width: 460px) 100vw, 420px"
+              priority
               className="w-full h-auto block"
             />
           </div>
@@ -228,11 +230,13 @@ export function BadgeGenerator() {
           <div className="relative overflow-hidden rounded-2xl border border-kcd-border shadow-card w-full max-w-[840px]">
             {!photoSrc && (
               <div className="relative w-full">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/images/EventBadgewithPlaceholder.png" 
-                  alt="Badge placeholder" 
-                  className="w-full h-auto block" 
+                <Image
+                  src="/images/EventBadgewithPlaceholder.png"
+                  alt="Badge placeholder"
+                  width={PHOTO_W}
+                  height={PHOTO_H}
+                  sizes="(max-width: 880px) 100vw, 840px"
+                  className="w-full h-auto block"
                 />
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-kcd-bg/60 backdrop-blur-[1px]">
                   <Upload className="h-7 w-7 text-kcd-ink" />
