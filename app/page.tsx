@@ -11,6 +11,7 @@ import { SponsorStrip } from '@/components/sections/SponsorStrip';
 import { CommunityPartners } from '@/components/sections/CommunityPartners';
 import { CommunityMixers } from '@/components/sections/CommunityMixers';
 import { FaqSection } from '@/components/sections/FaqSection';
+import { CtaSection } from '@/components/sections/CtaSection';
 import { ComingSoon } from '@/components/sections/ComingSoon';
 import {
   getFaqs,
@@ -172,6 +173,9 @@ export default async function HomePage() {
         homeFaqs.length > 0 ? (
           <FaqSection key="faq" faqs={homeFaqs} hasMore={faqs.length > homeFaqs.length} />
         ) : null,
+        // Closing CTA. Gated on the registration window like the hero/header
+        // CTAs, so it retires itself rather than linking to closed ticketing.
+        registrationOpen ? <CtaSection key="cta" /> : null,
       ]
         .filter(Boolean)
         .map((section, i) => (
