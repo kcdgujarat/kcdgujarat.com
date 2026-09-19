@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { ScheduleGrid } from '@/components/site/ScheduleGrid';
+import { ScheduleNow } from '@/components/site/ScheduleNow';
 import { getSessions, getSpeakers, getCfpConfig, getEventConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
 import { formatEventDate, formatWindowMoment } from '@/lib/utils';
@@ -80,6 +81,11 @@ export default async function SchedulePage() {
         eyebrow="Schedule"
         title="Sessions and themes"
         description="Filter by theme or hall to find the sessions that match your interests."
+      />
+      <ScheduleNow
+        sessions={sessions}
+        eventStart={event.eventDate}
+        eventEnd={event.eventEndDate}
       />
       <ScheduleGrid
         sessions={sessions}
