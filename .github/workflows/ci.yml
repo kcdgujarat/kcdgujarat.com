@@ -11,15 +11,15 @@ concurrency:
 
 jobs:
   verify:
-    name: Lint · Typecheck · Validate · Test
+    name: Lint · Typecheck · Validate · Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: pnpm
@@ -34,3 +34,11 @@ jobs:
 
       - name: Validate /content
         run: pnpm content:validate
+
+      # `tsc --noEmit` does not exercise the build. next.config.mjs redirects(),
+      # generateStaticParams and every content loader only run under `next build`,
+      # so without this a PR can go green and still break the Vercel deploy.
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://kcdgujarat.com
