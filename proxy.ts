@@ -28,7 +28,10 @@ function isAllowedDuringComingSoon(pathname: string): boolean {
     pathname.startsWith('/images/') ||
     pathname.startsWith('/static/') ||
     pathname.startsWith('/og/') ||
+    pathname.startsWith('/icons/') ||
     pathname === '/favicon.ico' ||
+    pathname === '/apple-touch-icon.png' ||
+    pathname === '/manifest.webmanifest' ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml'
   ) {
