@@ -5,6 +5,7 @@ import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Download, Upload, X } from 'lucide-react';
+import { Linkedin, Twitter, WhatsApp } from '@/components/ui/social-icons';
 
 // ─── Canvas dimensions ────────────────────────────────────────────────────────
 // Using full resolution of the provided images for the best download quality
@@ -12,7 +13,36 @@ const PLAIN_SIZE = 1280;   // square template (1280×1280)
 const PHOTO_W    = 2560;   // landscape "with photo" canvas — 2:1 (2560×1280)
 const PHOTO_H    = 1280;   //
 
-export function BadgeGenerator() {
+interface BadgeGeneratorProps {
+  /** Prefilled post text. Composed in the page from content, not hardcoded here. */
+  shareText: string;
+  shareUrl: string;
+  handle?: string;
+  handleUrl?: string;
+}
+
+export function BadgeGenerator({ shareText, shareUrl, handle, handleUrl }: BadgeGeneratorProps) {
+  const tags = '#KCDGujarat2026 #Kubernetes #CloudNative #CNCF';
+  const message = `${shareText}\n\n${tags}`;
+  const shareTargets = [
+    {
+      label: 'X',
+      Icon: Twitter,
+      href: `https://x.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      label: 'LinkedIn',
+      Icon: Linkedin,
+      // LinkedIn ignores prefilled text now, so this just seeds the URL.
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      label: 'WhatsApp',
+      Icon: WhatsApp,
+      href: `https://wa.me/?text=${encodeURIComponent(`${message}\n${shareUrl}`)}`,
+    },
+  ];
+
   const canvasRef    = React.useRef<HTMLCanvasElement>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -262,10 +292,10 @@ export function BadgeGenerator() {
           </Button>
         </section>
 
-        {/* ── Hashtags + share note ─────────────────────────────────────────── */}
+        {/* ── Share ─────────────────────────────────────────────────────────── */}
         <section className="flex flex-col items-center gap-4">
           <div className="flex flex-wrap justify-center gap-2">
-            {['#KCDGujarat', '#CloudNative', '#Kubernetes', '#CNCF'].map((tag) => (
+            {tags.split(' ').map((tag) => (
               <span
                 key={tag}
                 className="rounded-full border border-kcd-border bg-white px-3 py-1 text-xs font-semibold text-kcd-ink shadow-card"
@@ -274,20 +304,41 @@ export function BadgeGenerator() {
               </span>
             ))}
           </div>
-          <div className="rounded-2xl border border-kcd-border bg-white px-8 py-6 text-center shadow-card">
-            <p className="text-sm font-semibold text-kcd-ink">📣 Spread the Word!</p>
-            <p className="mx-auto mt-2 max-w-sm text-sm text-kcd-muted">
-              Tag{' '}
-              <a
-                href="https://twitter.com/KCDGujarat"
-                className="font-semibold text-kcd-primary"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                @KCDGujarat
-              </a>{' '}
-              and use <span className="font-semibold text-kcd-ink">#KCDGujarat2026</span> when you share.
+
+          <div className="w-full max-w-md rounded-2xl border border-kcd-border bg-white px-6 py-6 text-center shadow-card">
+            <p className="text-sm font-semibold text-kcd-ink">Share it</p>
+            <p className="mx-auto mt-1 text-xs text-kcd-muted">
+              Download the badge above, then attach it to your post.
             </p>
+            <ul className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {shareTargets.map(({ label, Icon, href }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-kcd-border bg-white px-4 py-2 text-sm font-semibold text-kcd-ink hover:border-kcd-primary"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden />
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            {handle && handleUrl && (
+              <p className="mt-4 text-xs text-kcd-muted">
+                Tag{' '}
+                <a
+                  href={handleUrl}
+                  className="font-semibold text-kcd-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {handle}
+                </a>{' '}
+                so we can reshare it.
+              </p>
+            )}
           </div>
         </section>
 
