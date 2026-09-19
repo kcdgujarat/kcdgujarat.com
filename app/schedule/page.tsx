@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CalendarPlus } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
 import { SectionHeader } from '@/components/site/SectionHeader';
@@ -81,6 +82,15 @@ export default async function SchedulePage() {
         title="Sessions and themes"
         description="Filter by theme or hall to find the sessions that match your interests."
       />
+      <p className="-mt-6 mb-10">
+        <a
+          href="/event.ics"
+          className="inline-flex items-center gap-2 rounded-full border border-kcd-border bg-white px-4 py-2 text-sm font-semibold text-kcd-ink shadow-card hover:border-kcd-primary"
+        >
+          <CalendarPlus className="h-4 w-4" aria-hidden />
+          Add the event to your calendar
+        </a>
+      </p>
       <ScheduleGrid
         sessions={sessions}
         timeline={event.timeline}

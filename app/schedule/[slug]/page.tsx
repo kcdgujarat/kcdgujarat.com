@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/site/Container';
+import { CalendarPlus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { getSessions, getSpeakers, getCfpConfig } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo';
@@ -43,9 +44,20 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
 
   return (
     <Container className="py-16">
-      <Link href="/schedule" className="text-sm text-kcd-primary hover:underline">
-        ← Back to schedule
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link href="/schedule" className="text-sm text-kcd-primary hover:underline">
+          ← Back to schedule
+        </Link>
+        {s.start && (
+          <a
+            href={`/schedule/${s.slug}/session.ics`}
+            className="inline-flex items-center gap-2 rounded-full border border-kcd-border bg-white px-4 py-2 text-sm font-semibold text-kcd-ink shadow-card hover:border-kcd-primary"
+          >
+            <CalendarPlus className="h-4 w-4" aria-hidden />
+            Add to calendar
+          </a>
+        )}
+      </div>
       <article className="mt-6 max-w-3xl">
         <div className="flex flex-wrap items-center gap-2 text-xs text-kcd-muted">
           {s.start && <span>{formatTime(s.start)}</span>}
