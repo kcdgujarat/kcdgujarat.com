@@ -1,12 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { getSessions, getSpeakers, getSponsors, getCfpConfig, getEventConfig } from '@/lib/content';
+import { getSessions, getSpeakers, getCfpConfig, getEventConfig } from '@/lib/content';
 import { siteUrl } from '@/lib/utils';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [speakers, sessions, sponsors, cfp, event] = await Promise.all([
+  const [speakers, sessions, cfp, event] = await Promise.all([
     getSpeakers(),
     getSessions(),
-    getSponsors(),
     getCfpConfig(),
     getEventConfig(),
   ]);
@@ -36,17 +35,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === '/' ? 1 : 0.7,
   }));
 
+  // `/sponsors` is a single page listing every sponsor — it is already in
+  // `staticPaths`. There are no `/sponsors/[slug]` routes to enumerate.
   if (cfp.phase !== 'closed' || !cfp.showSpeakers) {
-    return [
-      ...staticEntries,
-      ...sponsors.map((s) => ({ url: siteUrl(`/sponsors`), lastModified: now })),
-    ];
+    return staticEntries;
   }
 
   return [
     ...staticEntries,
     ...speakers.map((s) => ({ url: siteUrl(`/speakers/${s.slug}`), lastModified: now })),
     ...sessions.map((s) => ({ url: siteUrl(`/schedule/${s.slug}`), lastModified: now })),
-    ...sponsors.map((s) => ({ url: siteUrl(`/sponsors`), lastModified: now })),
   ];
 }
