@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Plus_Jakarta_Sans, Inter, Noto_Sans_Gujarati } from 'next/font/google';
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
@@ -31,14 +31,6 @@ const inter = Inter({
   weight: ['400', '500', '600'],
 });
 
-// Brand guideline: Noto Sans Gujarati (Bold/Black) for Gujarati script
-const notoSansGujarati = Noto_Sans_Gujarati({
-  subsets: ['gujarati'],
-  variable: '--font-gujarati',
-  display: 'swap',
-  weight: ['700', '900'],
-});
-
 export const metadata: Metadata = buildMetadata({});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -61,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${plusJakartaSans.variable} ${inter.variable} ${notoSansGujarati.variable}`}
+      className={`${plusJakartaSans.variable} ${inter.variable}`}
       style={{ colorScheme: 'light' }}
     >
       <body className="bg-kcd-bg text-kcd-ink antialiased">

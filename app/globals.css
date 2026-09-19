@@ -6,6 +6,9 @@
   color-scheme: light;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  /* Gujarati script is not used yet — CLAUDE.md §9 plans it. When Gujarati
+     content lands, re-add the Noto_Sans_Gujarati loader in app/layout.tsx so
+     this resolves to the real face instead of the display fallback. */
   --font-gujarati: 'Noto Sans Gujarati', var(--font-display);
 }
 
